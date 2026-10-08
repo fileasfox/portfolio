@@ -1,0 +1,623 @@
+{
+  "motor": "SQLite 3.50.4",
+  "carga": {
+    "listings": {
+      "filas": 14817,
+      "segundos": 0.0
+    },
+    "reviews": {
+      "filas": 410856,
+      "segundos": 0.2
+    },
+    "calendar": {
+      "filas": 5438865,
+      "segundos": 4.9
+    }
+  },
+  "consultas": [
+    {
+      "fichero": "01_vista_limpia.sql",
+      "sql": "-- 01 · Vista limpia sobre la tabla cruda de anuncios\n-- El precio llega como texto (\"$1,035.00\"): se limpia en SQL y los vacíos pasan a NULL.\nDROP VIEW IF EXISTS listings_limpio;\nCREATE VIEW listings_limpio AS\nSELECT\n    id,\n    host_id,\n    neighbourhood_cleansed                                   AS municipio,\n    room_type,\n    property_type,\n    accommodates,\n    bedrooms,\n    bathrooms,\n    CAST(NULLIF(REPLACE(REPLACE(price, '$', ''), ',', ''), '') AS REAL) AS precio,\n    number_of_reviews,\n    number_of_reviews_ltm,\n    estimated_revenue_l365d                                  AS ingreso_12m,\n    estimated_occupancy_l365d                                AS noches_12m,\n    calculated_host_listings_count                           AS anuncios_anfitrion\nFROM listings;",
+      "columnas": [],
+      "filas": [],
+      "ms": 3
+    },
+    {
+      "fichero": "02_perfil_calidad.sql",
+      "sql": "-- 02 · Perfil de calidad: volumen, duplicados, vacíos y extremos en una sola pasada\nSELECT\n    COUNT(*)                                              AS anuncios,\n    COUNT(*) - COUNT(DISTINCT id)                         AS ids_duplicados,\n    SUM(precio IS NULL)                                   AS sin_precio,\n    ROUND(100.0 * SUM(precio IS NULL) / COUNT(*), 1)      AS pct_sin_precio,\n    SUM(number_of_reviews = 0)                            AS sin_resenas,\n    MIN(precio)                                           AS precio_min,\n    MAX(precio)                                           AS precio_max\nFROM listings_limpio;",
+      "columnas": [
+        "anuncios",
+        "ids_duplicados",
+        "sin_precio",
+        "pct_sin_precio",
+        "sin_resenas",
+        "precio_min",
+        "precio_max"
+      ],
+      "filas": [
+        [
+          14817,
+          0,
+          3760,
+          25.4,
+          3208,
+          22.68,
+          22260.0
+        ]
+      ],
+      "ms": 24
+    },
+    {
+      "fichero": "03_sesgo_sin_precio.sql",
+      "sql": "-- 03 · ¿Los precios faltan al azar? Comparo la actividad de los anuncios con y sin precio\nSELECT\n    CASE WHEN precio IS NULL THEN 'Sin precio' ELSE 'Con precio' END  AS grupo,\n    COUNT(*)                                                          AS anuncios,\n    ROUND(AVG(number_of_reviews_ltm), 1)                              AS resenas_12m_media,\n    ROUND(100.0 * SUM(number_of_reviews_ltm = 0) / COUNT(*), 1)       AS pct_sin_actividad_12m\nFROM listings_limpio\nGROUP BY grupo;",
+      "columnas": [
+        "grupo",
+        "anuncios",
+        "resenas_12m_media",
+        "pct_sin_actividad_12m"
+      ],
+      "filas": [
+        [
+          "Con precio",
+          11057,
+          6.9,
+          26.8
+        ],
+        [
+          "Sin precio",
+          3760,
+          2.6,
+          48.1
+        ]
+      ],
+      "ms": 10
+    },
+    {
+      "fichero": "04_mediana_municipio.sql",
+      "sql": "-- 04 · Precio mediano por municipio\n-- SQLite no tiene MEDIAN(): se calcula con ROW_NUMBER() y COUNT() como funciones de ventana.\nWITH ordenado AS (\n    SELECT\n        municipio,\n        precio,\n        ROW_NUMBER() OVER (PARTITION BY municipio ORDER BY precio) AS rn,\n        COUNT(*)     OVER (PARTITION BY municipio)                 AS n\n    FROM listings_limpio\n    WHERE precio IS NOT NULL\n)\nSELECT\n    municipio,\n    MAX(n)               AS anuncios_con_precio,\n    ROUND(AVG(precio), 2) AS precio_mediano   -- sin redondear a entero: ver cuadre\nFROM ordenado\nWHERE rn IN ((n + 1) / 2, (n + 2) / 2)      -- 1 fila si n es impar, 2 si es par\nGROUP BY municipio\nORDER BY anuncios_con_precio DESC;",
+      "columnas": [
+        "municipio",
+        "anuncios_con_precio",
+        "precio_mediano"
+      ],
+      "filas": [
+        [
+          "Pollença",
+          1579,
+          426.8
+        ],
+        [
+          "Alcúdia",
+          1012,
+          426.53
+        ],
+        [
+          "Palma de Mallorca",
+          863,
+          262.0
+        ],
+        [
+          "Santanyí",
+          809,
+          416.0
+        ],
+        [
+          "Manacor",
+          608,
+          350.8
+        ],
+        [
+          "Felanitx",
+          500,
+          471.88
+        ],
+        [
+          "Santa Margalida",
+          452,
+          328.6
+        ],
+        [
+          "Llucmajor",
+          405,
+          438.21
+        ],
+        [
+          "Sóller",
+          397,
+          349.5
+        ],
+        [
+          "Calvià",
+          336,
+          481.5
+        ],
+        [
+          "Campos",
+          325,
+          449.0
+        ],
+        [
+          "Capdepera",
+          319,
+          383.0
+        ],
+        [
+          "Artà",
+          259,
+          407.43
+        ],
+        [
+          "Muro",
+          232,
+          416.29
+        ],
+        [
+          "Son Servera",
+          222,
+          386.9
+        ],
+        [
+          "Sant Llorenç des Cardassar",
+          218,
+          308.2
+        ],
+        [
+          "Selva",
+          193,
+          386.0
+        ],
+        [
+          "Ses Salines",
+          189,
+          310.0
+        ],
+        [
+          "Sa Pobla",
+          174,
+          381.11
+        ],
+        [
+          "Andratx",
+          165,
+          570.6
+        ],
+        [
+          "Inca",
+          157,
+          452.0
+        ],
+        [
+          "Petra",
+          110,
+          368.81
+        ],
+        [
+          "Campanet",
+          97,
+          415.4
+        ],
+        [
+          "Valldemossa",
+          91,
+          355.83
+        ],
+        [
+          "Búger",
+          89,
+          378.83
+        ],
+        [
+          "Sencelles",
+          71,
+          435.29
+        ],
+        [
+          "Llubí",
+          70,
+          342.75
+        ],
+        [
+          "Marratxí",
+          69,
+          745.2
+        ],
+        [
+          "Fornalutx",
+          67,
+          367.6
+        ],
+        [
+          "Deyá",
+          67,
+          640.0
+        ],
+        [
+          "Algaida",
+          66,
+          555.9
+        ],
+        [
+          "Alaró",
+          62,
+          457.7
+        ],
+        [
+          "Sineu",
+          55,
+          398.71
+        ],
+        [
+          "Porreres",
+          55,
+          318.71
+        ],
+        [
+          "Banyalbufar",
+          55,
+          310.0
+        ],
+        [
+          "Ariany",
+          54,
+          483.29
+        ],
+        [
+          "Bunyola",
+          52,
+          443.31
+        ],
+        [
+          "Maria de la Salut",
+          49,
+          335.6
+        ],
+        [
+          "Binissalem",
+          48,
+          420.97
+        ],
+        [
+          "Esporles",
+          46,
+          614.4
+        ],
+        [
+          "Santa María del Camí",
+          42,
+          411.57
+        ],
+        [
+          "Costitx",
+          42,
+          349.0
+        ],
+        [
+          "Montuïri",
+          38,
+          356.88
+        ],
+        [
+          "Lloseta",
+          37,
+          430.0
+        ],
+        [
+          "Mancor de la Vall",
+          32,
+          370.3
+        ],
+        [
+          "Lloret de Vistalegre",
+          32,
+          328.5
+        ],
+        [
+          "Sant Joan",
+          31,
+          282.0
+        ],
+        [
+          "Vilafranc de Bonany",
+          28,
+          391.6
+        ],
+        [
+          "Puigpunyent",
+          28,
+          507.81
+        ],
+        [
+          "Escorca",
+          26,
+          244.0
+        ],
+        [
+          "Consell",
+          14,
+          533.8
+        ],
+        [
+          "Santa Eugènia",
+          10,
+          612.33
+        ],
+        [
+          "Estellencs",
+          10,
+          209.2
+        ]
+      ],
+      "ms": 31
+    },
+    {
+      "fichero": "05_concentracion_ingresos.sql",
+      "sql": "-- 05 · Concentración del ingreso: ¿qué parte factura cada decil de anuncios?\nWITH r AS (\n    SELECT ingreso_12m,\n           NTILE(10) OVER (ORDER BY ingreso_12m DESC) AS decil\n    FROM listings_limpio\n    WHERE ingreso_12m > 0\n)\nSELECT\n    decil,\n    COUNT(*)                                                       AS anuncios,\n    ROUND(SUM(ingreso_12m))                                        AS ingreso_total,\n    ROUND(100.0 * SUM(ingreso_12m) / SUM(SUM(ingreso_12m)) OVER (), 1) AS pct_ingreso,\n    ROUND(SUM(SUM(ingreso_12m)) OVER (ORDER BY decil) * 100.0\n          / SUM(SUM(ingreso_12m)) OVER (), 1)                      AS pct_acumulado\nFROM r\nGROUP BY decil\nORDER BY decil;",
+      "columnas": [
+        "decil",
+        "anuncios",
+        "ingreso_total",
+        "pct_ingreso",
+        "pct_acumulado"
+      ],
+      "filas": [
+        [
+          1,
+          810,
+          75677261.0,
+          34.8,
+          34.8
+        ],
+        [
+          2,
+          810,
+          39304638.0,
+          18.1,
+          52.8
+        ],
+        [
+          3,
+          810,
+          28338365.0,
+          13.0,
+          65.8
+        ],
+        [
+          4,
+          810,
+          21605429.0,
+          9.9,
+          75.8
+        ],
+        [
+          5,
+          809,
+          16833990.0,
+          7.7,
+          83.5
+        ],
+        [
+          6,
+          809,
+          12998625.0,
+          6.0,
+          89.5
+        ],
+        [
+          7,
+          809,
+          9740133.0,
+          4.5,
+          94.0
+        ],
+        [
+          8,
+          809,
+          6789660.0,
+          3.1,
+          97.1
+        ],
+        [
+          9,
+          809,
+          4314107.0,
+          2.0,
+          99.1
+        ],
+        [
+          10,
+          809,
+          2046294.0,
+          0.9,
+          100.0
+        ]
+      ],
+      "ms": 10
+    },
+    {
+      "fichero": "06_anfitriones.sql",
+      "sql": "-- 06 · Profesionalización: anuncios según el tamaño de la cartera de su anfitrión\nSELECT\n    CASE\n        WHEN anuncios_anfitrion = 1  THEN '1'\n        WHEN anuncios_anfitrion <= 4 THEN '2-4'\n        WHEN anuncios_anfitrion <= 19 THEN '5-19'\n        ELSE '20+'\n    END                                                   AS cartera,\n    COUNT(*)                                              AS anuncios,\n    COUNT(DISTINCT host_id)                               AS anfitriones,\n    ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 1)    AS pct_anuncios\nFROM listings_limpio\nGROUP BY cartera\nORDER BY MIN(anuncios_anfitrion);",
+      "columnas": [
+        "cartera",
+        "anuncios",
+        "anfitriones",
+        "pct_anuncios"
+      ],
+      "filas": [
+        [
+          "1",
+          2766,
+          2766,
+          18.7
+        ],
+        [
+          "2-4",
+          1897,
+          750,
+          12.8
+        ],
+        [
+          "5-19",
+          2169,
+          258,
+          14.6
+        ],
+        [
+          "20+",
+          7985,
+          133,
+          53.9
+        ]
+      ],
+      "ms": 7
+    },
+    {
+      "fichero": "07_crecimiento_anual.sql",
+      "sql": "-- 07 · Crecimiento interanual de la actividad (reseñas como indicador de estancias)\nWITH anual AS (\n    SELECT CAST(strftime('%Y', date) AS INTEGER) AS anio,\n           COUNT(*)                              AS resenas\n    FROM reviews\n    WHERE date >= '2022-01-01' AND date < '2026-01-01'\n    GROUP BY anio\n)\nSELECT\n    anio,\n    resenas,\n    LAG(resenas) OVER (ORDER BY anio)                                         AS anio_anterior,\n    ROUND(100.0 * (1.0 * resenas / LAG(resenas) OVER (ORDER BY anio) - 1), 1) AS crecimiento_pct\nFROM anual\nORDER BY anio;",
+      "columnas": [
+        "anio",
+        "resenas",
+        "anio_anterior",
+        "crecimiento_pct"
+      ],
+      "filas": [
+        [
+          2022,
+          49841,
+          null,
+          null
+        ],
+        [
+          2023,
+          58032,
+          49841,
+          16.4
+        ],
+        [
+          2024,
+          72938,
+          58032,
+          25.7
+        ],
+        [
+          2025,
+          84867,
+          72938,
+          16.4
+        ]
+      ],
+      "ms": 136
+    },
+    {
+      "fichero": "08_calendario_mensual.sql",
+      "sql": "-- 08 · Calendario (≈5,4 M de filas): % de noches no disponibles por mes, próximos 12 meses\n-- \"No disponible\" mezcla reservas y bloqueos del propietario: es un techo, no la ocupación.\nSELECT\n    strftime('%Y-%m', date)                                   AS mes,\n    COUNT(DISTINCT listing_id)                                AS anuncios,\n    COUNT(*)                                                  AS noches,\n    ROUND(100.0 * SUM(available = 'f') / COUNT(*), 1)         AS pct_no_disponible\nFROM calendar\nWHERE date >= '2026-07-01' AND date < '2027-07-01'\nGROUP BY mes\nORDER BY mes;",
+      "columnas": [
+        "mes",
+        "anuncios",
+        "noches",
+        "pct_no_disponible"
+      ],
+      "filas": [
+        [
+          "2026-07",
+          14901,
+          461064,
+          70.7
+        ],
+        [
+          "2026-08",
+          14901,
+          461931,
+          69.1
+        ],
+        [
+          "2026-09",
+          14901,
+          447030,
+          51.9
+        ],
+        [
+          "2026-10",
+          14901,
+          461931,
+          38.6
+        ],
+        [
+          "2026-11",
+          14901,
+          447030,
+          41.7
+        ],
+        [
+          "2026-12",
+          14901,
+          461931,
+          47.3
+        ],
+        [
+          "2027-01",
+          14901,
+          461931,
+          52.0
+        ],
+        [
+          "2027-02",
+          14901,
+          417228,
+          51.3
+        ],
+        [
+          "2027-03",
+          14901,
+          461931,
+          47.5
+        ],
+        [
+          "2027-04",
+          14901,
+          447030,
+          41.8
+        ],
+        [
+          "2027-05",
+          14901,
+          461931,
+          42.8
+        ],
+        [
+          "2027-06",
+          14901,
+          334758,
+          42.6
+        ]
+      ],
+      "ms": 30899
+    }
+  ],
+  "cuadres": [
+    {
+      "control": "Precio mediano por municipio (SQL con ventanas vs pandas .median())",
+      "sql": "53 de 53 municipios",
+      "pandas": "53 municipios",
+      "ok": true,
+      "nota": "Con redondeo a entero salían 52 de 53: Lloret de Vistalegre (328,5 €) → 328 en pandas y 329 en SQLite."
+    },
+    {
+      "control": "Anuncios sin precio",
+      "sql": 3760,
+      "pandas": 3760,
+      "ok": true
+    },
+    {
+      "control": "Reseñas 2023–2025",
+      "sql": 215837,
+      "pandas": 215837,
+      "ok": true
+    },
+    {
+      "control": "% de anuncios de anfitriones con 20+",
+      "sql": 53.9,
+      "pandas": 53.9,
+      "ok": true
+    }
+  ]
+}

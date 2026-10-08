@@ -1,0 +1,146 @@
+{
+  "total": 23,
+  "ok": 23,
+  "controles": [
+    {
+      "control": "Sin claves, tokens ni contraseñas",
+      "ok": true,
+      "detalle": "Patrones de claves de AWS, OpenAI, GitHub, Google y asignaciones de secretos.",
+      "hallazgos": []
+    },
+    {
+      "control": "Sin nombres internos de tablas, columnas ni clientes",
+      "ok": true,
+      "detalle": "Tablas y columnas del almacén de datos del empleador, nombres de clientes y proveedores.",
+      "hallazgos": []
+    },
+    {
+      "control": "Email no aparece completo en el código",
+      "ok": true,
+      "detalle": "El email se monta en el navegador a partir de dos partes.",
+      "hallazgos": []
+    },
+    {
+      "control": "Sin teléfono ni dirección postal",
+      "ok": true,
+      "detalle": "Teléfono y dirección del CV en PDF excluidos.",
+      "hallazgos": []
+    },
+    {
+      "control": "Sin rutas locales del equipo",
+      "ok": true,
+      "detalle": "Rutas de Windows o macOS que delatarían el usuario o la estructura local.",
+      "hallazgos": []
+    },
+    {
+      "control": "Sin bases de datos, datos crudos ni código fuente publicado",
+      "ok": true,
+      "detalle": "La web solo publica HTML, CSS, JS, imágenes y datos agregados.",
+      "hallazgos": []
+    },
+    {
+      "control": "Enlaces externos con rel=\"noopener noreferrer\"",
+      "ok": true,
+      "detalle": "Evita que la página enlazada controle esta pestaña y que reciba la URL de origen.",
+      "hallazgos": []
+    },
+    {
+      "control": "Sin manejadores inline ni URLs javascript:",
+      "ok": true,
+      "detalle": "Todo el comportamiento vive en ficheros .js (compatible con CSP).",
+      "hallazgos": []
+    },
+    {
+      "control": "Content-Security-Policy en todas las páginas",
+      "ok": true,
+      "detalle": "Solo scripts propios y de cdnjs; sin plugins ni formularios externos.",
+      "hallazgos": []
+    },
+    {
+      "control": "Sin scripts externos en el HTML",
+      "ok": true,
+      "detalle": "Los únicos scripts estáticos son propios.",
+      "hallazgos": []
+    },
+    {
+      "control": "Sin recursos por HTTP sin cifrar",
+      "ok": true,
+      "detalle": "Todo se sirve por HTTPS o desde el propio sitio.",
+      "hallazgos": []
+    },
+    {
+      "control": "Ficheros de texto sin bytes nulos",
+      "ok": true,
+      "detalle": "Un byte nulo rompe el CSS o el JS en algunos navegadores.",
+      "hallazgos": []
+    },
+    {
+      "control": "Sin guiones largos en el texto visible",
+      "ok": true,
+      "detalle": "Rangos y pausas con guion normal o con puntuación.",
+      "hallazgos": []
+    },
+    {
+      "control": "Enlace «Saltar al contenido» en todas las páginas",
+      "ok": true,
+      "detalle": "Para quien navega con teclado o lector de pantalla.",
+      "hallazgos": []
+    },
+    {
+      "control": "Favicon y metadatos para compartir",
+      "ok": true,
+      "detalle": "Icono propio, color de la barra del navegador y tarjeta Open Graph.",
+      "hallazgos": []
+    },
+    {
+      "control": "Sin eval, new Function ni document.write",
+      "ok": true,
+      "detalle": "Sumideros que ejecutan texto como código.",
+      "hallazgos": []
+    },
+    {
+      "control": "Script de terceros con Subresource Integrity",
+      "ok": true,
+      "detalle": "sql.js se carga desde cdnjs con hash SHA-384 y crossorigin.",
+      "hallazgos": [
+        "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-asm.js"
+      ]
+    },
+    {
+      "control": "innerHTML solo con datos escapados",
+      "ok": true,
+      "detalle": "27 asignaciones revisadas: los datos pasan por esc() y el resto está en una línea base revisada a mano.",
+      "hallazgos": []
+    },
+    {
+      "control": "Valores de localStorage validados",
+      "ok": true,
+      "detalle": "El tema guardado solo acepta «light» o «dark».",
+      "hallazgos": []
+    },
+    {
+      "control": "Imágenes sin metadatos EXIF ni GPS",
+      "ok": true,
+      "detalle": "3 imágenes generadas desde canvas, sin metadatos de cámara.",
+      "hallazgos": []
+    },
+    {
+      "control": "Identificadores seudonimizados en la consola",
+      "ok": true,
+      "detalle": "Los IDs de anuncio y anfitrión son correlativos, no los de Airbnb.",
+      "hallazgos": []
+    },
+    {
+      "control": "Sin nombres de anfitriones en los datos",
+      "ok": true,
+      "detalle": "Solo variables del anuncio y agregados.",
+      "hallazgos": []
+    },
+    {
+      "control": "Cualquier sección a 3 clics o menos",
+      "ok": true,
+      "detalle": "22 destinos (9 páginas y 13 secciones). Peor caso desde cualquier página: 2 clic(s); desde el inicio: 2.",
+      "hallazgos": []
+    }
+  ]
+}

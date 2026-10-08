@@ -1,0 +1,273 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Ruta"><a href="index.html">Inicio</a> / <a href="proyectos.html">Proyectos</a> / Mallorca</nav>
+  <span class="eyebrow">Proyecto 01, datos públicos</span>
+  <h1>¿Cuánto vale una vista al mar en Mallorca?</h1>
+  <p class="lead">Qué atributos de un alojamiento justifican cobrar más, una vez descontados el tamaño, la zona, el tipo de propiedad y la temporada. Es la misma pregunta que se hace un hotel al poner precio a una habitación con vistas o a un upgrade.</p>
+  <div class="tags"><span class="tag">Python 3</span><span class="tag">pandas</span><span class="tag">numpy</span><span class="tag">SQLite</span><span class="tag">Regresión hedónica</span><span class="tag">SVG y JavaScript</span></div>
+  <div class="kpis">
+    <div class="kpi"><b>14.817</b><span>anuncios y 5,9 M de filas en total</span></div>
+    <div class="kpi"><b>+27 %</b><span>prima de la vista al mar</span></div>
+    <div class="kpi"><b>8</b><span>consultas SQL con su resultado real</span></div>
+    <div class="kpi"><b>4 / 4</b><span>cuadres SQL frente a pandas</span></div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice del proyecto">
+    <span class="eyebrow">En esta página</span>
+    <a href="#resumen" class="on">Resumen</a>
+    <a href="#datos">Datos</a>
+    <a href="#python">Python</a>
+    <a href="#sql">SQL</a>
+    <a href="#modelo">Modelo</a>
+    <a href="#hallazgos">Hallazgos</a>
+    <a href="#conclusiones">Conclusiones</a>
+  </nav>
+
+  <div>
+  <!-- ================================================= RESUMEN -->
+  <section class="chapter" id="resumen">
+    <div class="chapter-head"><h2>De ficheros crudos a una respuesta de negocio</h2></div>
+    <div class="findings">
+      <div class="finding good"><b>La respuesta</b><p>A igualdad de tamaño, zona, tipo y temporada, la vista al mar se asocia con un precio un <strong>27 %</strong> mayor, la piscina con un <strong>19 %</strong> y el aire acondicionado con un <strong>12 %</strong>.</p></div>
+      <div class="finding alert"><b>La trampa</b><p>Comparando medianas sin controles, la piscina parece valer un <strong>+73 %</strong>. Esa cifra sobrevalora el atributo casi cuatro veces.</p></div>
+    </div>
+    <ol class="stepper" aria-label="Proceso"><li><b>Extraer</b><span>3 ficheros CSV y un GeoJSON de Inside Airbnb</span><span class="tool">curl</span></li><li><b>Limpiar</b><span>Precios en texto, equipamientos en JSON, extremos</span><span class="tool">pandas</span></li><li><b>Consultar</b><span>Carga en SQLite y 8 consultas con CTE y ventanas</span><span class="tool">SQL</span></li><li><b>Cuadrar</b><span>Cada cifra clave, calculada dos veces y comparada</span><span class="tool">SQL y pandas</span></li><li><b>Modelar</b><span>Regresión con errores robustos, en 3 iteraciones</span><span class="tool">numpy</span></li><li><b>Publicar</b><span>Resultados en JSON y gráficos en esta web</span><span class="tool">JS y SVG</span></li></ol>
+  </section>
+
+  <!-- ================================================= DATOS -->
+  <section class="chapter" id="datos">
+    <div class="chapter-head"><h2>Qué datos y qué problemas tenían</h2>
+      <p>Inside Airbnb, Mallorca, extracción del 23/06/2026, licencia CC BY 4.0.</p></div>
+    <figure>
+      <div class="scroll"><table>
+        <thead><tr><th>Fichero</th><th class="r">Filas</th><th>Grano</th><th>Uso en el proyecto</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">listings.csv.gz</td><td class="r">14.817</td><td>1 anuncio · 93 columnas</td><td class="wrap">Precio, atributos, municipio, anfitrión, ingreso estimado</td></tr>
+          <tr><td class="mono">calendar.csv.gz</td><td class="r">5.438.865</td><td>1 anuncio × 1 noche</td><td class="wrap">Disponibilidad de los próximos 12 meses</td></tr>
+          <tr><td class="mono">reviews.csv</td><td class="r">410.856</td><td>1 reseña (id y fecha)</td><td class="wrap">Indicador de estancias por mes y año</td></tr>
+          <tr><td class="mono">neighbourhoods.geojson</td><td class="r">53</td><td>1 municipio</td><td class="wrap">Mapa por municipio</td></tr>
+        </tbody>
+      </table></div>
+    </figure>
+    <div class="findings">
+      <div class="finding alert"><b>25,4 % sin precio, y no al azar</b><p>Los 3.760 anuncios sin precio tienen 2,6 reseñas de media en el último año, frente a 6,9 de los que sí lo tienen, y el 48 % no tuvo actividad. Son anuncios poco activos: se excluyen del modelo y se indica (<a href="#sql-03">consulta 03</a>).</p></div>
+      <div class="finding alert"><b>El precio es una cotización</b><p>Cada precio corresponde a unas fechas de entrada concretas, entre junio y enero. Sin controlar el mes, el modelo confundiría temporada con atributos.</p></div>
+      <div class="finding alert"><b>«Pool» no siempre es piscina</b><p>Buscando texto libre, «pool table» y «pool view» contaban como piscina, y 5.482 anuncios marcan solo «pool» aunque sea privada. La solución fue leer la lista de equipamientos elemento a elemento.</p></div>
+      <div class="finding"><b>Precios de hasta 22.260 €</b><p>Para el modelo uso el rango del percentil 1 al 99 (71 € a 3.870 €) y el logaritmo del precio, para que las villas de lujo no dominen.</p></div>
+    </div>
+  </section>
+
+  <!-- ================================================= PYTHON -->
+  <section class="chapter" id="python">
+    <div class="chapter-head"><h2>El código que hace el trabajo</h2>
+      <p>Fragmentos de <span class="mono">analisis_mallorca.py</span>, simplificados para leerlos aquí. Cada pestaña explica qué hace el código y por qué lo escribí así.</p></div>
+    <div class="tabset">
+      <div class="tabs" role="tablist" aria-label="Fragmentos de Python">
+        <button type="button" role="tab">Limpieza</button>
+        <button type="button" role="tab">Equipamientos</button>
+        <button type="button" role="tab">Agregación</button>
+        <button type="button" role="tab">Regresión</button>
+      </div>
+      <div class="tabpanel" role="tabpanel">
+<template data-code="py" data-label="analisis_mallorca.py · limpieza">
+# El precio llega como texto: "$1,035.00"
+l["precio"] = pd.to_numeric(
+    l["price"].astype(str).str.replace(r"[$,]", "", regex=True),
+    errors="coerce",                      # lo que no es número pasa a NaN, no rompe
+)
+p1, p99 = l["precio"].quantile([0.01, 0.99])
+
+# ¿Faltan precios al azar? Comparo la actividad de ambos grupos
+sesgo = l.groupby(l["precio"].isna())["number_of_reviews_ltm"].median()
+
+# Muestra del modelo: viviendas enteras dentro del rango p1-p99
+m = l[(l["room_type"] == "Entire home/apt") &amp; l["precio"].between(p1, p99)].copy()
+m = m.dropna(subset=["accommodates", "bedrooms", "bathrooms"])
+m["log_precio"] = np.log(m["precio"])
+</template>
+        <div class="why"><div><h4>Qué hace</h4><p>Convierte el precio de texto a número, calcula los percentiles para recortar extremos y prepara la muestra del modelo.</p></div><div><h4>Por qué así</h4><p><span class="mono">errors="coerce"</span> evita que un valor raro tumbe el proceso. El logaritmo convierte los coeficientes en porcentajes de precio.</p></div></div>
+      </div>
+      <div class="tabpanel" role="tabpanel">
+<template data-code="py" data-label="analisis_mallorca.py · equipamientos">
+# amenities es una lista JSON por anuncio: '["Wifi", "Private pool", ...]'
+items = l["amenities"].fillna("[]").map(lambda s: [a.lower() for a in json.loads(s)])
+
+ATRIBUTOS = {
+    "Piscina":      r"^(private |shared )?(outdoor |indoor )?pool\b(?! table| view)",
+    "Vista al mar": r"^(sea|ocean|beach) views?\b",
+    "Aire acondicionado": r"air conditioning|central air",
+    # ...
+}
+for k, rx in ATRIBUTOS.items():
+    pat = re.compile(rx)
+    l[k] = items.map(lambda xs: any(pat.search(x) for x in xs)).astype(float)
+</template>
+        <div class="why"><div><h4>Qué hace</h4><p>Lee la lista de equipamientos de cada anuncio y crea una variable 0/1 por atributo.</p></div><div><h4>Por qué así</h4><p>La primera versión buscaba texto libre y contaba «pool table» como piscina. Al evaluar cada elemento por separado, con anclas y búsqueda negativa, la prima de la piscina pasó de −5,5 % a +19,1 %.</p></div></div>
+      </div>
+      <div class="tabpanel" role="tabpanel">
+<template data-code="py" data-label="analisis_mallorca.py · agregación">
+# Resumen por municipio en una sola pasada
+g = l.groupby("neighbourhood_cleansed").agg(
+    anuncios=("id", "size"),
+    precio_mediano=("precio", "median"),
+    ingreso_mediano=("estimated_revenue_l365d", lambda s: s[s &gt; 0].median()),
+    piscina_pct=("Piscina", "mean"),
+)
+
+# Tramos de cartera del anfitrión
+tramo = pd.cut(l["calculated_host_listings_count"],
+               [0, 1, 4, 19, 10**6], labels=["1", "2-4", "5-19", "20+"])
+reparto = tramo.value_counts(normalize=True, sort=False) * 100
+
+# Estacionalidad: reseñas por año y mes
+ym = rv.groupby([rv["date"].dt.year, rv["date"].dt.month]).size()
+</template>
+        <div class="why"><div><h4>Qué hace</h4><p>Agrega por municipio con varias métricas a la vez, corta la cartera del anfitrión en tramos y cuenta reseñas por año y mes.</p></div><div><h4>Por qué así</h4><p>Con <span class="mono">agg</span> y nombres explícitos, la tabla sale lista para publicar. El ingreso mediano excluye los ceros para no mezclar anuncios inactivos.</p></div></div>
+      </div>
+      <div class="tabpanel" role="tabpanel">
+<template data-code="py" data-label="analisis_mallorca.py · regresión">
+X = pd.concat([
+    m[["accommodates", "bedrooms", "bathrooms"]],
+    m[attrs],
+    pd.get_dummies(m["neighbourhood_cleansed"], prefix="mun", drop_first=True, dtype=float),
+    pd.get_dummies(m["tipo_propiedad"],        prefix="tipo", drop_first=True, dtype=float),
+    pd.get_dummies(m["mes_entrada"],           prefix="mes", drop_first=True, dtype=float),
+], axis=1)
+X.insert(0, "const", 1.0)
+
+beta, *_ = np.linalg.lstsq(X, y, rcond=None)          # mínimos cuadrados
+resid = y - X @ beta
+XtX_inv = np.linalg.pinv(X.T @ X)
+meat = (X * resid[:, None] ** 2).T @ X                # errores robustos HC1
+se = np.sqrt(np.diag(XtX_inv @ meat @ XtX_inv) * n / (n - k))
+prima_pct = (np.exp(beta) - 1) * 100                  # de log-precio a % de precio
+</template>
+        <div class="why"><div><h4>Qué hace</h4><p>Construye la matriz con atributos y controles (variables dummy de municipio, tipo y mes) y estima la regresión con errores robustos.</p></div><div><h4>Por qué así</h4><p>La programé con numpy en vez de usar una librería para entender cada paso. Los errores HC1 no asumen la misma varianza en villas y apartamentos.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================= SQL -->
+  <section class="chapter" id="sql">
+    <div class="chapter-head"><h2>Las mismas preguntas, en SQL, y con cuadre</h2>
+      <p>Cargué los ficheros crudos en SQLite y ejecuté 8 consultas. Lo que ves debajo son las consultas y los resultados reales de esa ejecución. Después calculé las cifras clave también en pandas y comparé.</p></div>
+    <div class="console" id="sqlConsole">
+      <div class="console-top"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="t">mallorca.db · SQLite ejecutándose en tu navegador</span></div>
+      <div class="presets" id="presets" role="group" aria-label="Consultas de ejemplo"></div>
+      <div class="editor"><pre aria-hidden="true"><code id="sqlHl"></code></pre><textarea id="sqlInput" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Consulta SQL editable"></textarea></div>
+      <div class="run-bar"><button class="btn" id="runSql" type="button">Ejecutar <span class="arr">▶</span></button><span><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span><button class="btn sm ghost" id="resetDb" type="button">Restaurar datos</button><span class="status" id="sqlStatus">Edita la consulta o elige un ejemplo. Al ejecutar, se cargan los 14.817 anuncios en SQLite dentro de tu navegador (una sola vez).</span></div>
+      <div class="console-out" id="sqlOut"></div>
+    </div>
+    <p class="muted small">Prueba a escribir tu propia consulta: por ejemplo, el precio medio con piscina por municipio. Las tablas son <span class="mono">listings_limpio</span> (un anuncio por fila, con <span class="mono">piscina</span>, <span class="mono">vista_mar</span> y <span class="mono">aire_acondicionado</span> como 0/1) y <span class="mono">reviews_mes</span>.</p>
+    <div class="findings">
+      <figure><h3>Carga en SQLite</h3><div class="scroll"><table id="cargaTable"><thead><tr><th>Tabla</th><th class="r">Filas</th><th class="r">Carga</th></tr></thead><tbody></tbody></table></div></figure>
+      <div class="callout"><h3>Por qué cuadrar</h3><p>En mi trabajo, dos informes con dos cifras distintas hacen que nadie se fíe de ninguno. Por eso calculo cada cifra clave por dos vías antes de publicarla.</p></div>
+    </div>
+    <figure>
+      <h3>Cuadre SQL frente a pandas</h3>
+      <div class="scroll"><table id="cuadreTable"><thead><tr><th>Control</th><th class="r">SQL</th><th class="r">pandas</th><th>Estado</th></tr></thead><tbody></tbody></table></div>
+      <figcaption>El primer cuadre de medianas falló, con 52 de 53 municipios iguales. No era un error de datos: pandas redondea 328,5 al par (328) y SQLite hacia arriba (329). Al comparar sin redondear, cuadran los 53.</figcaption>
+    </figure>
+    <div class="sql-list" id="sqlList"></div>
+  </section>
+
+  <!-- ================================================= MODELO -->
+  <section class="chapter" id="modelo">
+    <div class="chapter-head"><h2>Prima de precio por atributo</h2>
+      <p>Regresión del logaritmo del precio. Muestra: 9.255 viviendas enteras. Controles: capacidad, dormitorios, baños, municipio, tipo de propiedad y mes de entrada.</p></div>
+    <figure>
+      <h3>Registro de iteraciones</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Versión</th><th>Cambio</th><th class="r">R²</th><th class="r">Piscina</th><th class="r">Acceso a playa</th><th class="r">Vista al mar</th></tr></thead>
+        <tbody>
+          <tr><td>v1</td><td class="wrap">Tamaño y municipio; atributos buscados en texto libre</td><td class="r">0,398</td><td class="r">−6,3 %*</td><td class="r">−13,5 %</td><td class="r">+26,0 %</td></tr>
+          <tr><td>v2</td><td class="wrap">+ tipo de propiedad y mes de entrada</td><td class="r">0,535</td><td class="r">−5,5 %*</td><td class="r">−3,9 %</td><td class="r">+25,3 %</td></tr>
+          <tr class="hl"><td>v3</td><td class="wrap">Equipamientos leídos elemento a elemento</td><td class="r">0,541</td><td class="r">+19,1 %</td><td class="r">−1,9 % (n.s.)</td><td class="r">+27,2 %</td></tr>
+        </tbody>
+      </table></div>
+      <figcaption>* En v1 y v2 la variable era «piscina privada» y se comparaba con anuncios que también tenían piscina, pero etiquetada como «pool». Un signo negativo para la piscina era la pista de que algo fallaba en los datos, no en el mercado.</figcaption>
+    </figure>
+    <figure>
+      <svg data-chart="prima" role="img" aria-label="Prima de precio estimada por atributo con intervalo de confianza del 95 %"></svg>
+      <div class="legend"><span><i class="dot" style="background:var(--accent-mark)"></i>Prima significativa</span><span><i class="dot" style="background:var(--muted)"></i>No distinguible de cero</span><span><i style="background:var(--muted)"></i>Intervalo de confianza del 95 %</span></div>
+      <figcaption>Vista al mar: +27 % (entre +23 % y +32 %). Es una asociación, no un efecto causal: la barbacoa probablemente refleja que hay jardín o terraza.</figcaption>
+    </figure>
+    <div class="callout">
+      <h3>La lección de analista</h3>
+      <p>Los anuncios con piscina tienen una mediana de 488 € frente a 282 €, un 73 % más. Con controles, la prima es del 19 %: la mayor parte de la diferencia se explica porque las casas con piscina son más grandes y son villas.</p>
+    </div>
+    <div class="stack-sm">
+      <h3>Pruébalo: simulador de precio</h3>
+      <p class="muted">Aplica los coeficientes reales del modelo v3. Cambia la zona, el tamaño o los atributos y mira cómo cambia el precio estimado.</p>
+    </div>
+    <div class="sim" id="sim">
+      <div class="sim-in">
+        <div class="sim-row">
+          <div class="field"><label for="simMun">Municipio</label><select id="simMun"></select></div>
+          <div class="field"><label for="simTipo">Tipo</label><select id="simTipo"></select></div>
+          <div class="field"><label for="simMes">Entrada</label><select id="simMes"></select></div>
+        </div>
+        <div class="sim-row">
+          <div class="field"><label for="simCap">Huéspedes <output id="simCapOut"></output></label><input type="range" id="simCap"></div>
+          <div class="field"><label for="simDor">Dormitorios <output id="simDorOut"></output></label><input type="range" id="simDor"></div>
+          <div class="field"><label for="simBan">Baños <output id="simBanOut"></output></label><input type="range" id="simBan"></div>
+        </div>
+        <div class="field"><label>Atributos</label><div class="switches" id="simAttrs"></div></div>
+      </div>
+      <div class="sim-out" aria-live="polite">
+        <span class="eyebrow">Precio estimado por noche</span>
+        <div class="price" id="simPrice">-</div>
+        <ul id="simBreak"></ul>
+        <p class="note">Estimación del modelo (R² 0,54) con corrección de Duan al deshacer el logaritmo. Sirve para comparar escenarios, no como tarifa. n.s. = no significativo.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================= HALLAZGOS -->
+  <section class="chapter" id="hallazgos">
+    <div class="chapter-head"><h2>Cómo es el mercado</h2></div>
+    <figure>
+      <svg id="hostSvg" viewBox="0 0 640 100" role="img" aria-label="Reparto de anuncios según el número de anuncios del anfitrión"></svg>
+      <figcaption>El 54 % de los anuncios pertenece a anfitriones con 20 o más (133 anfitriones). El 94,8 % son viviendas enteras.</figcaption>
+    </figure>
+    <figure>
+      <svg id="decilSvg" viewBox="0 0 610 215" role="img" aria-label="Porcentaje del ingreso estimado por decil de anuncios"></svg>
+      <figcaption>Calculado con NTILE en SQL (<a href="#sql-05">consulta 05</a>): el 10 % de anuncios que más factura se lleva el 34,8 % del ingreso estimado, y la mitad superior, el 83,5 %.</figcaption>
+    </figure>
+    <figure>
+      <svg id="seasSvg" viewBox="0 0 640 240" role="img" aria-label="Reseñas por mes en 2023, 2024 y 2025"></svg>
+      <div class="legend" id="seasLegend"></div>
+      <figcaption>De mayo a septiembre se concentra el 65 % de la actividad, y el pico multiplica por 6,9 el valle. Crecimiento interanual: +16,4 % en 2023, +25,7 % en 2024 y +16,4 % en 2025 (<a href="#sql-07">consulta 07</a>).</figcaption>
+    </figure>
+    <figure>
+      <svg id="mapSvg" role="img" aria-label="Mapa de Mallorca por municipio coloreado según el precio mediano por noche"></svg>
+      <div class="maptip" id="mapTip" aria-live="polite">Pasa el cursor o toca un municipio.</div>
+      <div class="legend" id="mapLegend"></div>
+    </figure>
+    <figure>
+      <div class="scroll"><table id="munTable"><thead><tr><th>Municipio</th><th class="r">Anuncios</th><th class="r">Precio mediano</th><th class="r">Ingreso anual mediano</th><th class="r">Con piscina</th></tr></thead><tbody></tbody></table></div>
+      <figcaption>Los 12 municipios con más anuncios. Palma tiene el precio por noche más bajo de la lista y uno de los ingresos anuales más altos, porque trabaja todo el año. Sóller tiene el ingreso mediano más alto: 31.865 €.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ================================================= CONCLUSIONES -->
+  <section class="chapter" id="conclusiones">
+    <div class="chapter-head"><h2>Qué haría con esto un negocio</h2></div>
+    <div class="grid-cards auto">
+      <div class="card"><h3>Hotel</h3><p>Usar el ≈ 25 % de la vista al mar como techo de referencia para el upgrade a habitación con vistas, y vender el aire acondicionado o la piscina como atributos aparte.</p></div>
+      <div class="card"><h3>Gestora vacacional</h3><p>Fijar precio por atributo y por mes de entrada, no por mediana de zona. La diferencia entre la cifra bruta y la controlada evita sobrevalorar una casa.</p></div>
+      <div class="card"><h3>Destino</h3><p>Seguir la concentración de la oferta y el peso del verano para planificar servicios y regulación.</p></div>
+    </div>
+    <div class="stack">
+      <h3>Reprodúcelo</h3>
+<template data-code="py" data-label="terminal">
+python proyecto_airbnb/analisis_mallorca.py proyecto_airbnb/datos proyecto_airbnb   # pandas + modelo
+python proyecto_airbnb/ejecutar_sql.py      proyecto_airbnb/datos proyecto_airbnb   # SQLite + cuadres
+python sitio_src/build.py                                                           # genera esta web
+</template>
+      <p class="muted small">Código en <a href="https://github.com/fileasfox/portfolio" rel="noopener">github.com/fileasfox/portfolio</a>. Datos: <a href="https://insideairbnb.com/get-the-data/" rel="noopener">Inside Airbnb</a> (CC BY 4.0).</p>
+    </div>
+  </section>
+  </div>
+</div>

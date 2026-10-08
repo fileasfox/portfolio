@@ -1,0 +1,86 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Ruta"><a href="index.html">Inicio</a> / <a href="proyectos.html">Proyectos</a> / Churn por ROI</nav>
+  <span class="eyebrow">Proyecto 02, caso real anonimizado</span>
+  <h1>Salud de cuenta y riesgo de churn por ROI</h1>
+  <p class="lead">Cada hotel paga una cuota mensual fija. Si lo que el producto le genera no la cubre, tarde o temprano cancela. El objetivo era verlo venir con meses de antelación, no cuando llega el email de baja.</p>
+  <div class="tags"><span class="tag">BigQuery</span><span class="tag">SQL</span><span class="tag">Looker Studio</span><span class="tag">Definición de métricas</span></div>
+</header>
+
+<div class="stack-lg">
+  <section class="case-block">
+    <h3>Lo primero: separar dos flujos de dinero</h3>
+    <div class="findings">
+      <div class="finding"><b>Lo que paga el hotel</b><p>Una cuota mensual fija según el tipo de hotel, independiente de lo que genere. Es el coste del producto.</p></div>
+      <div class="finding good"><b>Lo que paga el huésped</b><p>Habitación, servicio y upgrade elegidos por el cliente final. Para el hotel es <strong>ingreso</strong>, y es lo que el producto debe justificar.</p></div>
+    </div>
+    <p>Confundirlos es el error más fácil: medir solo los upgrades, o tratar el ingreso del hotel como si fuera nuestro. El ROI compara los dos.</p>
+  </section>
+
+  <section class="case-block">
+    <h3>Definición de la métrica</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Concepto</th><th>Definición</th></tr></thead>
+      <tbody>
+        <tr><td>Ingreso generado</td><td class="wrap">Precio de habitación + upgrade + servicio, con cada sumando a 0 si falta, en EUR y <strong>sin solicitudes canceladas</strong></td></tr>
+        <tr><td>Conversión a EUR</td><td class="wrap">Tasa más reciente por divisa. La tasa está en unidades de divisa por 1 EUR, así que <strong>se divide</strong></td></tr>
+        <tr><td>ROI</td><td class="wrap">Ingreso generado del mes / cuota mensual</td></tr>
+        <tr><td>Lectura</td><td class="wrap">&lt; 1× no cubre la cuota (riesgo); ≥ 1× funciona; ≥ 2× es el objetivo</td></tr>
+        <tr><td>Hoteles con modelo variable</td><td class="wrap">Sin cuota fija el ROI no aplica: se evalúan por conversión (≤ 5 % es riesgo) e ingresos</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="case-block">
+    <h3>Cómo lo resolví</h3>
+    <ol class="steps">
+      <li><p>Acordé la definición con el equipo de cuentas antes de escribir SQL: qué entra en el ingreso y qué no.</p></li>
+      <li><p>Construí la conversión de divisas con la tasa más reciente por moneda y comprobé el sentido de la tasa con un importe conocido.</p></li>
+      <li><p>Excluí canceladas y reservas de prueba con un filtro tolerante a valores nulos.</p></li>
+      <li><p>Validé la tabla de cuotas: todos los identificadores existen en el maestro de hoteles, y salieron cuentas activas sin cuota registrada.</p></li>
+      <li><p>Crucé ROI y conversión y clasifiqué cada hotel con reglas explícitas.</p></li>
+      <li><p>Lo entregué en Looker Studio, filtrable por mes y hotel, con la causa probable para cada responsable de cuenta.</p></li>
+    </ol>
+  </section>
+
+<template data-code="sql" data-label="BigQuery · ingreso y ROI por hotel y mes (nombres simplificados)">
+WITH tasa AS (                                  -- tasa más reciente por divisa
+  SELECT currency, rate
+  FROM currency_rates
+  WHERE base_currency = 'EUR'
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY currency ORDER BY last_update DESC) = 1
+),
+ingreso AS (
+  SELECT
+    b.hotel_id,
+    DATE_TRUNC(b.created_at, MONTH)                                  AS mes,
+    SUM((IFNULL(b.room_price, 0) + IFNULL(b.upgrade_price, 0)
+         + IFNULL(b.service_price, 0)) / t.rate)                     AS ingreso_eur
+  FROM bookings b
+  JOIN tasa t USING (currency)
+  WHERE b.status NOT IN ('Cancelled', 'Cancelled by Client')
+  GROUP BY 1, 2
+)
+SELECT
+  i.hotel_id, i.mes, i.ingreso_eur, f.monthly_fee,
+  SAFE_DIVIDE(i.ingreso_eur, NULLIF(f.monthly_fee, 0))               AS roi,
+  CASE
+    WHEN f.monthly_fee = 0                    THEN 'Variable: ver conversión'
+    WHEN i.ingreso_eur < f.monthly_fee        THEN 'Riesgo'
+    WHEN i.ingreso_eur < 2 * f.monthly_fee    THEN 'Vigilar'
+    ELSE 'Sano'
+  END                                                                AS estado
+FROM ingreso i
+JOIN fees f USING (hotel_id);
+</template>
+
+  <section class="case-block">
+    <h3>Resultado</h3>
+    <p>Una vista mensual de salud de cuenta con tres niveles y una causa probable (poco tráfico, baja conversión o precios bajos). El equipo de cuentas pasa de reaccionar a una baja a preparar la conversación antes de la renovación.</p>
+    <div class="transfer"><h4>Dónde se aplica</h4><p>Cualquier SaaS B2B: valor recibido frente a precio pagado, por cuenta y por mes. Customer Success, Revenue Operations y Account Management.</p></div>
+  </section>
+</div>
+
+<nav class="prevnext" aria-label="Otros proyectos">
+  <a href="mallorca.html"><span>← Anterior</span><b>01 · Vista al mar en Mallorca</b></a>
+  <a class="next" href="caso-cuadre.html"><span>Siguiente →</span><b>03 · El dashboard que contaba el doble</b></a>
+</nav>

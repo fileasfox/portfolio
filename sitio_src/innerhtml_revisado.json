@@ -1,0 +1,27 @@
+{
+  "nota": "Interpolaciones revisadas a mano: constantes, números o plantillas anidadas que ya escapan sus datos.",
+  "revisadas": [
+    "(v / max * 100).toFixed(1)",
+    "a === \"Vista al mar\" ? \" checked\" : \"\"",
+    "c",
+    "c.nota ? `<br><span class=\"muted small\">${esc(c.nota)}</span>` : \"\"",
+    "c.ok ? \"ok\" : \"warn\"",
+    "c.ok ? \"✓\" : \"✗\"",
+    "c.ok ? '<span class=\"ok-mark\">✓ cuadra</span>' : '<span class=\"ko-mark\">✗ revisar</span>'",
+    "d >= 0 ? \"+\" : \"−\"",
+    "i + 1",
+    "i === 0 ? \" checked\" : \"\"",
+    "id === \"04\" ? \" open\" : \"\"",
+    "n === \"Base\" ? \"\" : \"+\"",
+    "q.columnas.length ? fmt(q.filas.length) + \" filas de resultado\" : \"crea la vista\"",
+    "q.columnas.map(c => `<th${typeof q.filas[0][q.columnas.indexOf(c)] === \"number\" ? ' class=\"r\"' : \"\"}>${esc(c)}</th>`).join(\"\")",
+    "q.filas.length",
+    "r.map(v => typeof v === \"number\" ? `<td class=\"r\">${fmt(v, Number.isInteger(v) ? 0 : (Math.abs(v) < 100 ? 1 : 0))}</td>` : `<td>${v == null ? \"-\" : esc(v)}</td>`).join(\"\")",
+    "rows.length",
+    "rows.map((r, i) =>\n        `<tr style=\"--d:${i * 70}ms\" class=\"appear\"><td>${esc(r[0])}</td><td class=\"r\">${fmt(r[1])}</td><td class=\"r\"><span class=\"cellbar\" style=\"--w:${(r[2] / max * 100).toFixed(0)}%\"></span>${fmt(r[2])}</td></tr>`).join(\"\")",
+    "sig[a] ? \"\" : \" (n.s.)\"",
+    "skills.map(s => `<span class=\"tag\">${esc(s)}</span>`).join(\"\")",
+    "t",
+    "w"
+  ]
+}

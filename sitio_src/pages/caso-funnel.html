@@ -1,0 +1,65 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Ruta"><a href="index.html">Inicio</a> / <a href="proyectos.html">Proyectos</a> / Funnel e integraciones</nav>
+  <span class="eyebrow">Proyecto 04, caso real anonimizado</span>
+  <h1>Funnel de invitaciones y alertas de integración</h1>
+  <p class="lead">Las reservas llegan del sistema de cada hotel (PMS o motor de reservas) por API. Si el conector falla, las invitaciones no salen y el hotel pierde ventas sin saberlo. Hay que distinguir si el problema es comercial o técnico.</p>
+  <div class="tags"><span class="tag">SQL</span><span class="tag">APIs REST</span><span class="tag">PMS y motores de reservas</span><span class="tag">Funnels</span></div>
+</header>
+
+<div class="stack-lg">
+  <section class="case-block">
+    <h3>El funnel</h3>
+    <ol class="steps">
+      <li><p><strong>Importada</strong>: la reserva llega desde el conector del hotel.</p></li>
+      <li><p><strong>Notificada</strong>, o no notificada con un motivo (sin email, idioma, reglas del hotel).</p></li>
+      <li><p><strong>Email</strong> enviado, entregado, abierto y clicado.</p></li>
+      <li><p><strong>Acceso</strong> del huésped al flujo de elección de habitación.</p></li>
+      <li><p><strong>Solicitud</strong> de habitación o upgrade.</p></li>
+      <li><p><strong>Gestión</strong> por el hotel: asignada, pendiente o rechazada.</p></li>
+    </ol>
+  </section>
+
+  <section class="case-block">
+    <h3>Síntoma → señal en los datos → responsable</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Fallo típico del conector</th><th>Señal en los datos</th><th>Quién actúa</th></tr></thead>
+      <tbody>
+        <tr><td class="wrap">Bloqueo por cambio de credenciales</td><td class="wrap">Las importaciones caen a cero de un día para otro</td><td>Técnico + hotel</td></tr>
+        <tr><td class="wrap">El conector deja de pasar algunas reservas</td><td class="wrap">Importaciones por debajo de su media reciente</td><td>Técnico</td></tr>
+        <tr><td class="wrap">Emails de huésped vacíos en origen</td><td class="wrap">Sube «no notificada» por falta de email; dominio vacío</td><td>Hotel</td></tr>
+        <tr><td class="wrap">Idioma incorrecto</td><td class="wrap">Aperturas y clics bajos en un mercado concreto</td><td>Hotel + cuentas</td></tr>
+        <tr><td class="wrap">Mapeo de habitaciones u hotel incorrecto</td><td class="wrap">Errores de disponibilidad en los accesos</td><td>Técnico</td></tr>
+      </tbody>
+    </table></div>
+    <p class="muted small">Si el funnel cae de clic hacia abajo con importaciones normales, el problema es comercial: visibilidad, precios o mensaje. Eso va al equipo de cuentas.</p>
+  </section>
+
+  <section class="case-block">
+    <h3>Regla de alerta</h3>
+    <span class="illus">Consulta de ejemplo, simplificada para el portafolio</span>
+<template data-code="sql" data-label="SQL · caída de importaciones por hotel">
+WITH diario AS (
+  SELECT hotel_id, date, importadas,
+         AVG(importadas) OVER (PARTITION BY hotel_id ORDER BY date
+                                   ROWS BETWEEN 7 PRECEDING AND 1 PRECEDING) AS media_7d
+  FROM funnel_diario
+)
+SELECT hotel_id, date, importadas, ROUND(media_7d) AS media_7d
+FROM diario
+WHERE media_7d >= 20                         -- evita alertas en hoteles pequeños
+  AND importadas < 0.5 * media_7d        -- caída de más del 50 %
+ORDER BY date DESC;
+</template>
+  </section>
+
+  <section class="case-block">
+    <h3>Resultado</h3>
+    <p>Una revisión diaria que separa la caída comercial de la técnica y la asigna a quien puede arreglarla. Al cruzarla con el stack tecnológico de cada hotel (motor de reservas, PMS), los fallos se agrupan por proveedor y se detectan los patrones antes.</p>
+    <div class="transfer"><h4>Dónde se aplica</h4><p>Cualquier producto que dependa de integraciones (e-commerce, fintech, marketplaces): distinguir si cae el negocio o la tubería de datos.</p></div>
+  </section>
+</div>
+
+<nav class="prevnext" aria-label="Otros proyectos">
+  <a href="caso-cuadre.html"><span>← Anterior</span><b>03 · El dashboard que contaba el doble</b></a>
+  <a class="next" href="caso-facturacion.html"><span>Siguiente →</span><b>05 · Limpieza de facturación</b></a>
+</nav>

@@ -1,0 +1,83 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Ruta"><a href="index.html">Inicio</a> / <a href="proyectos.html">Proyectos</a> / Dashboard ×2</nav>
+  <span class="eyebrow">Proyecto 03, caso real anonimizado</span>
+  <h1>El dashboard que contaba el doble</h1>
+  <p class="lead">El dashboard de un cliente mostraba unas 2,2 veces más accesos que el informe oficial. Dos cifras para la misma pregunta hacen que nadie se fíe de ninguna.</p>
+  <div class="tags"><span class="tag">BigQuery</span><span class="tag">Modelado de vistas</span><span class="tag">Looker Studio</span><span class="tag">Validación</span></div>
+  <div class="kpis">
+    <div class="kpi"><b>2,2×</b><span>sobreconteo inicial</span></div>
+    <div class="kpi"><b>3</b><span>causas encontradas</span></div>
+    <div class="kpi"><b>0</b><span>diferencia en accesos</span></div>
+    <div class="kpi"><b>&lt; 0,1 %</b><span>diferencia en solicitudes</span></div>
+  </div>
+</header>
+
+<div class="stack-lg">
+  <section class="case-block">
+    <h3>Diagnóstico: aislar antes de culpar a la fuente</h3>
+    <div class="findings">
+      <div class="finding alert"><b>Eventos, no entidades</b><p>La vista contaba cada evento de acceso. Un huésped que entra tres veces contaba tres.</p></div>
+      <div class="finding alert"><b>Únicos sumados entre días</b><p>Sumaba únicos diarios para dar un mes. El total de un rango no coincidía con el informe oficial, que cuenta únicos por mes.</p></div>
+      <div class="finding alert"><b>Filtro de pruebas frágil</b><p>Solo detectaba «test» y «TEST», y un CONCAT con campos nulos descartaba filas enteras sin avisar.</p></div>
+      <div class="finding good"><b>El grano correcto</b><p>Una fila por reserva, más una fila por hotel, mes y localizador de acceso, cada tipo con sus propias columnas.</p></div>
+    </div>
+  </section>
+
+  <section class="case-block">
+    <h3>Una definición oficial por métrica</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Métrica</th><th>Definición</th></tr></thead>
+      <tbody>
+        <tr><td>Solicitudes</td><td class="wrap">Recuento único del localizador externo</td></tr>
+        <tr><td>Habitaciones</td><td class="wrap">Recuento único del localizador interno (una solicitud puede tener varias)</td></tr>
+        <tr><td>Accesos</td><td class="wrap">Recuento único de localizadores que entran al flujo, solo de los tipos de acceso válidos, por hotel y mes</td></tr>
+        <tr><td>Conversión</td><td class="wrap">Solicitudes / accesos, como campo calculado. Nunca un promedio de porcentajes</td></tr>
+        <tr><td>Regla de rangos</td><td class="wrap">Únicos por mes, de modo que el total de un rango = la suma de sus meses</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="case-block">
+    <h3>Cómo lo resolví</h3>
+    <ol class="steps">
+      <li><p>Fijé la referencia: el informe oficial del equipo de cuentas, con las cifras de un hotel concreto mes a mes.</p></li>
+      <li><p>Aislé las filas que diferían entre ambas fuentes, en lugar de comparar solo totales.</p></li>
+      <li><p>Rediseñé la vista con el grano por reserva y la versioné con un nombre nuevo, sin pisar la anterior.</p></li>
+      <li><p>Entregué bloques de validación SQL numerados, cada uno con su resultado esperado en un comentario.</p></li>
+      <li><p>Monté los ratios como campos calculados en Looker Studio, con nombres en el lenguaje del cliente.</p></li>
+    </ol>
+  </section>
+
+  <div class="tabset">
+    <div class="tabs" role="tablist" aria-label="Código del caso">
+      <button type="button" role="tab">Filtro de pruebas</button>
+      <button type="button" role="tab">Únicos por mes (Looker)</button>
+    </div>
+    <div class="tabpanel" role="tabpanel">
+<template data-code="sql" data-label="BigQuery · filtro tolerante a NULL y a mayúsculas">
+WHERE NOT REGEXP_CONTAINS(
+  LOWER(CONCAT(IFNULL(localizador, ''), '|', IFNULL(nombre, ''), '|',
+               IFNULL(apellidos, ''), '|', IFNULL(dominio_email, ''))),
+  r'test')
+-- Sin IFNULL, CONCAT devuelve NULL si falta un campo y la fila desaparece sin avisar.
+</template>
+    </div>
+    <div class="tabpanel" role="tabpanel">
+<template data-code="sql" data-label="Looker Studio · campo calculado «Accesos»">
+COUNT_DISTINCT(CONCAT(acceso_id, "|", CAST(YEAR(fecha) * 100 + MONTH(fecha) AS TEXT)))
+-- Un acceso cuenta una vez por mes: el total de un rango coincide con la suma de sus meses.
+</template>
+    </div>
+  </div>
+
+  <section class="case-block">
+    <h3>Resultado</h3>
+    <p>Accesos idénticos a los del informe oficial en todo el grupo hotelero, y solicitudes con menos de un 0,1 % de diferencia, atribuida al filtro de pruebas. El cliente y el equipo de cuentas vuelven a mirar la misma cifra.</p>
+    <div class="transfer"><h4>Dónde se aplica</h4><p>Cualquier empresa con más de un dashboard: cuadrar contra una referencia antes de construir, fijar el grano y mantener una definición por métrica.</p></div>
+  </section>
+</div>
+
+<nav class="prevnext" aria-label="Otros proyectos">
+  <a href="caso-churn.html"><span>← Anterior</span><b>02 · Churn por ROI</b></a>
+  <a class="next" href="caso-funnel.html"><span>Siguiente →</span><b>04 · Funnel e integraciones</b></a>
+</nav>

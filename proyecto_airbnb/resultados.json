@@ -1,0 +1,501 @@
+{
+  "calidad": {
+    "fecha_extraccion": "2026-07-02",
+    "anuncios": 14817,
+    "columnas": 93,
+    "ids_duplicados": 0,
+    "sin_precio_pct": 25.4,
+    "sin_precio_n": 3760,
+    "precio_p1_p99": [
+      71.0,
+      3870.0
+    ],
+    "precio_max": 22260.0,
+    "sin_licencia_visible_pct": 0.4,
+    "sin_reseñas_pct": 21.7,
+    "reseñas_ltm_mediana_con_precio": 3.0,
+    "reseñas_ltm_mediana_sin_precio": 1.0,
+    "pool_generico_n": 5482
+  },
+  "mercado": {
+    "tipo_alojamiento_pct": {
+      "Entire home/apt": 94.8,
+      "Private room": 4.9,
+      "Hotel room": 0.3
+    },
+    "precio_mediano_noche": 398.0,
+    "capacidad_mediana": 6.0,
+    "anuncios_por_tramo_anfitrion_pct": {
+      "1": 18.7,
+      "2-4": 12.8,
+      "5-19": 14.6,
+      "20+": 53.9
+    },
+    "anfitriones": 3907,
+    "top10_anfitriones_pct_anuncios": 15.0,
+    "ingreso_estimado_mediano_anual": 18300.0,
+    "top10pct_anuncios_pct_ingresos": 34.7,
+    "ocupacion_estimada_mediana_noches": 42.0
+  },
+  "hedonico": {
+    "muestra": 9255,
+    "r2": 0.541,
+    "controles": "capacidad, dormitorios, baños, municipio, tipo de propiedad y mes de entrada",
+    "prima_por_dormitorio_pct": 8.7,
+    "atributos": [
+      {
+        "atributo": "Vista al mar",
+        "prima_pct": 27.2,
+        "ic95": [
+          23.0,
+          31.5
+        ],
+        "pct_anuncios": 13.4,
+        "mediana_con": 504.0,
+        "mediana_sin": 408.0
+      },
+      {
+        "atributo": "Piscina",
+        "prima_pct": 19.1,
+        "ic95": [
+          15.8,
+          22.6
+        ],
+        "pct_anuncios": 71.6,
+        "mediana_con": 488.0,
+        "mediana_sin": 282.0
+      },
+      {
+        "atributo": "Aire acondicionado",
+        "prima_pct": 12.0,
+        "ic95": [
+          9.4,
+          14.6
+        ],
+        "pct_anuncios": 72.3,
+        "mediana_con": 436.0,
+        "mediana_sin": 382.0
+      },
+      {
+        "atributo": "Barbacoa",
+        "prima_pct": 10.6,
+        "ic95": [
+          7.4,
+          14.0
+        ],
+        "pct_anuncios": 69.3,
+        "mediana_con": 491.0,
+        "mediana_sin": 285.0
+      },
+      {
+        "atributo": "Cargador VE",
+        "prima_pct": 5.1,
+        "ic95": [
+          -2.9,
+          13.8
+        ],
+        "pct_anuncios": 1.6,
+        "mediana_con": 521.0,
+        "mediana_sin": 417.0
+      },
+      {
+        "atributo": "Jacuzzi",
+        "prima_pct": 4.7,
+        "ic95": [
+          -0.4,
+          10.1
+        ],
+        "pct_anuncios": 4.5,
+        "mediana_con": 595.0,
+        "mediana_sin": 413.0
+      },
+      {
+        "atributo": "Parking gratuito",
+        "prima_pct": -0.7,
+        "ic95": [
+          -3.5,
+          2.2
+        ],
+        "pct_anuncios": 78.1,
+        "mediana_con": 434.0,
+        "mediana_sin": 366.0
+      },
+      {
+        "atributo": "Acceso a playa",
+        "prima_pct": -1.9,
+        "ic95": [
+          -4.3,
+          0.6
+        ],
+        "pct_anuncios": 26.6,
+        "mediana_con": 362.0,
+        "mediana_sin": 439.0
+      },
+      {
+        "atributo": "Gimnasio",
+        "prima_pct": -3.5,
+        "ic95": [
+          -9.8,
+          3.3
+        ],
+        "pct_anuncios": 2.4,
+        "mediana_con": 611.0,
+        "mediana_sin": 415.0
+      }
+    ]
+  },
+  "simulador": {
+    "const": 5.126553712901685,
+    "smearing": 1.1621,
+    "num": {
+      "accommodates": 0.04604413536731253,
+      "bedrooms": 0.0836420527130807,
+      "bathrooms": 0.0879997411747887
+    },
+    "num_rango": {
+      "accommodates": [
+        2,
+        10,
+        6
+      ],
+      "bedrooms": [
+        1,
+        6,
+        3
+      ],
+      "bathrooms": [
+        1,
+        5,
+        2
+      ]
+    },
+    "atributos": {
+      "Piscina": 0.17507555086245907,
+      "Vista al mar": 0.2402805387084711,
+      "Acceso a playa": -0.01887324753155356,
+      "Aire acondicionado": 0.11294033514842229,
+      "Jacuzzi": 0.0459770068145299,
+      "Parking gratuito": -0.0073610838904075715,
+      "Barbacoa": 0.10112426271288674,
+      "Cargador VE": 0.050146188217659794,
+      "Gimnasio": -0.03523740415054717
+    },
+    "municipio": {
+      "Alaró": 0.0,
+      "Alcúdia": -0.00810890741066106,
+      "Algaida": 0.1519201230690048,
+      "Andratx": 0.14889725566148743,
+      "Ariany": -0.044108112373476414,
+      "Artà": -0.06405976537427749,
+      "Banyalbufar": -0.19054321705831012,
+      "Binissalem": -0.0675244413592454,
+      "Bunyola": -0.08507616882750066,
+      "Búger": -0.17847555140677993,
+      "Calvià": 0.10040679661144483,
+      "Campanet": -0.10469165235853073,
+      "Campos": -0.08983877982370826,
+      "Capdepera": 0.06526451756696323,
+      "Consell": -0.001064797998703515,
+      "Costitx": -0.10591850794468566,
+      "Deyá": 0.2614920828934581,
+      "Escorca": -0.15646365175331434,
+      "Esporles": 0.01985675474566212,
+      "Estellencs": -0.44046055135220874,
+      "Felanitx": -0.09721366404666687,
+      "Fornalutx": 0.07229968282874946,
+      "Inca": -0.1208087531825841,
+      "Lloret de Vistalegre": -0.36086042494321363,
+      "Lloseta": -0.026627166201562014,
+      "Llubí": -0.2638110742584404,
+      "Llucmajor": -0.10366810789829811,
+      "Manacor": -0.16628030871542704,
+      "Mancor de la Vall": 0.019876521706036765,
+      "Maria de la Salut": -0.1383087372126425,
+      "Marratxí": -0.018936122396560146,
+      "Montuïri": -0.03972441177150477,
+      "Muro": -0.11102799106607042,
+      "Palma de Mallorca": -0.1271093145617455,
+      "Petra": -0.25199086307093194,
+      "Pollença": -0.07587760472463534,
+      "Porreres": -0.019875103856414986,
+      "Puigpunyent": -0.13499339432873614,
+      "Sa Pobla": -0.22364558152462122,
+      "Sant Joan": -0.13720502456203854,
+      "Sant Llorenç des Cardassar": -0.14660140140424158,
+      "Santa Eugènia": 0.29284423894028333,
+      "Santa Margalida": -0.128604293034845,
+      "Santa María del Camí": -0.09406416934801988,
+      "Santanyí": 0.0084814908386118,
+      "Selva": -0.10790256950632171,
+      "Sencelles": -0.1542110866903909,
+      "Ses Salines": -0.040499884114979845,
+      "Sineu": -0.16454963214433893,
+      "Son Servera": 0.015571898431885084,
+      "Sóller": 0.2077942750567348,
+      "Valldemossa": -0.05446017197198297,
+      "Vilafranc de Bonany": -0.0640283920218399
+    },
+    "municipio_n": {
+      "Alaró": 55,
+      "Alcúdia": 840,
+      "Algaida": 59,
+      "Andratx": 131,
+      "Ariany": 46,
+      "Artà": 222,
+      "Banyalbufar": 44,
+      "Binissalem": 45,
+      "Bunyola": 46,
+      "Búger": 77,
+      "Calvià": 269,
+      "Campanet": 92,
+      "Campos": 287,
+      "Capdepera": 239,
+      "Consell": 13,
+      "Costitx": 39,
+      "Deyá": 52,
+      "Escorca": 16,
+      "Esporles": 29,
+      "Estellencs": 8,
+      "Felanitx": 449,
+      "Fornalutx": 61,
+      "Inca": 141,
+      "Lloret de Vistalegre": 30,
+      "Lloseta": 33,
+      "Llubí": 57,
+      "Llucmajor": 339,
+      "Manacor": 524,
+      "Mancor de la Vall": 30,
+      "Maria de la Salut": 41,
+      "Marratxí": 61,
+      "Montuïri": 28,
+      "Muro": 193,
+      "Palma de Mallorca": 634,
+      "Petra": 97,
+      "Pollença": 1379,
+      "Porreres": 46,
+      "Puigpunyent": 28,
+      "Sa Pobla": 153,
+      "Sant Joan": 30,
+      "Sant Llorenç des Cardassar": 157,
+      "Santa Eugènia": 10,
+      "Santa Margalida": 368,
+      "Santa María del Camí": 24,
+      "Santanyí": 683,
+      "Selva": 149,
+      "Sencelles": 68,
+      "Ses Salines": 160,
+      "Sineu": 51,
+      "Son Servera": 191,
+      "Sóller": 325,
+      "Valldemossa": 80,
+      "Vilafranc de Bonany": 26
+    },
+    "tipo": {
+      "Apartamento": 0.0,
+      "Casa / otros": 0.16499708051977888,
+      "Villa / finca": 0.31750697340400247
+    },
+    "mes": {
+      "2026-06": 0.0,
+      "2026-07": -0.01763893422308388,
+      "2026-08": -0.15977111609681957,
+      "2026-09": -0.464293592168495,
+      "2026-10": -0.7114863855544313,
+      "2026-11": -0.8957040780386759,
+      "2026-12": -0.6077060805504826,
+      "2027-01": -0.5437832795970108,
+      "2027-02": -0.5801317411579034,
+      "2027-03": -0.6655256200014398,
+      "2027-04": -0.7237052905379598,
+      "2027-05": -0.5081030579399721,
+      "2027-06": -0.4102895213768411
+    }
+  },
+  "reseñas_por_mes": {
+    "2023": [
+      1126,
+      1278,
+      2123,
+      6096,
+      7031,
+      7335,
+      7821,
+      7708,
+      7545,
+      6553,
+      2212,
+      1204
+    ],
+    "2024": [
+      1426,
+      1509,
+      2916,
+      6896,
+      9243,
+      9715,
+      9536,
+      9582,
+      9579,
+      8276,
+      2774,
+      1486
+    ],
+    "2025": [
+      1571,
+      1826,
+      3527,
+      8011,
+      10265,
+      11452,
+      11129,
+      11255,
+      11388,
+      9684,
+      3145,
+      1614
+    ]
+  },
+  "reseñas_crecimiento_pct": {
+    "2024": 25.7,
+    "2025": 16.4
+  },
+  "estacionalidad_ratio_pico_valle": 6.9,
+  "temporada_alta_pct_reseñas": 65.1,
+  "calendario_no_disponible_pct": [
+    {
+      "mes": "2026-07",
+      "pct": 70.7
+    },
+    {
+      "mes": "2026-08",
+      "pct": 69.1
+    },
+    {
+      "mes": "2026-09",
+      "pct": 51.9
+    },
+    {
+      "mes": "2026-10",
+      "pct": 38.6
+    },
+    {
+      "mes": "2026-11",
+      "pct": 41.7
+    },
+    {
+      "mes": "2026-12",
+      "pct": 47.3
+    },
+    {
+      "mes": "2027-01",
+      "pct": 52.0
+    },
+    {
+      "mes": "2027-02",
+      "pct": 51.3
+    },
+    {
+      "mes": "2027-03",
+      "pct": 47.5
+    },
+    {
+      "mes": "2027-04",
+      "pct": 41.8
+    },
+    {
+      "mes": "2027-05",
+      "pct": 42.8
+    },
+    {
+      "mes": "2027-06",
+      "pct": 42.6
+    }
+  ],
+  "municipios_top_anuncios": [
+    {
+      "municipio": "Pollença",
+      "anuncios": 2271.0,
+      "precio_mediano": 427.0,
+      "ingreso_mediano": 15156.0,
+      "piscina_pct": 80.0
+    },
+    {
+      "municipio": "Alcúdia",
+      "anuncios": 1372.0,
+      "precio_mediano": 427.0,
+      "ingreso_mediano": 18412.0,
+      "piscina_pct": 60.0
+    },
+    {
+      "municipio": "Santanyí",
+      "anuncios": 1014.0,
+      "precio_mediano": 416.0,
+      "ingreso_mediano": 16794.0,
+      "piscina_pct": 81.0
+    },
+    {
+      "municipio": "Palma de Mallorca",
+      "anuncios": 949.0,
+      "precio_mediano": 262.0,
+      "ingreso_mediano": 24233.0,
+      "piscina_pct": 34.0
+    },
+    {
+      "municipio": "Manacor",
+      "anuncios": 800.0,
+      "precio_mediano": 351.0,
+      "ingreso_mediano": 14618.0,
+      "piscina_pct": 78.0
+    },
+    {
+      "municipio": "Felanitx",
+      "anuncios": 676.0,
+      "precio_mediano": 472.0,
+      "ingreso_mediano": 15828.0,
+      "piscina_pct": 81.0
+    },
+    {
+      "municipio": "Santa Margalida",
+      "anuncios": 631.0,
+      "precio_mediano": 329.0,
+      "ingreso_mediano": 16940.0,
+      "piscina_pct": 52.0
+    },
+    {
+      "municipio": "Capdepera",
+      "anuncios": 522.0,
+      "precio_mediano": 383.0,
+      "ingreso_mediano": 12816.0,
+      "piscina_pct": 66.0
+    },
+    {
+      "municipio": "Llucmajor",
+      "anuncios": 515.0,
+      "precio_mediano": 438.0,
+      "ingreso_mediano": 21846.0,
+      "piscina_pct": 85.0
+    },
+    {
+      "municipio": "Campos",
+      "anuncios": 473.0,
+      "precio_mediano": 449.0,
+      "ingreso_mediano": 18360.0,
+      "piscina_pct": 84.0
+    },
+    {
+      "municipio": "Sóller",
+      "anuncios": 455.0,
+      "precio_mediano": 350.0,
+      "ingreso_mediano": 31865.0,
+      "piscina_pct": 52.0
+    },
+    {
+      "municipio": "Artà",
+      "anuncios": 432.0,
+      "precio_mediano": 407.0,
+      "ingreso_mediano": 15096.0,
+      "piscina_pct": 72.0
+    }
+  ],
+  "municipios_n": 53
+}

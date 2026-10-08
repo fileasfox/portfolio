@@ -1,0 +1,20 @@
+# Datos crudos de Inside Airbnb (se descargan, no se versionan) y base SQLite generada
+proyecto_airbnb/datos/
+proyecto_airbnb/mallorca.db
+
+# Foto original (solo se publican las versiones optimizadas sin metadatos de sitio_src/assets/img)
+foto/
+
+# Material de trabajo: capturas y scripts de revisión, copias para el Artifact de Claude
+revision/
+artifact/
+portfolio.html
+.playwright-cli/
+.claude/
+
+# Python
+__pycache__/
+*.pyc
+
+# Patrones sensibles que usa la auditoría (no se publican)
+sitio_src/privado/

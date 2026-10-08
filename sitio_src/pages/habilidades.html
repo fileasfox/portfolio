@@ -1,0 +1,80 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Ruta"><a href="index.html">Inicio</a> / Habilidades</nav>
+  
+  <h1>Habilidades, con pruebas</h1>
+  <p class="lead">Cada habilidad tiene un nivel honesto y un enlace a dónde se ve aplicada. «Diario» es lo que uso en el trabajo, «Proyecto» lo que he aplicado en este portafolio y «Formación» lo que estoy aprendiendo.</p>
+  <div class="legend"><span class="lv diario">Diario</span><span class="lv proyecto">Proyecto</span><span class="lv formacion">Formación</span></div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Secciones">
+    <span class="eyebrow">En esta página</span>
+    <a href="#datos" class="on">Datos</a>
+    <a href="#negocio">Negocio y técnica</a>
+    <a href="#metodo">Método</a>
+    <a href="#formacion">Formación</a>
+    <a href="#portal">Este portal</a>
+  </nav>
+  <div>
+    <section class="chapter" id="datos">
+      <div class="chapter-head"><h2>Datos y análisis</h2></div>
+      <div class="matrix">
+        <div class="mrow"><div><h3>SQL</h3><p>CTE, funciones de ventana (ROW_NUMBER, NTILE, LAG), medianas sin MEDIAN(), agregados condicionales e índices.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="mallorca.html#sql">8 consultas y consola SQL</a><a href="caso-churn.html">ROI en BigQuery</a><a href="caso-cuadre.html">Cuadre de vistas</a></div></div>
+        <div class="mrow"><div><h3>BigQuery</h3><p>Vistas versionadas, conversión de divisas, filtros tolerantes a nulos y QUALIFY.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="caso-churn.html">Churn por ROI</a><a href="caso-cuadre.html">Dashboard ×2</a></div></div>
+        <div class="mrow"><div><h3>Python y pandas</h3><p>Limpieza, parseo de JSON, groupby/agg, cortes por tramos, cuadres entre fuentes.</p></div><span class="lv proyecto">Proyecto</span><div class="ev"><a href="mallorca.html#python">Código del proyecto</a><a href="caso-facturacion.html">Limpieza de facturación</a></div></div>
+        <div class="mrow"><div><h3>Estadística aplicada</h3><p>Regresión con variables de control, errores robustos, sesgo de selección e interpretación de coeficientes.</p></div><span class="lv proyecto">Proyecto</span><div class="ev"><a href="mallorca.html#modelo">Modelo y simulador</a></div></div>
+        <div class="mrow"><div><h3>Looker Studio</h3><p>Informes para cliente final: ratios como campos calculados, filtros por fecha y hotel, una definición por métrica.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="caso-cuadre.html">Únicos por mes</a></div></div>
+        <div class="mrow"><div><h3>Excel y Google Sheets</h3><p>Análisis de rendimiento e informes para cuentas.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="cv.html">Experiencia</a></div></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="negocio">
+      <div class="chapter-head"><h2>Negocio y técnica</h2></div>
+      <div class="matrix">
+        <div class="mrow"><div><h3>Negocio hotelero</h3><p>Distribución, motores de reservas, upselling por atributos, ROI de un SaaS para el hotel.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="mallorca.html">Pricing por atributo</a><a href="caso-churn.html">ROI por hotel</a></div></div>
+        <div class="mrow"><div><h3>Integraciones</h3><p>APIs REST, PMS y motores de reservas: validación de flujos de datos e incidencias de sincronización.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="caso-funnel.html">Alertas de conectores</a></div></div>
+        <div class="mrow"><div><h3>Web analytics</h3><p>Google Tag Manager, Data Layer y JavaScript para medir funnels y validar la captura de eventos.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="cv.html">Experiencia</a></div></div>
+        <div class="mrow"><div><h3>Desarrollo web</h3><p>HTML, CSS y JavaScript sin frameworks; C# y .NET en el ciclo de DAW.</p></div><span class="lv formacion">Formación</span><div class="ev"><a href="#portal">Este portal</a></div></div>
+        <div class="mrow"><div><h3>Comunicación con cliente</h3><p>Revisiones trimestrales (QBR) con dirección de cadenas hoteleras: de la cifra a la decisión.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="cv.html">Experiencia</a></div></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="metodo">
+      <div class="chapter-head"><h2>Cómo trabajo</h2><p>Conceptos que aplico y que se pueden ver en los proyectos.</p></div>
+      <div class="concepts">
+        <span>Cuadrar antes de construir</span><span>Una definición por métrica</span><span>Grano de la vista</span><span>Únicos por periodo</span><span>Filtros NULL-seguros</span><span>Sesgo de selección</span><span>Variables de control</span><span>Errores robustos</span><span>Bruto frente a controlado</span><span>Vistas versionadas</span><span>Validaciones con resultado esperado</span><span>Del dato a la acción</span>
+      </div>
+      <div class="callout"><h3>Un ejemplo</h3><p>En el proyecto Mallorca, el primer cuadre SQL-pandas falló por un redondeo (328,5 €), y la primera versión del modelo daba a la piscina una prima negativa por un fallo de etiquetado. En los dos casos, el error estaba en el dato o en el método, y documentarlo es parte del trabajo.</p></div>
+    </section>
+
+    <section class="chapter" id="formacion">
+      <div class="chapter-head"><h2>Formación</h2><p>Lo que aporta cada pieza al perfil.</p></div>
+      <div class="grid-cards auto">
+        <div class="card"><span class="idx">2021 - 2025, UIB</span><h3>Grado en Turismo</h3><p>Entender el negocio: distribución, estacionalidad, experiencia de cliente y transformación digital del sector. Es lo que da sentido a las cifras.</p></div>
+        <div class="card"><span class="idx">2026</span><h3>Desarrollo de Aplicaciones Web</h3><p>C#, .NET, HTML, CSS y JavaScript. La base para construir herramientas propias, como este portal.</p></div>
+        <div class="card"><span class="idx">2026, Google</span><h3>Foundations of Data Science</h3><p>Ciclo de un proyecto de datos, estadística y comunicación de resultados.</p></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="portal">
+      <div class="chapter-head"><h2>Cómo está hecho este portal</h2><p>Sin plantillas ni frameworks: un generador en Python y JavaScript propio.</p></div>
+      <ol class="stepper five" aria-label="Proceso"><li><b>Análisis</b><span>Python escribe los resultados en JSON</span><span class="tool">pandas</span></li><li><b>Generador</b><span>build.py une las páginas con cabecera, pie y datos</span><span class="tool">Python</span></li><li><b>Gráficos</b><span>SVG dibujado con JavaScript a partir del JSON</span><span class="tool">JS y SVG</span></li><li><b>Consola SQL</b><span>SQLite compilado a JavaScript, en tu navegador</span><span class="tool">sql.js</span></li><li><b>Diseño</b><span>Paleta UIB, cristal tipo macOS, tema claro y oscuro</span><span class="tool">CSS</span></li></ol>
+<template data-code="py" data-label="build.py · simplificado">
+for fichero, titulo, desc, _ in PAGINAS:
+    contenido = (SRC / "pages" / fichero).read_text(encoding="utf-8")
+    html = plantilla(titulo, desc, cabecera(fichero), contenido, PIE)
+    (OUT / fichero).write_text(html, encoding="utf-8")
+
+# Los resultados del análisis viajan a la web como datos, no copiados a mano
+datos = {"res": resultados, "sql": sql_resultados, "mapa": mapa}
+(OUT / "assets" / "datos.js").write_text("window.PF = " + json.dumps(datos) + ";")
+</template>
+      <div class="stack-sm">
+        <h3>Auditoría automática antes de publicar</h3>
+        <p class="muted"><span class="mono">auditoria.py</span> revisa la web generada: secretos, datos personales, nombres internos del empleador, enlaces y scripts externos, CSP, sumideros de JavaScript, metadatos de imágenes y que cualquier sección esté a 3 clics o menos. Si un control falla, no se publica.</p>
+        <div class="audit" id="auditList"></div>
+      </div>
+      <p class="muted small">Las tablas, los gráficos, la consola y el simulador leen directamente los resultados del análisis: si cambian los datos, basta con volver a ejecutar el análisis y el generador.</p>
+    </section>
+  </div>
+</div>

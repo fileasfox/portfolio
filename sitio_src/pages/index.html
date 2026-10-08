@@ -1,0 +1,144 @@
+<div class="wrap">
+<section class="hero" aria-labelledby="h-nombre">
+  <p class="hero-tag">Datos que mueven hoteles.</p>
+  <h1 class="giant" id="h-nombre"><span class="sr">Matteo Eiras Pé, Data &amp; Performance Analyst</span><span aria-hidden="true">E</span><span aria-hidden="true">I</span><span aria-hidden="true">R</span><span aria-hidden="true">A</span><span aria-hidden="true">S<b class="dot">.</b></span><!--RECORTE--></h1>
+  <div class="hero-foot">
+    <div class="intro">
+      <p class="role"><strong>Matteo Eiras Pé.</strong> Turismo por la UIB, datos y web. Mido si los hoteles sacan valor de un SaaS y construyo las herramientas para verlo.</p>
+      <div class="actions">
+        <a class="btn" href="proyectos.html">Ver proyectos <span class="arr" aria-hidden="true">→</span></a>
+        <a class="link" href="cv.html">Ver CV <span aria-hidden="true">→</span></a>
+      </div>
+    </div>
+    <p class="hero-side" aria-hidden="true">Data &amp; Performance Analyst</p>
+  </div>
+
+  <div class="lab">
+    <div class="lab-head"><h2>Pruébalo con datos reales</h2><span class="eyebrow">14.817 anuncios de Mallorca</span></div>
+    <div class="demo" id="demo">
+      <div class="demo-top">
+        <div class="demo-tabs" role="tablist" aria-label="Demostraciones interactivas con datos reales">
+          <button type="button" role="tab" id="t1" aria-controls="p1">Simulador</button>
+          <button type="button" role="tab" id="t2" aria-controls="p2">SQL</button>
+          <button type="button" role="tab" id="t3" aria-controls="p3">Mapa</button>
+          <button type="button" role="tab" id="t4" aria-controls="p4">CSS en vivo</button>
+        </div>
+      </div>
+      <div class="demo-body">
+        <div role="tabpanel" id="p1" aria-labelledby="t1" class="dp dp-sim">
+          <div class="stack">
+            <p class="dp-intro">¿Cuánto cobra un apartamento en Mallorca en julio? Cambia la zona, el tamaño y los atributos.</p>
+            <div class="sim-row two">
+              <div class="field"><label for="hMun">Municipio</label><select id="hMun"></select></div>
+              <div class="field"><label for="hDor">Dormitorios <output id="hDorOut" for="hDor"></output></label><input type="range" id="hDor" step="1"></div>
+            </div>
+            <div class="switches grid" id="hAttrs" role="group" aria-label="Atributos"></div>
+          </div>
+          <div class="dp-out" aria-live="polite">
+            <span class="eyebrow">Precio estimado por noche</span>
+            <div class="big" id="hPrice">-</div>
+            <div class="hbars" id="hBars"></div>
+            <a href="mallorca.html#modelo" class="dp-link">Cómo se calcula →</a>
+          </div>
+        </div>
+        <div role="tabpanel" id="p2" aria-labelledby="t2" class="dp dp-sql" hidden>
+          <div class="code"><div class="code-bar"><span>SQLite, consulta 04</span><button type="button" id="hRun">▶ Ver resultado</button></div><pre><code id="hSql"></code></pre></div>
+          <div class="dp-res" id="hSqlOut" aria-live="polite"><p class="muted small pad">Pulsa «Ver resultado» para ver lo que devuelve la consulta.</p></div>
+        </div>
+        <div role="tabpanel" id="p3" aria-labelledby="t3" class="dp dp-map" hidden>
+          <svg id="hMap" role="img" aria-label="Mapa de Mallorca coloreado por precio mediano por noche"></svg>
+          <div class="stack-sm">
+            <p class="dp-intro">Precio mediano por noche en los 53 municipios. Pasa el cursor, toca o recorre con el tabulador.</p>
+            <p class="maptip" id="hTip" aria-live="polite">Palma de Mallorca: 262 € de mediana</p>
+            <div class="legend" id="hLegend"></div>
+            <a href="mallorca.html#hallazgos" class="dp-link">Ver todos los hallazgos →</a>
+          </div>
+        </div>
+        <div role="tabpanel" id="p4" aria-labelledby="t4" class="dp dp-css" hidden>
+          <div class="stack">
+            <p class="dp-intro">Esta ventana es HTML y CSS. Cambia sus propiedades y mira el código que se aplica.</p>
+            <div class="field"><label for="cRadius">Radio de las esquinas <output id="cRadiusOut" for="cRadius"></output></label><input type="range" id="cRadius" min="0" max="32" value="0"></div>
+            <div class="field"><label for="cBorder">Grosor del borde <output id="cBorderOut" for="cBorder"></output></label><input type="range" id="cBorder" min="1" max="6" value="1"></div>
+            <div class="field"><label for="cAccent">Tono del acento <output id="cAccentOut" for="cAccent"></output></label><input type="range" id="cAccent" min="4" max="10" value="6"></div>
+            <div><button class="btn sm ghost" type="button" id="cReset">Restablecer</button></div>
+          </div>
+          <div class="code"><div class="code-bar"><span>styles.css en vivo</span></div><pre><code id="hCss"></code></pre></div>
+        </div>
+      </div>
+      <div class="demo-foot"><span>HTML, CSS, SVG y JavaScript sin librerías</span><span>Datos: Inside Airbnb, Mallorca 2026</span></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<div class="marquee" aria-label="Herramientas: SQL, BigQuery, Python, pandas, Looker Studio, Google Tag Manager, HTML, CSS, JavaScript, SQLite, APIs REST, Excel"><div class="track" aria-hidden="true"><span>SQL</span><i aria-hidden="true"></i><span>BigQuery</span><i aria-hidden="true"></i><span>Python</span><i aria-hidden="true"></i><span>pandas</span><i aria-hidden="true"></i><span>Looker Studio</span><i aria-hidden="true"></i><span>Google Tag Manager</span><i aria-hidden="true"></i><span>HTML</span><i aria-hidden="true"></i><span>CSS</span><i aria-hidden="true"></i><span>JavaScript</span><i aria-hidden="true"></i><span>SQLite</span><i aria-hidden="true"></i><span>APIs REST</span><i aria-hidden="true"></i><span>Excel</span><i aria-hidden="true"></i><span>SQL</span><i aria-hidden="true"></i><span>BigQuery</span><i aria-hidden="true"></i><span>Python</span><i aria-hidden="true"></i><span>pandas</span><i aria-hidden="true"></i><span>Looker Studio</span><i aria-hidden="true"></i><span>Google Tag Manager</span><i aria-hidden="true"></i><span>HTML</span><i aria-hidden="true"></i><span>CSS</span><i aria-hidden="true"></i><span>JavaScript</span><i aria-hidden="true"></i><span>SQLite</span><i aria-hidden="true"></i><span>APIs REST</span><i aria-hidden="true"></i><span>Excel</span><i aria-hidden="true"></i></div></div>
+
+<div class="wrap">
+<section class="section about" aria-labelledby="h-about">
+  <h2 id="h-about">Sobre mí <span>del turismo a los datos</span></h2>
+  <div>
+    <div class="text">
+      <p>Me gradué en <strong>Turismo en la UIB</strong> y entré en un SaaS hotelero. Allí pasé de coordinar implantaciones a medir si los hoteles sacan valor del producto, con <strong>SQL, BigQuery y Looker Studio</strong>.</p>
+      <p>Ese recorrido me da tres cosas a la vez: entiendo el negocio, trabajo con los datos y sé construir lo que hace falta para medirlo, como este portafolio.</p>
+      <div class="actions"><a class="link" href="habilidades.html">Habilidades con pruebas →</a><a class="link" href="cv.html">CV completo →</a></div>
+    </div>
+    <div class="stats">
+      <div><b data-n="370" data-suf="">370</b><span>hoteles en cartera</span></div>
+      <div><b data-n="170" data-suf="+">170+</b><span>implantaciones</span></div>
+      <div><b data-n="300" data-suf="+">300+</b><span>incidencias resueltas</span></div>
+      <div><b data-n="5" data-suf="">5</b><span>idiomas</span></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<section class="band" aria-label="Accesos rápidos">
+  <div class="wrap">
+    <a href="mallorca.html"><span class="thumb"><svg id="bandMap" role="img" aria-label="Mallorca coloreada por precio"></svg></span><span><h3>Datos públicos</h3><p>Un estudio completo, de los ficheros crudos al modelo.</p><span class="go">Ver proyecto →</span></span></a>
+    <a href="proyectos.html"><span class="thumb"><span class="num">4<small>casos reales</small></span></span><span><h3>Casos reales</h3><p>Churn, cuadre de métricas, alertas y limpieza.</p><span class="go">Ver casos →</span></span></a>
+    <a href="habilidades.html"><span class="thumb"><pre><b>SELECT</b>
+  municipio,
+  <b>ROW_NUMBER</b>()
+<b>OVER</b> (...)</pre></span><span><h3>Habilidades</h3><p>SQL, Python, BI y web, con un enlace a cada prueba.</p><span class="go">Ver habilidades →</span></span></a>
+  </div>
+</section>
+
+<section class="feature" aria-labelledby="h-dest">
+  <div class="wrap">
+    <div class="copy">
+      <span class="eyebrow">Proyecto destacado</span>
+      <h2 class="big-type" id="h-dest">Vista al mar, <em>+27 %</em></h2>
+      <p class="lead">Separé el valor de cada atributo de un alojamiento del tamaño, la zona y la temporada. Comparando medianas, la piscina parecía valer un 73 %; con controles vale un 19 %.</p>
+      <div class="actions"><a class="btn" href="mallorca.html">Ver el proyecto <span class="arr" aria-hidden="true">→</span></a><a class="link" href="mallorca.html#sql">Abrir la consola SQL →</a></div>
+    </div>
+    <figure>
+      <svg data-chart="prima" role="img" aria-label="Prima de precio estimada por atributo con intervalo de confianza del 95 %"></svg>
+      <figcaption>Prima de precio por atributo, con intervalo de confianza del 95 %. En gris, lo que no se distingue de cero.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<div class="wrap">
+<section class="section" aria-label="Cómo trabajo">
+  <div class="method">
+    <div><b>4/4</b><h3>Cuadrar antes de construir</h3><p>Cada cifra clave se calcula por dos vías, SQL y pandas, antes de publicarla.</p></div>
+    <div><b>1</b><h3>Una definición por métrica</h3><p>Una fórmula escrita y una sola fuente por KPI, sin promediar porcentajes.</p></div>
+    <div><b>3,8<em>×</em></b><h3>Bruto frente a controlado</h3><p>La cifra sin controles sobrevaloraba la piscina casi cuatro veces.</p></div>
+    <div><b>23/23</b><h3>Auditado antes de publicar</h3><p>Seguridad, datos personales y navegación revisados de forma automática.</p></div>
+  </div>
+</section>
+
+<section class="section" aria-labelledby="h-casos">
+  <div class="section-head"><h2 id="h-casos">Proyectos y casos</h2><a class="link" href="proyectos.html">Todos, con filtros →</a></div>
+  <!--CASOS-->
+</section>
+
+
+</div>
+
+<section class="cta" aria-labelledby="h-cta">
+  <div class="wrap">
+    <div><h2 id="h-cta">¿Hablamos?</h2><p>Data Analyst, BI o Customer Success Analytics en turismo, travel tech o SaaS.</p></div>
+    <div class="actions"><a class="btn" href="cv.html#contacto">Contacto <span class="arr" aria-hidden="true">→</span></a><a class="btn ghost" href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener">LinkedIn</a></div>
+  </div>
+</section>

@@ -1,0 +1,73 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Ruta"><a href="index.html">Inicio</a> / <a href="proyectos.html">Proyectos</a> / Limpieza de facturación</nav>
+  <span class="eyebrow">Proyecto 05, caso real anonimizado</span>
+  <h1>Limpieza reproducible de datos de facturación</h1>
+  <p class="lead">La cuota y el stack tecnológico de cada cliente vivían en una hoja mantenida a mano. Para usarlos en el análisis de ROI hacía falta cargarlos en BigQuery sin errores, y poder repetir la carga cada vez que la hoja cambie.</p>
+  <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">Expresiones regulares</span><span class="tag">BigQuery</span></div>
+</header>
+
+<div class="stack-lg">
+  <section class="case-block">
+    <h3>Problemas de la hoja original</h3>
+    <div class="findings">
+      <div class="finding alert"><b>Formatos</b><p>Decimales con coma y valores «TBC» en campos numéricos.</p></div>
+      <div class="finding alert"><b>Nombres inconsistentes</b><p>El mismo proveedor escrito de varias formas y desarrollos propios con descripciones libres.</p></div>
+      <div class="finding alert"><b>Datos personales</b><p>Emails de personas en un campo que debía contener el nombre de una empresa.</p></div>
+      <div class="finding alert"><b>Nombres que no cruzan</b><p>Los nombres de hotel no coincidían con la base de datos por fechas, códigos y tildes. La unión tenía que ser por identificador.</p></div>
+    </div>
+  </section>
+
+  <section class="case-block">
+    <h3>Reglas de limpieza</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Regla</th><th>Antes</th><th>Después</th></tr></thead>
+      <tbody>
+        <tr><td>Decimal</td><td class="mono">"1.234,50"</td><td class="mono">1234.50</td></tr>
+        <tr><td>Pendiente</td><td class="mono">TBC</td><td class="mono">NULL</td></tr>
+        <tr><td>Proveedor unificado</td><td class="mono">Synxis · SYNXIS</td><td class="mono">SynXis</td></tr>
+        <tr><td>Desarrollo propio</td><td class="mono">Custom (web del hotel)</td><td class="mono">Custom</td></tr>
+        <tr><td>Variantes de un PMS</td><td class="mono">Opera Cloud v5 · OperaCloud</td><td class="mono">Opera Cloud</td></tr>
+        <tr><td>Dato personal</td><td class="mono">email de una persona</td><td class="mono">Agencia externa</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="case-block">
+    <h3>Cómo lo resolví</h3>
+    <ol class="steps">
+      <li><p>Un script con una sola entrada (la hoja original) y tres salidas: el fichero limpio, las filas excluidas y un log con cada cambio.</p></li>
+      <li><p>Reglas declaradas en un diccionario de alias, para que añadir una variante nueva sea una línea.</p></li>
+      <li><p>Unión por identificador numérico; el nombre siempre se toma del maestro de hoteles.</p></li>
+      <li><p>Validación tras la carga: todos los identificadores existen en el maestro, y los hoteles activos sin cuota se listan para revisar.</p></li>
+    </ol>
+  </section>
+
+<template data-code="py" data-label="limpieza.py · normalizar proveedor (simplificado)">
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[a-z]{2,}$", re.I)
+ALIAS = {"synxis": "SynXis", "tecsoft": "Techsoft", "operacloud": "Opera Cloud"}
+
+def normaliza_proveedor(valor: str | None) -&gt; str | None:
+    if valor is None or valor.strip().upper() == "TBC":
+        return None
+    v = valor.strip()
+    if EMAIL_RE.match(v):                 # no guardar emails de personas
+        return "Agencia externa"
+    if v.lower().startswith("custom"):
+        return "Custom"
+    return ALIAS.get(v.lower().replace(" ", ""), v)
+
+df["pms"] = df["pms"].map(normaliza_proveedor)
+cambios = df_original.compare(df)          # log de lo que ha cambiado, celda a celda
+</template>
+
+  <section class="case-block">
+    <h3>Resultado</h3>
+    <p>Más de 500 clientes cargados con todas sus claves validadas. La validación sacó a la luz una veintena de cuentas activas sin cuota registrada, que pasaron a revisión de facturación. Y el stack tecnológico limpio permite agrupar los fallos técnicos por proveedor en el <a href="caso-funnel.html">caso 04</a>.</p>
+    <div class="transfer"><h4>Dónde se aplica</h4><p>Las hojas maestras con errores manuales existen en cualquier empresa. Convertirlas en un proceso reproducible es trabajo típico de RevOps, finanzas y data quality.</p></div>
+  </section>
+</div>
+
+<nav class="prevnext" aria-label="Otros proyectos">
+  <a href="caso-funnel.html"><span>← Anterior</span><b>04 · Funnel e integraciones</b></a>
+  <a class="next" href="habilidades.html#portal"><span>Siguiente →</span><b>06 · Este portal</b></a>
+</nav>
