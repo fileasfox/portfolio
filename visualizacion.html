@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Cómo presento los datos: antes y después | Visualización</title>
+<meta name="description" content="Gráficos habituales frente a su versión corregida con datos reales: tartas, ejes truncados, medias engañosas, doble eje y color. Más un informe de una página.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#e9e8e4">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Matteo Eiras Pé">
+<link rel="canonical" href="https://fileasfox.github.io/portfolio/visualizacion.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="Matteo Eiras Pé">
+<meta property="og:url" content="https://fileasfox.github.io/portfolio/visualizacion.html">
+<meta property="og:title" content="Cómo presento los datos: antes y después | Visualización">
+<meta property="og:description" content="Gráficos habituales frente a su versión corregida con datos reales: tartas, ejes truncados, medias engañosas, doble eje y color. Más un informe de una página.">
+<meta property="og:image" content="https://fileasfox.github.io/portfolio/assets/img/retrato.jpg">
+<meta property="og:image:width" content="554">
+<meta property="og:image:height" content="693">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "headline": "Cómo presento los datos: antes y después", "inLanguage": "es", "url": "https://fileasfox.github.io/portfolio/visualizacion.html", "image": "https://fileasfox.github.io/portfolio/assets/img/retrato.jpg", "author": {"@type": "Person", "name": "Matteo Eiras Pé", "url": "https://fileasfox.github.io/portfolio/"}, "isBasedOn": {"@type": "Dataset", "name": "Inside Airbnb: Mallorca", "url": "https://insideairbnb.com/get-the-data/", "license": "https://creativecommons.org/licenses/by/4.0/"}}]}</script>
+<script src="assets/tema.js?v=85e2a5d7"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="assets/styles.css?v=05ad0fd3">
+</head>
+<body>
+<a class="skip" href="#contenido">Saltar al contenido</a>
+<div class="topbar"><div class="wrap"><span class="avail"><i aria-hidden="true"></i>Abierto a nuevos retos</span><nav aria-label="Enlaces rápidos"><a href="cv.html">CV</a><a href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener noreferrer">LinkedIn</a></nav></div></div><header class="site-head"><div class="bar"><nav class="menu" id="menu" aria-label="Principal"><a href="index.html">Inicio</a><div class="dd"><a href="proyectos.html" aria-current=page>Proyectos</a><button class="dd-btn" type="button" aria-expanded="false" aria-controls="ddp" aria-label="Ver la lista de proyectos"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="dd-panel" id="ddp"><a href="mallorca.html"><b>01 · Vista al mar en Mallorca</b><small>pandas, SQL, regresión y consola</small></a><a href="dashboard.html"><b>02 · Dashboard de mercado</b><small>KPIs, filtros y filtrado cruzado</small></a><a href="pandas.html"><b>03 · Cuaderno de pandas</b><small>11 celdas con su salida real</small></a><a href="visualizacion.html"><b>04 · Cómo presento los datos</b><small>Antes y después, informe ejecutivo</small></a><a href="caso-churn.html"><b>05 · Churn por ROI</b><small>Customer Success · BigQuery</small></a><a href="caso-cuadre.html"><b>06 · Dashboard ×2</b><small>Cuadre de métricas</small></a><a href="caso-funnel.html"><b>07 · Funnel e integraciones</b><small>Alertas de conectores</small></a><a href="caso-facturacion.html"><b>08 · Limpieza de facturación</b><small>Python · data quality</small></a><a href="habilidades.html#portal"><b>09 · Este portal</b><small>Desarrollo web y auditoría</small></a><a class="all" href="proyectos.html">Todos los proyectos con filtros →</a></div></div><a href="habilidades.html">Habilidades</a><a href="cv.html">CV</a></nav><a class="brand" href="index.html" aria-label="Matteo Eiras, inicio">Eiras<span class="dot">.</span></a><div class="head-tools"><button class="icon-btn" id="themeBtn" type="button" aria-label="Cambiar tema"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg></button><button class="icon-btn burger" id="burger" type="button" aria-label="Menú" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div><span class="progress" aria-hidden="true"></span></div></header>
+<main class="wrap" id="contenido" tabindex="-1">
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Ruta"><a href="index.html">Inicio</a> / <a href="proyectos.html">Proyectos</a> / Cómo presento los datos</nav>
+  <span class="eyebrow">Proyecto 04, datos públicos</span>
+  <h1>Cómo presento los datos</h1>
+  <p class="lead">Un buen análisis mal presentado no cambia ninguna decisión. Aquí hay seis gráficos que veo a menudo en informes, cada uno junto a la versión que yo entregaría, con los mismos datos reales de Mallorca y la razón de cada cambio.</p>
+  <div class="tags"><span class="tag">Visualización</span><span class="tag">Storytelling con datos</span><span class="tag">Informes para dirección</span><span class="tag">Accesibilidad</span></div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice">
+    <span class="eyebrow">En esta página</span>
+    <a href="#principios" class="on">Principios</a>
+    <a href="#vz-tarta">Tarta → barras</a>
+    <a href="#vz-eje">Eje truncado</a>
+    <a href="#vz-media">La media engañosa</a>
+    <a href="#vz-doble">Doble eje</a>
+    <a href="#vz-color">Color</a>
+    <a href="#vz-tabla">Tablas</a>
+    <a href="#informe">Informe de una página</a>
+    <a href="#checklist">Antes de enviar</a>
+  </nav>
+
+  <div>
+  <section class="chapter" id="principios">
+    <div class="chapter-head"><h2>Cuatro reglas que aplico siempre</h2></div>
+    <div class="findings">
+      <div class="finding"><b>El título es la conclusión</b><p>«Precio por municipio» describe el gráfico. «Palma es un tercio más barata que la isla» dice qué hacer con él.</p></div>
+      <div class="finding"><b>Una idea por gráfico</b><p>Si hacen falta dos ideas, son dos gráficos alineados, no uno con dos ejes.</p></div>
+      <div class="finding"><b>El color señala</b><p>Gris para el contexto y un solo color para lo que importa. El lector debe saber dónde mirar sin leer la leyenda.</p></div>
+      <div class="finding"><b>La cifra con su referencia</b><p>Frente al total, al año anterior o al objetivo. Un número solo no es bueno ni malo.</p></div>
+    </div>
+  </section>
+
+  <section class="chapter vz" id="vz-tarta">
+    <div class="chapter-head"><span class="eyebrow">01 · Comparar partes</span><h2 id="t-tarta"></h2></div>
+    <div class="vz-pair">
+      <figure class="vz-bad"><span class="vz-tag">Habitual</span><svg data-vz="tarta-mal" role="img" aria-label="Gráfico de tarta con 13 porciones de colores"></svg>
+        <figcaption><b>Qué falla.</b> Trece porciones de colores obligan a ir y volver a la leyenda, y el ojo no compara bien ángulos: Santanyí y Palma parecen iguales.</figcaption></figure>
+      <figure class="vz-good"><span class="vz-tag">Corregido</span><svg data-vz="tarta-bien" role="img" aria-label="Barras horizontales ordenadas por número de anuncios"></svg>
+        <figcaption><b>Qué cambié.</b> Barras ordenadas con el valor junto a cada barra, los tres primeros en color y el resto agrupado. El título dice la conclusión.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter vz" id="vz-eje">
+    <div class="chapter-head"><span class="eyebrow">02 · Escala</span><h2 id="t-eje"></h2></div>
+    <div class="vz-pair">
+      <figure class="vz-bad"><span class="vz-tag">Habitual</span><svg data-vz="eje-mal" role="img" aria-label="Columnas con el eje vertical empezando en 250 euros"></svg>
+        <figcaption><b>Qué falla.</b> El eje empieza en 250&nbsp;€. Felanitx parece costar dieciocho veces más que Palma, cuando la diferencia real es del 80&nbsp;%.</figcaption></figure>
+      <figure class="vz-good"><span class="vz-tag">Corregido</span><svg data-vz="eje-bien" role="img" aria-label="Barras desde cero con la mediana de Mallorca como referencia"></svg>
+        <figcaption><b>Qué cambié.</b> Las barras empiezan en cero, porque su longitud es el dato. La mediana de la isla aparece como referencia y Palma, que es la excepción, en color.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter vz" id="vz-media">
+    <div class="chapter-head"><span class="eyebrow">03 · Resumir una distribución</span><h2 id="t-media"></h2></div>
+    <div class="vz-pair">
+      <figure class="vz-bad"><span class="vz-tag">Habitual</span><div class="vz-kpi" id="vzMediaMal"></div>
+        <figcaption><b>Qué falla.</b> La media de una distribución tan desigual la arrastran unos pocos anuncios. Dos de cada tres anuncios ingresan menos que esa cifra.</figcaption></figure>
+      <figure class="vz-good"><span class="vz-tag">Corregido</span><svg data-vz="media-bien" role="img" aria-label="Porcentaje del ingreso total por decil de anuncios"></svg>
+        <figcaption><b>Qué cambié.</b> La mediana como cifra típica y, al lado, cómo se reparte el ingreso por deciles. Ahí está la historia: la concentración.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter vz" id="vz-doble">
+    <div class="chapter-head"><span class="eyebrow">04 · Dos medidas a la vez</span><h2 id="t-doble"></h2></div>
+    <div class="vz-pair">
+      <figure class="vz-bad"><span class="vz-tag">Habitual</span><svg data-vz="doble-mal" role="img" aria-label="Columnas de anuncios y línea de precio con dos ejes verticales"></svg>
+        <figcaption><b>Qué falla.</b> Con dos ejes, donde se cruzan las series lo decide quien elige las escalas. Sugiere una relación entre volumen y precio que los datos no muestran.</figcaption></figure>
+      <figure class="vz-good"><span class="vz-tag">Corregido</span><svg data-vz="doble-bien" role="img" aria-label="Dos paneles de barras alineados por municipio: anuncios y precio mediano"></svg>
+        <figcaption><b>Qué cambié.</b> Dos paneles con el mismo orden de municipios, cada uno con su escala desde cero. Se lee fila a fila sin trucos.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter vz" id="vz-color">
+    <div class="chapter-head"><span class="eyebrow">05 · Color</span><h2>En un mapa de precios, más oscuro debe ser más caro</h2></div>
+    <div class="vz-pair">
+      <figure class="vz-bad"><span class="vz-tag">Habitual</span><svg data-vz="color-mal" role="img" aria-label="Mapa de Mallorca con una escala arcoíris"></svg><div class="legend" id="vzLegMal"></div>
+        <figcaption><b>Qué falla.</b> El arcoíris no tiene orden: ¿el verde es más caro que el naranja? Además, rojo y verde se confunden con daltonismo, que afecta a uno de cada doce hombres.</figcaption></figure>
+      <figure class="vz-good"><span class="vz-tag">Corregido</span><svg data-vz="color-bien" role="img" aria-label="Mapa de Mallorca con una escala secuencial de un solo tono"></svg><div class="legend" id="vzLegBien"></div>
+        <figcaption><b>Qué cambié.</b> Un solo tono de claro a oscuro, con cuatro tramos de precio redondos. El orden se entiende sin leyenda y aguanta la impresión en gris.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter vz" id="vz-tabla">
+    <div class="chapter-head"><span class="eyebrow">06 · Tablas</span><h2>Una tabla también se diseña</h2></div>
+    <div class="vz-pair stack">
+      <figure class="vz-bad"><span class="vz-tag">Habitual</span><div class="scroll"><table class="vz-raw" id="vzTablaMal"><thead></thead><tbody></tbody></table></div>
+        <figcaption><b>Qué falla.</b> Nombres de columna técnicos, decimales que nadie pidió, sin unidades y en orden alfabético. Encontrar lo importante es trabajo del lector.</figcaption></figure>
+      <figure class="vz-good"><span class="vz-tag">Corregido</span><div class="scroll"><table class="vz-nice" id="vzTablaBien"><thead></thead><tbody></tbody></table></div>
+        <figcaption><b>Qué cambié.</b> Ordenada por tamaño, cifras alineadas a la derecha con separador de miles y unidad, una barra que da escala sin leer números y el precio marcado frente a la mediana de la isla.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter" id="informe">
+    <div class="chapter-head"><h2>Un informe de una página para dirección</h2>
+      <p>Así entrego un hallazgo a alguien que tiene dos minutos: la conclusión arriba, tres cifras, un gráfico, qué recomiendo y qué no sé. Lo demás va en el anexo.</p></div>
+    <article class="onepager" aria-label="Ejemplo de informe ejecutivo">
+      <header class="op-head"><span>Para: Dirección comercial</span><span>De: Matteo Eiras</span><span>Datos: julio de 2026</span></header>
+      <h3 class="op-title">Las vistas al mar justifican cobrar un 27&nbsp;% más. La piscina, un 19&nbsp;%.</h3>
+      <p class="op-sub">Comparando anuncios de Mallorca del mismo tamaño, zona, tipo y fecha, estos dos atributos son los que más precio sostienen. Es la misma lógica que el recargo de una habitación con vistas en un hotel.</p>
+      <div class="op-kpis">
+        <div><b>+27&nbsp;%</b><span>vista al mar<br>(entre +23 y +32&nbsp;%)</span></div>
+        <div><b>+19&nbsp;%</b><span>piscina<br>(entre +16 y +23&nbsp;%)</span></div>
+        <div><b>9.255</b><span>viviendas comparadas<br>con 6 controles</span></div>
+      </div>
+      <figure class="op-chart"><svg data-chart="prima" data-compact="1" role="img" aria-label="Prima de precio de los atributos que se distinguen de cero"></svg>
+        <figcaption>Prima de precio por atributo con su intervalo de confianza del 95&nbsp;%. Solo los atributos con efecto claro.</figcaption></figure>
+      <div class="op-cols">
+        <div><h4>Qué recomiendo</h4><ol>
+          <li>Poner precio a los atributos por separado, no solo por categoría de habitación.</li>
+          <li>Probar un recargo por vistas entre el 15 y el 25&nbsp;%, por debajo del efecto estimado para no perder conversión.</li>
+          <li>Medir la conversión del upgrade un mes antes y un mes después del cambio.</li>
+        </ol></div>
+        <div><h4>Qué no sé todavía</h4><ul>
+          <li>Son precios publicados, no cobrados.</li>
+          <li>Es un solo verano: la prima puede cambiar en temporada baja.</li>
+          <li>Es una comparación con controles, no un experimento.</li>
+        </ul></div>
+      </div>
+      <footer class="op-foot">Fuente: Inside Airbnb, Mallorca, 14.817 anuncios. Método y código completos en <a href="mallorca.html#modelo">el proyecto</a>.</footer>
+    </article>
+  </section>
+
+  <section class="chapter" id="checklist">
+    <div class="chapter-head"><h2>Lo que reviso antes de enviar un gráfico</h2></div>
+    <ol class="checklist">
+      <li><b>¿El título dice la conclusión?</b> Si alguien solo lee el título, ¿sabe qué pasa?</li>
+      <li><b>¿Cuadra con la fuente oficial?</b> Al menos una cifra comprobada contra una referencia conocida.</li>
+      <li><b>¿Está la referencia?</b> Total, periodo anterior u objetivo, al lado de la cifra.</li>
+      <li><b>¿La agregación es correcta?</b> Ratios como suma entre suma; medianas si hay cola larga.</li>
+      <li><b>¿Las barras empiezan en cero?</b> Y si es una línea que no empieza en cero, que se note.</li>
+      <li><b>¿Sobra algo?</b> Bordes, sombras, 3D, decimales y leyendas que se pueden poner sobre la marca.</li>
+      <li><b>¿Se entiende sin color?</b> Por daltonismo, por impresión en gris o por una pantalla mala.</li>
+      <li><b>¿Dice el tamaño de la muestra y la fecha?</b> Y qué se ha dejado fuera.</li>
+    </ol>
+  </section>
+  </div>
+</div>
+
+<nav class="prevnext" aria-label="Otros proyectos"><a href="pandas.html"><span>← Anterior</span><b>03 · Cuaderno de pandas</b></a><a class="next" href="caso-churn.html"><span>Siguiente →</span><b>05 · Churn por ROI</b></a></nav>
+
+</main>
+<footer class="site-foot"><div class="wrap"><nav class="sitemap" aria-label="Mapa del sitio"><div><h2>Proyectos</h2><a href="proyectos.html">Todos los proyectos</a><a href="mallorca.html">Vista al mar en Mallorca</a><a href="dashboard.html">Dashboard de mercado</a><a href="pandas.html">Cuaderno de pandas</a><a href="visualizacion.html">Cómo presento los datos</a><a href="caso-churn.html">Churn por ROI</a><a href="caso-cuadre.html">Dashboard ×2</a><a href="caso-funnel.html">Funnel e integraciones</a><a href="caso-facturacion.html">Limpieza de facturación</a><a href="habilidades.html#portal">Este portal</a></div><div><h2>Proyecto Mallorca</h2><a href="mallorca.html#datos">Datos y calidad</a><a href="mallorca.html#python">Python y pandas</a><a href="mallorca.html#sql">SQL y consola</a><a href="mallorca.html#modelo">Modelo y simulador</a><a href="mallorca.html#hallazgos">Hallazgos y mapa</a><a href="mallorca.html#conclusiones">Conclusiones</a></div><div><h2>Habilidades</h2><a href="habilidades.html#datos">Datos y análisis</a><a href="habilidades.html#negocio">Negocio y técnica</a><a href="habilidades.html#metodo">Cómo trabajo</a><a href="habilidades.html#formacion">Formación</a><a href="habilidades.html#portal">Este portal y auditoría</a></div><div><h2>Sobre mí</h2><a href="index.html#sobre-mi">Sobre mí</a><a href="index.html#trayectoria">Trayectoria</a><a href="index.html#habilidades">Habilidades</a><a href="cv.html">CV</a><a href="index.html#contacto">Contacto</a><a href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener noreferrer">LinkedIn</a></div></nav><div class="foot-meta"><span>Matteo Eiras Pé, Palma de Mallorca</span><span>Datos del proyecto: Inside Airbnb (CC BY 4.0)</span></div><div class="foot-word" aria-hidden="true">Eiras.</div></div></footer>
+<script src="assets/datos.js?v=a05842df"></script>
+<script src="assets/app.js?v=9da4ce00"></script>
+<script src="assets/vista.js?v=ce32492e"></script>
+</body>
+</html>
