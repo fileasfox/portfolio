@@ -1,0 +1,101 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Ruta"><a href="index.html">Inicio</a> / <a href="proyectos.html">Proyectos</a> / Dashboard de mercado</nav>
+  <span class="eyebrow">Proyecto 02, datos públicos</span>
+  <h1>Dashboard del alquiler vacacional en Mallorca</h1>
+  <p class="lead">El tipo de informe que construyo cada semana en Looker Studio, rehecho a mano para poder tocarlo: elige una zona, un tipo de anfitrión o un tamaño de vivienda y todo se recalcula, siempre comparado con el total de Mallorca.</p>
+  <div class="tags"><span class="tag">pandas</span><span class="tag">Diseño de dashboards</span><span class="tag">KPIs</span><span class="tag">Filtrado cruzado</span><span class="tag">JavaScript y SVG</span></div>
+  <nav class="jump" aria-label="En esta página"><a href="#panel">Panel</a><a href="#decisiones">Decisiones de diseño</a><a href="#como">Cómo está hecho</a><a href="#definiciones">Definiciones</a></nav>
+</header>
+
+<section class="dash" id="panel" aria-label="Dashboard interactivo">
+  <div class="dash-bar" role="group" aria-label="Filtros">
+    <label class="dash-f"><span>Municipio</span><select id="fMun"><option value="">Toda Mallorca</option></select></label>
+    <div class="dash-f"><span id="lTramo">Anfitrión</span><div class="seg" id="fTramo" role="group" aria-labelledby="lTramo"></div></div>
+    <div class="dash-f"><span id="lCap">Capacidad</span><div class="seg" id="fCap" role="group" aria-labelledby="lCap"></div></div>
+    <div class="dash-tools">
+      <button class="btn sm ghost" type="button" id="dReset">Quitar filtros</button>
+      <button class="btn sm ghost" type="button" id="dCsv">Exportar CSV</button>
+      <button class="btn sm ghost" type="button" id="dLink">Copiar enlace</button>
+    </div>
+  </div>
+
+  <p class="dash-read" id="dRead" aria-live="polite"></p>
+
+  <div class="dash-kpis" id="dKpis"></div>
+
+  <div class="dash-grid">
+    <figure class="panel wide">
+      <figcaption><h3>Noches no disponibles, próximos 12 meses</h3><p>Reservadas o bloqueadas por el anfitrión. La línea gris es Mallorca.</p></figcaption>
+      <svg id="dOcc" role="img" aria-label="Porcentaje de noches no disponibles por mes, selección frente a Mallorca"></svg>
+    </figure>
+    <figure class="panel">
+      <figcaption><h3>Precio mediano por municipio</h3><p>Haz clic en un municipio para filtrar todo el panel.</p></figcaption>
+      <svg id="dMap" role="img" aria-label="Mapa de Mallorca por precio mediano; cada municipio filtra el panel"></svg>
+      <div class="legend" id="dMapLegend"></div>
+    </figure>
+    <figure class="panel">
+      <figcaption><h3>Distribución del precio por noche</h3><p>Tramos de 50 €. La línea marca la mediana de la selección.</p></figcaption>
+      <svg id="dHist" role="img" aria-label="Histograma del precio por noche de la selección"></svg>
+    </figure>
+    <figure class="panel">
+      <figcaption><h3>Demanda: reseñas al mes</h3><p>Últimos 12 meses en color; los 12 anteriores, en gris, para comparar cada mes con el mismo mes del año antes.</p></figcaption>
+      <svg id="dRev" role="img" aria-label="Reseñas por mes, últimos 12 meses frente a los 12 anteriores"></svg>
+    </figure>
+    <figure class="panel">
+      <figcaption class="with-tools"><div><h3>Ranking de municipios</h3><p>Los 10 primeros con al menos 30 anuncios. Clic para filtrar.</p></div>
+        <label class="mini-select"><span class="sr-only">Ordenar por</span><select id="fRank">
+          <option value="n">Anuncios</option><option value="p">Precio mediano</option><option value="o">Noches no disponibles</option><option value="i">Ingreso mediano</option>
+        </select></label></figcaption>
+      <svg id="dRank" role="img" aria-label="Ranking de municipios por la métrica elegida"></svg>
+    </figure>
+    <div class="panel wide">
+      <h3>Por capacidad de la vivienda</h3>
+      <div class="scroll"><table class="dash-table" id="dTable">
+        <thead><tr><th scope="col">Capacidad</th><th scope="col">Anuncios</th><th scope="col">Precio mediano</th><th scope="col">Noches no disp.</th><th scope="col">Ingreso mediano</th><th scope="col">Valoración</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+  </div>
+  <p class="dash-foot" id="dFoot"></p>
+</section>
+
+<div class="stack-lg">
+  <section class="case-block" id="decisiones">
+    <h3>Decisiones de diseño</h3>
+    <div class="findings">
+      <div class="finding"><b>Cada cifra con su referencia</b><p>Un KPI suelto no dice si es bueno o malo. Todos llevan al lado la diferencia con Mallorca, en puntos o en porcentaje según la métrica.</p></div>
+      <div class="finding"><b>Medianas, no medias</b><p>El precio y el ingreso tienen una cola larga: unas pocas villas de lujo suben la media. La mediana describe el anuncio típico.</p></div>
+      <div class="finding"><b>Ratios bien agregados</b><p>Las noches no disponibles se guardan como numerador y denominador. Al filtrar se suman ambos y se dividen al final, nunca se promedian porcentajes.</p></div>
+      <div class="finding"><b>Un solo color con significado</b><p>Rojo es la selección; gris, el contexto. No hay colores decorativos que obliguen a buscar una leyenda.</p></div>
+      <div class="finding"><b>Avisos de muestra pequeña</b><p>Con menos de 30 anuncios, el panel lo dice y atenúa las cifras. Una mediana de 8 viviendas no sirve para decidir.</p></div>
+      <div class="finding good"><b>Filtrado cruzado</b><p>El mapa y el ranking también filtran, como las interacciones entre gráficos de Looker Studio. El estado queda en el enlace para compartirlo.</p></div>
+    </div>
+  </section>
+
+  <section class="case-block" id="como">
+    <h3>Cómo está hecho</h3>
+    <div class="why">
+      <div><h4>Preparación en pandas</h4><p><span class="mono">dashboard.py</span> lee los anuncios, el calendario de 5,4 millones de noches y las reseñas. Exporta una fila por anuncio (para calcular medianas al filtrar) y un cubo por municipio, anfitrión, capacidad y mes con numeradores y denominadores.</p></div>
+      <div><h4>Cuadre antes de publicar</h4><p>El script compara el total del cubo con el cálculo directo sobre el calendario y se detiene si no coinciden. El precio mediano de Mallorca, 398&nbsp;€, es el mismo que en el proyecto principal.</p></div>
+      <div><h4>Equivalente en Looker Studio</h4><p>Fuente en BigQuery con la misma granularidad, campo calculado <span class="mono">SUM(no_disp) / SUM(noches)</span>, controles de filtro y filtrado cruzado activado entre gráficos.</p></div>
+      <div><h4>Lo que no muestra</h4><p>Noche no disponible no es lo mismo que reservada: incluye bloqueos del anfitrión. Por eso no lo llamo ocupación. Quedan fuera 84 anuncios del calendario que ya no están en el listado.</p></div>
+    </div>
+  </section>
+
+  <section class="case-block" id="definiciones">
+    <h3>Definiciones</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Métrica</th><th>Definición</th></tr></thead>
+      <tbody>
+        <tr><td>Anuncios</td><td class="wrap">Anuncios activos en la extracción de Inside Airbnb que cumplen los filtros</td></tr>
+        <tr><td>Precio mediano</td><td class="wrap">Mediana del precio por noche publicado. Una cuarta parte de los anuncios no publica precio y no cuenta aquí</td></tr>
+        <tr><td>Noches no disponibles</td><td class="wrap">Suma de noches reservadas o bloqueadas entre suma de noches del calendario, en los 12 meses siguientes a la extracción</td></tr>
+        <tr><td>Ingreso mediano</td><td class="wrap">Mediana del ingreso estimado de los últimos 12 meses (estimación de Inside Airbnb), solo anuncios con ingreso mayor que cero</td></tr>
+        <tr><td>Reseñas 12 meses</td><td class="wrap">Reseñas escritas en los 12 meses completos anteriores a la extracción. Es un indicador de demanda, no de reservas</td></tr>
+        <tr><td>Anfitrión</td><td class="wrap">Tramo por número de anuncios del anfitrión: particular (1), pequeño (2-4), gestor (5-19) y gran gestor (20 o más)</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+</div>
+
+<!--PREVNEXT-->

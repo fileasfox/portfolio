@@ -11,7 +11,7 @@ Portafolio de data analyst en hospitality tech. Web estática, generada con Pyth
 
 | Carpeta | Contenido |
 |---|---|
-| `proyecto_airbnb/` | Análisis en Python (`analisis_mallorca.py`), consultas SQL (`sql/`) y cuadre SQL frente a pandas (`ejecutar_sql.py`) |
+| `proyecto_airbnb/` | Análisis en Python (`analisis_mallorca.py`), consultas SQL (`sql/`), cuadre SQL frente a pandas (`ejecutar_sql.py`), datos del dashboard (`dashboard.py`) y cuaderno de pandas (`cuaderno.py`, que genera `cuaderno.ipynb`) |
 | `sitio_src/` | Páginas, estilos, scripts, generador (`build.py`) y auditoría (`auditoria.py`) |
 | `sitio/` | Web generada, la que se publica en GitHub Pages |
 
@@ -22,6 +22,8 @@ Portafolio de data analyst en hospitality tech. Web estática, generada con Pyth
 #    listings.csv.gz, calendar.csv.gz, reviews.csv y neighbourhoods.geojson
 python proyecto_airbnb/analisis_mallorca.py proyecto_airbnb/datos proyecto_airbnb
 python proyecto_airbnb/ejecutar_sql.py proyecto_airbnb/datos proyecto_airbnb
+python proyecto_airbnb/dashboard.py proyecto_airbnb/datos proyecto_airbnb
+python proyecto_airbnb/cuaderno.py proyecto_airbnb/datos proyecto_airbnb
 
 # 2. Web: generar, auditar (debe dar 23/23) y volver a generar con el resultado de la auditoría
 python sitio_src/build.py

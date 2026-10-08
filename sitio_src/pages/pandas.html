@@ -1,0 +1,60 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Ruta"><a href="index.html">Inicio</a> / <a href="proyectos.html">Proyectos</a> / Cuaderno de pandas</nav>
+  <span class="eyebrow">Proyecto 03, datos públicos</span>
+  <h1>Cuaderno de pandas con datos reales</h1>
+  <p class="lead">Once celdas de Python que hacen el trabajo de un analista de principio a fin: cargar, perfilar, limpiar, agregar, cruzar, comparar en el tiempo y cuadrar el resultado contra SQL. El código se ejecuta de verdad y cada salida es la que dio la última ejecución.</p>
+  <div class="tags"><span class="tag">Python 3.14</span><span class="tag">pandas 3</span><span class="tag">numpy</span><span class="tag">sqlite3</span><span class="tag">Jupyter</span></div>
+  <div class="kpis">
+    <div class="kpi"><b>11</b><span>celdas con su salida real</span></div>
+    <div class="kpi"><b>5,4 M</b><span>noches de calendario cruzadas</span></div>
+    <div class="kpi"><b>84</b><span>anuncios huérfanos detectados</span></div>
+    <div class="kpi"><b>53 / 53</b><span>municipios cuadrados con SQL</span></div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice del cuaderno">
+    <span class="eyebrow">Celdas</span>
+    <a href="#como" class="on">Cómo leerlo</a>
+    <a href="#celda-1">1 · Carga tipada</a>
+    <a href="#celda-2">2 · Perfil de calidad</a>
+    <a href="#celda-3">3 · Limpieza</a>
+    <a href="#celda-4">4 · groupby</a>
+    <a href="#celda-5">5 · pivot_table</a>
+    <a href="#celda-6">6 · merge</a>
+    <a href="#celda-7">7 · Promedios</a>
+    <a href="#celda-8">8 · Series temporales</a>
+    <a href="#celda-9">9 · Concentración</a>
+    <a href="#celda-10">10 · Vectorizar</a>
+    <a href="#celda-11">11 · Cuadre con SQL</a>
+    <a href="#produccion">Llevarlo a producción</a>
+  </nav>
+
+  <div>
+  <section class="chapter" id="como">
+    <div class="chapter-head"><h2>Cómo leer este cuaderno</h2>
+      <p>Cada celda tiene arriba qué demuestra y por qué importa en un trabajo real. Debajo, el código y su salida. Las variables pasan de una celda a la siguiente, igual que en Jupyter.</p></div>
+    <div class="why">
+      <div><h4>Cómo se genera</h4><p><span class="mono">cuaderno.py</span> ejecuta cada celda, captura lo que imprime y el valor final, y escribe dos ficheros: los datos de esta página y un <span class="mono">.ipynb</span> con las mismas salidas.</p></div>
+      <div><h4>Dónde verlo entero</h4><p>El cuaderno se puede abrir directamente en GitHub: <a href="https://github.com/fileasfox/portfolio/blob/main/proyecto_airbnb/cuaderno.ipynb" rel="noopener">cuaderno.ipynb</a>. El generador está en <a href="https://github.com/fileasfox/portfolio/blob/main/proyecto_airbnb/cuaderno.py" rel="noopener">cuaderno.py</a>.</p></div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-label="Celdas del cuaderno">
+    <!--CUADERNO-->
+  </section>
+
+  <section class="chapter" id="produccion">
+    <div class="chapter-head"><h2>Qué cambiaría para llevarlo a producción</h2>
+      <p>Un cuaderno sirve para explorar y para explicar. Si este análisis tuviera que correr cada semana, haría esto:</p></div>
+    <div class="findings">
+      <div class="finding"><b>Funciones con pruebas</b><p>Pasar la limpieza a un módulo y probarla con casos pequeños escritos a mano: precio vacío, con símbolo, con miles.</p></div>
+      <div class="finding"><b>Formato columnar</b><p>Guardar la tabla limpia en Parquet, o cargarla en BigQuery, para no leer el CSV comprimido en cada ejecución.</p></div>
+      <div class="finding"><b>Cuadres como alertas</b><p>Los <span class="mono">assert</span> de este cuaderno pasarían a ser controles que avisan, en lugar de parar, cuando una cifra se desvía.</p></div>
+      <div class="finding good"><b>Lo que ya está</b><p>Tipos explícitos, limpieza sin efectos secundarios, relaciones validadas en cada merge y el resultado cuadrado por dos caminos.</p></div>
+    </div>
+  </section>
+  </div>
+</div>
+
+<!--PREVNEXT-->

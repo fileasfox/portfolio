@@ -27,6 +27,12 @@ PAGINAS = [
      "Proyectos de data analytics: pricing de alquiler vacacional en Mallorca con Python y SQL, y casos reales de churn, BI y calidad del dato en un SaaS hotelero.", "proyectos.html"),
     ("mallorca.html", "¿Cuánto vale una vista al mar en Mallorca? | Proyecto de datos",
      "Análisis de 14.817 anuncios de Airbnb en Mallorca con pandas, SQL y regresión: la vista al mar suma un 27 % al precio. Con consola SQL y simulador interactivo.", "proyectos.html"),
+    ("dashboard.html", "Dashboard interactivo del alquiler vacacional en Mallorca",
+     "Dashboard de mercado con datos reales de Mallorca: KPIs frente al total, filtros, filtrado cruzado desde el mapa, ocupación, precios y exportación a CSV.", "proyectos.html"),
+    ("pandas.html", "Cuaderno de pandas con datos reales | Python para análisis",
+     "Once celdas de pandas ejecutadas sobre 5,9 millones de filas de Inside Airbnb: carga tipada, limpieza, groupby, pivot, merge, series temporales y cuadre con SQL.", "proyectos.html"),
+    ("visualizacion.html", "Cómo presento los datos: antes y después | Visualización",
+     "Gráficos habituales frente a su versión corregida con datos reales: tartas, ejes truncados, medias engañosas, doble eje y color. Más un informe de una página.", "proyectos.html"),
     ("caso-churn.html", "Churn por ROI en un SaaS hotelero | Caso de análisis",
      "Cómo medir la salud de cuenta de cada hotel con su ROI mensual en BigQuery y Looker Studio para anticipar bajas. Caso real anonimizado de Customer Success.", "proyectos.html"),
     ("caso-cuadre.html", "Un dashboard que contaba el doble | Caso de BI",
@@ -61,14 +67,33 @@ ICONO_FLECHA = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
                 '<path d="m6 9 6 6 6-6"/></svg>')
 
 # Desplegable de Proyectos: cualquier proyecto a 1 clic (o al pasar el cursor) desde cualquier página
-PROYECTOS_MENU = [
-    ("mallorca.html", "01 · Vista al mar en Mallorca", "pandas, SQL, regresión y consola"),
-    ("caso-churn.html", "02 · Churn por ROI", "Customer Success · BigQuery"),
-    ("caso-cuadre.html", "03 · Dashboard ×2", "Cuadre de métricas"),
-    ("caso-funnel.html", "04 · Funnel e integraciones", "Alertas de conectores"),
-    ("caso-facturacion.html", "05 · Limpieza de facturación", "Python · data quality"),
-    ("habilidades.html#portal", "06 · Este portal", "Desarrollo web y auditoría"),
+# Orden único de los proyectos: de aquí salen la numeración, el menú, el pie y los enlaces anterior/siguiente
+PROYECTOS = [
+    ("mallorca.html", "Vista al mar en Mallorca", "pandas, SQL, regresión y consola"),
+    ("dashboard.html", "Dashboard de mercado", "KPIs, filtros y filtrado cruzado"),
+    ("pandas.html", "Cuaderno de pandas", "11 celdas con su salida real"),
+    ("visualizacion.html", "Cómo presento los datos", "Antes y después, informe ejecutivo"),
+    ("caso-churn.html", "Churn por ROI", "Customer Success · BigQuery"),
+    ("caso-cuadre.html", "Dashboard ×2", "Cuadre de métricas"),
+    ("caso-funnel.html", "Funnel e integraciones", "Alertas de conectores"),
+    ("caso-facturacion.html", "Limpieza de facturación", "Python · data quality"),
+    ("habilidades.html#portal", "Este portal", "Desarrollo web y auditoría"),
 ]
+num = lambda h: f"{[p[0] for p in PROYECTOS].index(h) + 1:02d}"
+PROYECTOS_MENU = [(h, f"{num(h)} · {t}", d) for h, t, d in PROYECTOS]
+
+
+def prevnext(fichero: str) -> str:
+    hrefs = [p[0] for p in PROYECTOS]
+    if fichero not in hrefs:
+        return ""
+    i = hrefs.index(fichero)
+    enlace = lambda j, cls, rotulo: (f'<a{cls} href="{PROYECTOS[j][0]}"><span>{rotulo}</span>'
+                                     f'<b>{num(PROYECTOS[j][0])} · {PROYECTOS[j][1]}</b></a>')
+    return ('<nav class="prevnext" aria-label="Otros proyectos">'
+            + (enlace(i - 1, "", "← Anterior") if i > 0 else "<span></span>")
+            + (enlace(i + 1, ' class="next"', "Siguiente →") if i + 1 < len(PROYECTOS) else "")
+            + "</nav>")
 
 
 def cabecera(fichero: str) -> str:
@@ -97,33 +122,56 @@ def cabecera(fichero: str) -> str:
 # Tarjetas de proyectos: una sola lista para el inicio y la página de proyectos.
 # Cada tarjeta lleva arriba una visual hecha con sus propios datos, en lugar de una foto.
 CASOS = [
-    ("mallorca.html", "01", "Datos públicos", "publico sql python interactivo", "¿Cuánto vale una vista al mar?",
+    ("mallorca.html", "Datos públicos", "publico sql python interactivo", "¿Cuánto vale una vista al mar?",
      "pandas, 8 consultas SQL cuadradas y una regresión, con consola SQL en el navegador.",
      '<div class="v-map"><svg data-minimap role="img" aria-label="Mallorca coloreada por precio mediano"></svg></div>'),
-    ("caso-churn.html", "02", "Customer Success", "profesional sql", "Salud de cuenta y churn por ROI",
+    ("dashboard.html", "Dashboard", "publico interactivo", "Dashboard del mercado vacacional",
+     "KPIs frente al total, filtros y filtrado cruzado desde el mapa, como en Looker Studio.",
+     '<div class="v-dash"><span class="k"><b>398 €</b><small>precio</small></span><span class="k"><b>50 %</b><small>noches no disp.</small></span>'
+     '<span class="spark"><i style="--h:92%"></i><i style="--h:89%"></i><i style="--h:67%"></i><i style="--h:50%"></i><i style="--h:54%"></i>'
+     '<i style="--h:61%"></i><i style="--h:67%"></i><i style="--h:66%"></i><i style="--h:61%"></i><i style="--h:54%"></i><i style="--h:55%"></i><i style="--h:55%"></i></span></div>'),
+    ("pandas.html", "Python", "publico python", "Cuaderno de pandas",
+     "Once celdas ejecutadas sobre 5,9 millones de filas: limpieza, groupby, merge y cuadre con SQL.",
+     '<div class="v-code">df.groupby("municipio")<br>&nbsp;&nbsp;.agg(precio=("precio", "median"))<br><b>→ 53 filas</b><br><b>→ cuadra con SQL</b></div>'),
+    ("visualizacion.html", "Visualización", "publico interactivo", "Cómo presento los datos",
+     "Seis gráficos habituales frente a su versión corregida, y un informe de una página.",
+     '<div class="v-viz"><span class="pie" aria-hidden="true"></span><span class="arrow">→</span>'
+     '<span class="bars"><i style="--w:100%"></i><i style="--w:60%"></i><i style="--w:44%"></i><i style="--w:30%"></i></span></div>'),
+    ("caso-churn.html", "Customer Success", "profesional sql", "Salud de cuenta y churn por ROI",
      "Qué hoteles no recuperan su cuota mensual, y por qué, antes de que pidan la baja.",
      '<div class="v-roi"><div class="v-num">&lt;&nbsp;1<em>×</em><small>umbral de riesgo</small></div>'
      '<div class="scale"><i></i><i></i><i></i></div><div class="ticks"><span>Riesgo</span><span>1×</span><span>2×</span></div></div>'),
-    ("caso-cuadre.html", "03", "BI governance", "profesional sql", "El dashboard que contaba el doble",
+    ("caso-cuadre.html", "BI governance", "profesional sql", "El dashboard que contaba el doble",
      "Diagnóstico de un sobreconteo frente al informe oficial y rediseño de la vista.",
      '<div class="v-num"><s>2,2×</s><br>1,0<em>×</em><small>cuadrado con el oficial</small></div>'),
-    ("caso-funnel.html", "04", "Observabilidad", "profesional sql", "Funnel e integraciones",
+    ("caso-funnel.html", "Observabilidad", "profesional sql", "Funnel e integraciones",
      "Alertas que separan una caída comercial de un fallo del conector.",
      '<div class="v-bars"><i style="--w:100%"></i><i style="--w:82%"></i><i style="--w:49%"></i><i style="--w:17%"></i><i style="--w:13%"></i><i style="--w:8%"></i></div>'),
-    ("caso-facturacion.html", "05", "Calidad del dato", "profesional python", "Limpieza de facturación",
+    ("caso-facturacion.html", "Calidad del dato", "profesional python", "Limpieza de facturación",
      "Una hoja manual convertida en un proceso reproducible con log de cambios.",
      '<div class="v-code">"Synxis"<br>"SYNXIS"<br>"1.234,50"<br><b>→ SynXis</b><br><b>→ 1234.50</b></div>'),
-    ("habilidades.html#portal", "06", "Desarrollo web", "python interactivo", "Este portal",
+    ("habilidades.html#portal", "Desarrollo web", "python interactivo", "Este portal",
      "Generado con Python, sin frameworks, con consola SQL y auditoría antes de publicar.",
      '<div class="v-num">23<em>/</em>23<small>controles superados</small></div>'),
 ]
+assert [c[0] for c in CASOS] == [p[0] for p in PROYECTOS]
 
 
 def tarjetas() -> str:
     return '<div class="cases">' + "".join(
-        f'<a class="case" href="{h}" data-cat="{cat}"><div class="visual"><span class="idx">{n}</span><span class="cat">{c}</span>{v}</div>'
-        f'<div class="meta"><h3>{t}</h3><p>{d}</p><span class="go">Ver {"proyecto" if n in ("01", "06") else "caso"} <span aria-hidden="true">→</span></span></div></a>'
-        for h, n, c, cat, t, d, v in CASOS) + "</div>"
+        f'<a class="case" href="{h}" data-cat="{cat}"><div class="visual"><span class="idx">{num(h)}</span><span class="cat">{c}</span>{v}</div>'
+        f'<div class="meta"><h3>{t}</h3><p>{d}</p><span class="go">Ver {"caso" if h.startswith("caso-") else "proyecto"} <span aria-hidden="true">→</span></span></div></a>'
+        for h, c, cat, t, d, v in CASOS) + "</div>"
+
+
+def filtros() -> str:
+    """Chips de la página de proyectos con el recuento calculado, no escrito a mano."""
+    cats = [("todos", "Todos"), ("publico", "Datos públicos"), ("profesional", "Casos profesionales"),
+            ("sql", "SQL"), ("python", "Python"), ("interactivo", "Interactivo")]
+    n = lambda k: len(CASOS) if k == "todos" else sum(k in c[2].split() for c in CASOS)
+    return ('<div class="chips" role="group" aria-label="Filtrar proyectos">' + "".join(
+        f'<button class="chip" type="button" data-filter="{k}" aria-pressed="{str(k == "todos").lower()}">{t}<span>{n(k)}</span></button>'
+        for k, t in cats) + "</div>")
 
 
 def recorte() -> str:
@@ -159,13 +207,43 @@ def scripts(fichero: str) -> str:
     s = '<script src="assets/datos.js"></script>\n<script src="assets/app.js"></script>'
     if fichero == "mallorca.html":     # consola SQL y simulador
         s += '\n<script src="assets/interactivo.js"></script>'
+    if fichero == "dashboard.html":    # filas por anuncio y cubos, solo donde hacen falta
+        s += '\n<script src="assets/dashboard-datos.js"></script>'
+    if fichero in ("dashboard.html", "visualizacion.html"):
+        s += '\n<script src="assets/vista.js"></script>'
     return s
+
+
+def cuaderno() -> str:
+    """Celdas del cuaderno de pandas con su salida real, en HTML estático (indexable y sin JavaScript)."""
+    from html import escape
+    c = json.loads((DATOS / "cuaderno.json").read_text(encoding="utf-8"))
+    partes = []
+    for x in c["celdas"]:
+        salida = f'<pre class="nb-print">{escape(x["impreso"])}</pre>' if x["impreso"] else ""
+        if x["tabla"]:
+            tb = x["tabla"]
+            cab = f'<th>{escape(tb["nombre_indice"])}</th>' + "".join(f"<th>{escape(col)}</th>" for col in tb["columnas"])
+            filas = "".join(f'<tr><th scope="row">{escape(i)}</th>' + "".join(f"<td>{escape(v)}</td>" for v in fila) + "</tr>"
+                            for i, fila in zip(tb["index"], tb["filas"]))
+            salida += f'<div class="scroll"><table class="nb-table"><thead><tr>{cab}</tr></thead><tbody>{filas}</tbody></table></div>'
+        if x["texto"]:
+            salida += f'<pre class="nb-print">{escape(x["texto"])}</pre>'
+        segundos = f"{x['segundos']:.1f}".replace(".", ",")
+        partes.append(
+            f'<article class="nb-cell" id="celda-{x["n"]}"><div class="nb-head"><span class="nb-n">[{x["n"]}]</span>'
+            f'<div><h3>{escape(x["titulo"])}</h3><p>{escape(x["explicacion"])}</p></div></div>'
+            f'<template data-code="py" data-label="cuaderno.py · celda {x["n"]}">{escape(x["codigo"], quote=False)}</template>'
+            f'<div class="nb-out" aria-label="Salida de la celda {x["n"]}"><span class="nb-lbl">Salida · {segundos} s</span>{salida}</div></article>')
+    return "".join(partes)
 
 
 def cuerpo(fichero: str) -> str:
     contenido = (SRC / "pages" / fichero).read_text(encoding="utf-8")
     contenido = contenido.replace('rel="noopener"', 'rel="noopener noreferrer"')
-    contenido = contenido.replace("<!--CASOS-->", tarjetas()).replace("<!--RECORTE-->", recorte())
+    contenido = (contenido.replace("<!--CASOS-->", tarjetas()).replace("<!--RECORTE-->", recorte())
+                 .replace("<!--FILTROS-->", filtros()).replace("<!--PREVNEXT-->", prevnext(fichero))
+                 .replace("<!--CUADERNO-->", cuaderno() if "<!--CUADERNO-->" in contenido else ""))
     # Cifra y unidad nunca se separan de línea ("19 %", "262 €"); el código de las plantillas no se toca
     partes = re.split(r"(<template[\s\S]*?</template>)", contenido)
     contenido = "".join(p if p.startswith("<template") else re.sub(r"(\d) ([%€×])", "\\1&nbsp;\\2", p) for p in partes)
@@ -194,7 +272,7 @@ def datos_estructurados(fichero: str) -> str:
     """JSON-LD para Google: la persona en el inicio y el CV; el estudio en la página del proyecto."""
     persona = {
         "@type": "Person", "@id": BASE_URL + "#persona", "name": "Matteo Eiras Pé", "url": BASE_URL,
-        "image": BASE_URL + "assets/img/retrato-720.jpg", "jobTitle": "Data & Performance Analyst",
+        "image": BASE_URL + "assets/img/retrato.jpg", "jobTitle": "Data & Performance Analyst",
         "worksFor": {"@type": "Organization", "name": "Hotelverse", "url": "https://hotelverse.tech"},
         "address": {"@type": "PostalAddress", "addressLocality": "Palma de Mallorca", "addressRegion": "Islas Baleares", "addressCountry": "ES"},
         "alumniOf": {"@type": "CollegeOrUniversity", "name": "Universitat de les Illes Balears"},
@@ -210,9 +288,16 @@ def datos_estructurados(fichero: str) -> str:
             grafo.append({"@type": "ProfilePage", "url": BASE_URL + "cv.html", "mainEntity": {"@id": BASE_URL + "#persona"}})
     elif fichero == "mallorca.html":
         grafo = [{"@type": "Article", "headline": "¿Cuánto vale una vista al mar en Mallorca?", "inLanguage": "es",
-                  "url": BASE_URL + "mallorca.html", "image": BASE_URL + "assets/img/retrato-720.jpg",
+                  "url": BASE_URL + "mallorca.html", "image": BASE_URL + "assets/img/retrato.jpg",
                   "author": {"@type": "Person", "name": "Matteo Eiras Pé", "url": BASE_URL},
                   "about": ["Alquiler vacacional", "Pricing", "Regresión hedónica", "Mallorca"],
+                  "isBasedOn": {"@type": "Dataset", "name": "Inside Airbnb: Mallorca", "url": "https://insideairbnb.com/get-the-data/",
+                                "license": "https://creativecommons.org/licenses/by/4.0/"}}]
+    elif fichero in ("dashboard.html", "pandas.html", "visualizacion.html"):
+        titulo = next(t for f, t, *_ in PAGINAS if f == fichero).split(" | ")[0]
+        grafo = [{"@type": "Article", "headline": titulo, "inLanguage": "es", "url": BASE_URL + fichero,
+                  "image": BASE_URL + "assets/img/retrato.jpg",
+                  "author": {"@type": "Person", "name": "Matteo Eiras Pé", "url": BASE_URL},
                   "isBasedOn": {"@type": "Dataset", "name": "Inside Airbnb: Mallorca", "url": "https://insideairbnb.com/get-the-data/",
                                 "license": "https://creativecommons.org/licenses/by/4.0/"}}]
     else:
@@ -234,8 +319,8 @@ def cabeza_extra(titulo, desc, fichero="index.html"):
             '<meta property="og:locale" content="es_ES">\n<meta property="og:site_name" content="Matteo Eiras Pé">\n'
             f'<meta property="og:url" content="{url}">\n<meta property="og:title" content="{titulo}">\n'
             f'<meta property="og:description" content="{desc}">\n'
-            f'<meta property="og:image" content="{BASE_URL}assets/img/retrato-720.jpg">\n'
-            '<meta property="og:image:width" content="720">\n<meta property="og:image:height" content="900">\n'
+            f'<meta property="og:image" content="{BASE_URL}assets/img/retrato.jpg">\n'
+            '<meta property="og:image:width" content="554">\n<meta property="og:image:height" content="693">\n'
             '<meta name="twitter:card" content="summary">\n'
             + datos_estructurados(fichero))
 
@@ -250,7 +335,7 @@ def pagina_completa(fichero, titulo, desc, seguridad=False):
 
 # ------------------------------------------------------------------ assets
 (OUT / "assets").mkdir(parents=True, exist_ok=True)
-for f in ("styles.css", "app.js", "interactivo.js", "tema.js", "favicon.svg"):
+for f in ("styles.css", "app.js", "interactivo.js", "vista.js", "tema.js", "favicon.svg"):
     shutil.copy(SRC / "assets" / f, OUT / "assets" / f)
 shutil.copytree(SRC / "assets" / "img", OUT / "assets" / "img", dirs_exist_ok=True)
 
@@ -259,6 +344,11 @@ datos = {
     "sql": json.loads((DATOS / "sql_resultados.json").read_text(encoding="utf-8")),
     "mapa": json.loads((DATOS / "mapa.json").read_text(encoding="utf-8")),
 }
+# Media frente a mediana del ingreso, para el ejemplo de la página de visualización
+_ingresos = sorted(x for x in json.loads((DATOS / "dashboard.json").read_text(encoding="utf-8"))["anuncios"]["i"] if x)
+_media = sum(_ingresos) / len(_ingresos)
+datos["viz"] = {"ingreso_medio": round(_media), "ingreso_mediano": round((_ingresos[(len(_ingresos) - 1) // 2] + _ingresos[len(_ingresos) // 2]) / 2),
+                "bajo_media_pct": round(sum(x < _media for x in _ingresos) / len(_ingresos) * 100, 1), "n": len(_ingresos)}
 if (SRC / "auditoria.json").exists():   # resultado de la última auditoría, para la página Habilidades
     datos["audit"] = json.loads((SRC / "auditoria.json").read_text(encoding="utf-8"))
 (OUT / "assets" / "datos.js").write_text(
@@ -268,6 +358,8 @@ if (SRC / "auditoria.json").exists():   # resultado de la última auditoría, pa
 (OUT / "assets" / "playground.js").write_text(
     "window.PG = " + (DATOS / "playground.json").read_text(encoding="utf-8").replace("</", "<\\/") + ";\n",
     encoding="utf-8")
+(OUT / "assets" / "dashboard-datos.js").write_text(
+    "window.PD = " + (DATOS / "dashboard.json").read_text(encoding="utf-8").replace("</", "<\\/") + ";\n", encoding="utf-8")
 (OUT / "casos.html").unlink(missing_ok=True)   # sustituida por una página por caso
 
 # ------------------------------------------------------------------ versión de los assets
@@ -276,7 +368,7 @@ def version(nombre: str) -> str:
     return hashlib.sha1((OUT / "assets" / nombre).read_bytes()).hexdigest()[:8]
 
 
-VERSIONES = {n: version(n) for n in ("styles.css", "app.js", "interactivo.js", "tema.js", "datos.js")}
+VERSIONES = {n: version(n) for n in ("styles.css", "app.js", "interactivo.js", "vista.js", "tema.js", "datos.js", "dashboard-datos.js")}
 
 
 def con_version(html: str) -> str:
@@ -294,7 +386,8 @@ for fichero, titulo, desc, _ in PAGINAS:
 # Mapa del sitio para buscadores (enviarlo en Google Search Console) y robots.txt
 from datetime import date
 hoy = date.today().isoformat()
-prioridad = {"index.html": "1.0", "mallorca.html": "0.9", "cv.html": "0.9", "proyectos.html": "0.8"}
+prioridad = {"index.html": "1.0", "mallorca.html": "0.9", "cv.html": "0.9", "proyectos.html": "0.8",
+             "dashboard.html": "0.8", "pandas.html": "0.8", "visualizacion.html": "0.8"}
 (OUT / "sitemap.xml").write_text(
     '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
     + "".join(f"  <url><loc>{BASE_URL if f == 'index.html' else BASE_URL + f}</loc><lastmod>{hoy}</lastmod>"

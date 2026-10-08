@@ -139,7 +139,7 @@
     {
       "control": "Cualquier sección a 3 clics o menos",
       "ok": true,
-      "detalle": "27 destinos (9 páginas y 18 secciones). Peor caso desde cualquier página: 2 clic(s); desde el inicio: 2.",
+      "detalle": "56 destinos (12 páginas y 44 secciones). Peor caso desde cualquier página: 2 clic(s); desde el inicio: 2.",
       "hallazgos": []
     }
   ]
