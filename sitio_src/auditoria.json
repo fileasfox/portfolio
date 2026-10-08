@@ -109,7 +109,7 @@
     {
       "control": "innerHTML solo con datos escapados",
       "ok": true,
-      "detalle": "27 asignaciones revisadas: los datos pasan por esc() y el resto está en una línea base revisada a mano.",
+      "detalle": "21 asignaciones revisadas: los datos pasan por esc() y el resto está en una línea base revisada a mano.",
       "hallazgos": []
     },
     {
@@ -139,7 +139,7 @@
     {
       "control": "Cualquier sección a 3 clics o menos",
       "ok": true,
-      "detalle": "22 destinos (9 páginas y 13 secciones). Peor caso desde cualquier página: 2 clic(s); desde el inicio: 2.",
+      "detalle": "27 destinos (9 páginas y 18 secciones). Peor caso desde cualquier página: 2 clic(s); desde el inicio: 2.",
       "hallazgos": []
     }
   ]

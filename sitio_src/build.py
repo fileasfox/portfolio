@@ -20,16 +20,25 @@ DATOS = RAIZ / "proyecto_airbnb"
 OUT = RAIZ / "sitio"
 
 PAGINAS = [
-    # fichero, título de la pestaña, descripción, entrada de menú a la que pertenece
-    ("index.html", "Matteo Eiras · Data Analyst", "Portafolio de Matteo Eiras, data analyst en hospitality tech.", "index.html"),
-    ("proyectos.html", "Proyectos · Matteo Eiras", "Proyectos de datos: pricing en Mallorca y casos reales de un SaaS hotelero.", "proyectos.html"),
-    ("mallorca.html", "Vista al mar · Mallorca", "Cuánto vale cada atributo de un alojamiento en Mallorca: pandas, SQL interactivo y regresión con datos reales.", "proyectos.html"),
-    ("caso-churn.html", "Churn por ROI", "Caso: salud de cuenta y riesgo de churn por ROI en un SaaS hotelero.", "proyectos.html"),
-    ("caso-cuadre.html", "Dashboard ×2", "Caso: un dashboard que contaba el doble y cómo se cuadró con el informe oficial.", "proyectos.html"),
-    ("caso-funnel.html", "Funnel e integraciones", "Caso: funnel de invitaciones y alertas de integración con PMS y motores de reservas.", "proyectos.html"),
-    ("caso-facturacion.html", "Limpieza de facturación", "Caso: limpieza reproducible de datos de facturación con Python.", "proyectos.html"),
-    ("habilidades.html", "Habilidades · Matteo Eiras", "Habilidades de Matteo Eiras con enlaces a dónde se demuestran.", "habilidades.html"),
-    ("cv.html", "CV · Matteo Eiras", "Curriculum vitae de Matteo Eiras Pé.", "cv.html"),
+    # fichero, título (unos 60 caracteres), descripción para buscadores (unos 150), entrada de menú
+    ("index.html", "Matteo Eiras Pé | Data Analyst en hospitality tech, Palma",
+     "Data & Performance Analyst en Palma de Mallorca: SQL, BigQuery y Looker Studio aplicados a hoteles. Trayectoria, proyectos con datos reales y contacto.", "index.html"),
+    ("proyectos.html", "Proyectos de análisis de datos | Matteo Eiras Pé",
+     "Proyectos de data analytics: pricing de alquiler vacacional en Mallorca con Python y SQL, y casos reales de churn, BI y calidad del dato en un SaaS hotelero.", "proyectos.html"),
+    ("mallorca.html", "¿Cuánto vale una vista al mar en Mallorca? | Proyecto de datos",
+     "Análisis de 14.817 anuncios de Airbnb en Mallorca con pandas, SQL y regresión: la vista al mar suma un 27 % al precio. Con consola SQL y simulador interactivo.", "proyectos.html"),
+    ("caso-churn.html", "Churn por ROI en un SaaS hotelero | Caso de análisis",
+     "Cómo medir la salud de cuenta de cada hotel con su ROI mensual en BigQuery y Looker Studio para anticipar bajas. Caso real anonimizado de Customer Success.", "proyectos.html"),
+    ("caso-cuadre.html", "Un dashboard que contaba el doble | Caso de BI",
+     "Diagnóstico de un sobreconteo de 2,2 veces frente al informe oficial y rediseño de la vista en BigQuery. Una definición por métrica. Caso real anonimizado.", "proyectos.html"),
+    ("caso-funnel.html", "Funnel de invitaciones y alertas de integración | Caso",
+     "Funnel de reservas importadas a solicitudes y alertas que separan una caída comercial de un fallo del conector con PMS o motor de reservas. Caso anonimizado.", "proyectos.html"),
+    ("caso-facturacion.html", "Limpieza reproducible de datos con Python | Caso",
+     "De una hoja de facturación mantenida a mano a un proceso en Python con normalización, validación de claves y log de cambios. Caso real anonimizado.", "proyectos.html"),
+    ("habilidades.html", "Habilidades: SQL, BigQuery, Looker Studio y Python | Matteo Eiras",
+     "Habilidades de data analyst con enlace a dónde se demuestran: SQL, BigQuery, Looker Studio, Python, integraciones API y web analytics con Google Tag Manager.", "habilidades.html"),
+    ("cv.html", "CV de Matteo Eiras Pé | Data & Performance Analyst",
+     "Curriculum de Matteo Eiras Pé: Performance Manager en Hotelverse, grado en Turismo por la UIB, SQL, BigQuery y Looker Studio. Español, catalán, italiano e inglés C1.", "cv.html"),
 ]
 MENU = [("index.html", "Inicio"), ("proyectos.html", "Proyectos"), ("habilidades.html", "Habilidades"), ("cv.html", "CV")]
 
@@ -134,7 +143,7 @@ SITEMAP = [
     ("Habilidades", [("habilidades.html#datos", "Datos y análisis"), ("habilidades.html#negocio", "Negocio y técnica"),
                      ("habilidades.html#metodo", "Cómo trabajo"), ("habilidades.html#formacion", "Formación"),
                      ("habilidades.html#portal", "Este portal y auditoría")]),
-    ("Sobre mí", [("index.html", "Inicio"), ("cv.html", "CV"), ("cv.html#contacto", "Contacto"),
+    ("Sobre mí", [("index.html#sobre-mi", "Sobre mí"), ("index.html#trayectoria", "Trayectoria"), ("index.html#habilidades", "Habilidades"), ("cv.html", "CV"), ("index.html#contacto", "Contacto"),
                   ("https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/", "LinkedIn")]),
 ]
 PIE = ('<footer class="site-foot"><div class="wrap"><nav class="sitemap" aria-label="Mapa del sitio">'
@@ -150,8 +159,6 @@ def scripts(fichero: str) -> str:
     s = '<script src="assets/datos.js"></script>\n<script src="assets/app.js"></script>'
     if fichero == "mallorca.html":     # consola SQL y simulador
         s += '\n<script src="assets/interactivo.js"></script>'
-    if fichero == "index.html":        # hero interactivo
-        s += '\n<script src="assets/hero.js"></script>'
     return s
 
 
@@ -179,26 +186,71 @@ SEGURIDAD = (f'<meta http-equiv="Content-Security-Policy" content="{CSP}">\n'
 
 
 # Favicon, color de la barra del navegador y tarjeta para compartir en redes
-def cabeza_extra(titulo, desc):
+BASE_URL = "https://fileasfox.github.io/portfolio/"
+LINKEDIN = "https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/"
+
+
+def datos_estructurados(fichero: str) -> str:
+    """JSON-LD para Google: la persona en el inicio y el CV; el estudio en la página del proyecto."""
+    persona = {
+        "@type": "Person", "@id": BASE_URL + "#persona", "name": "Matteo Eiras Pé", "url": BASE_URL,
+        "image": BASE_URL + "assets/img/retrato-720.jpg", "jobTitle": "Data & Performance Analyst",
+        "worksFor": {"@type": "Organization", "name": "Hotelverse", "url": "https://hotelverse.tech"},
+        "address": {"@type": "PostalAddress", "addressLocality": "Palma de Mallorca", "addressRegion": "Islas Baleares", "addressCountry": "ES"},
+        "alumniOf": {"@type": "CollegeOrUniversity", "name": "Universitat de les Illes Balears"},
+        "knowsLanguage": ["es", "ca", "it", "en", "de"],
+        "knowsAbout": ["Análisis de datos", "SQL", "BigQuery", "Looker Studio", "Python", "pandas", "Business Intelligence",
+                       "Customer Success", "Hospitality tech", "Distribución hotelera", "Google Tag Manager"],
+        "sameAs": [LINKEDIN, "https://github.com/fileasfox"],
+    }
+    if fichero in ("index.html", "cv.html"):
+        grafo = [persona, {"@type": "WebSite", "@id": BASE_URL + "#web", "url": BASE_URL, "name": "Matteo Eiras Pé, portafolio",
+                           "inLanguage": "es", "author": {"@id": BASE_URL + "#persona"}}]
+        if fichero == "cv.html":
+            grafo.append({"@type": "ProfilePage", "url": BASE_URL + "cv.html", "mainEntity": {"@id": BASE_URL + "#persona"}})
+    elif fichero == "mallorca.html":
+        grafo = [{"@type": "Article", "headline": "¿Cuánto vale una vista al mar en Mallorca?", "inLanguage": "es",
+                  "url": BASE_URL + "mallorca.html", "image": BASE_URL + "assets/img/retrato-720.jpg",
+                  "author": {"@type": "Person", "name": "Matteo Eiras Pé", "url": BASE_URL},
+                  "about": ["Alquiler vacacional", "Pricing", "Regresión hedónica", "Mallorca"],
+                  "isBasedOn": {"@type": "Dataset", "name": "Inside Airbnb: Mallorca", "url": "https://insideairbnb.com/get-the-data/",
+                                "license": "https://creativecommons.org/licenses/by/4.0/"}}]
+    else:
+        return ""
+    datos = json.dumps({"@context": "https://schema.org", "@graph": grafo}, ensure_ascii=False).replace("</", "<\\/")
+    return f'<script type="application/ld+json">{datos}</script>\n'
+
+
+# Favicon, color de la barra, URL canónica, tarjeta para compartir y datos estructurados
+def cabeza_extra(titulo, desc, fichero="index.html"):
+    url = BASE_URL if fichero == "index.html" else BASE_URL + fichero
+    robots = "noindex" if fichero == "404.html" else "index, follow"
+    tipo = "profile" if fichero in ("index.html", "cv.html") else "article"
     return ('<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">\n'
-            '<meta name="theme-color" content="#f3f6fa" media="(prefers-color-scheme: light)">\n'
-            '<meta name="theme-color" content="#0b1724" media="(prefers-color-scheme: dark)">\n'
-            f'<meta property="og:type" content="website">\n<meta property="og:title" content="{titulo}">\n'
+            '<meta name="theme-color" content="#e9e8e4">\n'
+            f'<meta name="robots" content="{robots}">\n<meta name="author" content="Matteo Eiras Pé">\n'
+            f'<link rel="canonical" href="{url}">\n'
+            f'<meta property="og:type" content="{tipo}">\n'
+            '<meta property="og:locale" content="es_ES">\n<meta property="og:site_name" content="Matteo Eiras Pé">\n'
+            f'<meta property="og:url" content="{url}">\n<meta property="og:title" content="{titulo}">\n'
             f'<meta property="og:description" content="{desc}">\n'
-            '<meta property="og:image" content="assets/img/retrato-720.jpg">\n<meta name="twitter:card" content="summary">\n')
+            f'<meta property="og:image" content="{BASE_URL}assets/img/retrato-720.jpg">\n'
+            '<meta property="og:image:width" content="720">\n<meta property="og:image:height" content="900">\n'
+            '<meta name="twitter:card" content="summary">\n'
+            + datos_estructurados(fichero))
 
 
 def pagina_completa(fichero, titulo, desc, seguridad=False):
     return ('<!doctype html>\n<html lang="es">\n<head>\n<meta charset="utf-8">\n'
             '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">\n'
             + (SEGURIDAD if seguridad else "") +
-            f'<title>{titulo}</title>\n<meta name="description" content="{desc}">\n' + cabeza_extra(titulo, desc) + f'{FUENTES}\n</head>\n'
+            f'<title>{titulo}</title>\n<meta name="description" content="{desc}">\n' + cabeza_extra(titulo, desc, fichero) + f'{FUENTES}\n</head>\n'
             f'<body>\n{cuerpo(fichero)}\n</body>\n</html>\n')
 
 
 # ------------------------------------------------------------------ assets
 (OUT / "assets").mkdir(parents=True, exist_ok=True)
-for f in ("styles.css", "app.js", "interactivo.js", "hero.js", "tema.js", "favicon.svg"):
+for f in ("styles.css", "app.js", "interactivo.js", "tema.js", "favicon.svg"):
     shutil.copy(SRC / "assets" / f, OUT / "assets" / f)
 shutil.copytree(SRC / "assets" / "img", OUT / "assets" / "img", dirs_exist_ok=True)
 
@@ -224,7 +276,7 @@ def version(nombre: str) -> str:
     return hashlib.sha1((OUT / "assets" / nombre).read_bytes()).hexdigest()[:8]
 
 
-VERSIONES = {n: version(n) for n in ("styles.css", "app.js", "interactivo.js", "hero.js", "tema.js", "datos.js")}
+VERSIONES = {n: version(n) for n in ("styles.css", "app.js", "interactivo.js", "tema.js", "datos.js")}
 
 
 def con_version(html: str) -> str:
@@ -239,6 +291,17 @@ for fichero, titulo, desc, _ in PAGINAS:
 
 (OUT / ".nojekyll").write_text("", encoding="utf-8")   # GitHub Pages sirve los ficheros tal cual, sin Jekyll
 
+# Mapa del sitio para buscadores (enviarlo en Google Search Console) y robots.txt
+from datetime import date
+hoy = date.today().isoformat()
+prioridad = {"index.html": "1.0", "mallorca.html": "0.9", "cv.html": "0.9", "proyectos.html": "0.8"}
+(OUT / "sitemap.xml").write_text(
+    '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
+    + "".join(f"  <url><loc>{BASE_URL if f == 'index.html' else BASE_URL + f}</loc><lastmod>{hoy}</lastmod>"
+              f"<priority>{prioridad.get(f, '0.6')}</priority></url>\n" for f, *_ in PAGINAS)
+    + "</urlset>\n", encoding="utf-8")
+(OUT / "robots.txt").write_text(f"User-agent: *\nAllow: /\n\nSitemap: {BASE_URL}sitemap.xml\n", encoding="utf-8")
+
 # Página 404: GitHub Pages la sirve sola para cualquier ruta inexistente; no entra en el menú
 (OUT / "404.html").write_text(con_version(pagina_completa("404.html", "Página no encontrada", "Esta página no existe.", seguridad=True)),
                               encoding="utf-8")
@@ -246,7 +309,7 @@ for fichero, titulo, desc, _ in PAGINAS:
 # Copia para el Artifact, sin ?v= (sirve sus ficheros por ruta exacta).
 # El inicio va sin <html>/<head>/<body>: el publicador los añade.
 _, titulo, desc, _ = PAGINAS[0]
-(RAIZ / "portfolio.html").write_text(f"<title>{titulo}</title>\n" + cabeza_extra(titulo, desc) + f"{FUENTES}\n{cuerpo('index.html')}\n",
+(RAIZ / "portfolio.html").write_text(f"<title>{titulo}</title>\n" + cabeza_extra(titulo, desc, "index.html") +f"{FUENTES}\n{cuerpo('index.html')}\n",
                                      encoding="utf-8")
 ART = RAIZ / "artifact"
 ART.mkdir(exist_ok=True)
