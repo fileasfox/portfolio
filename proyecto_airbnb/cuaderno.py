@@ -199,6 +199,34 @@ print(f"Cuadre correcto en {len(sql)} municipios y 3 métricas")'''),
 ]
 
 
+# Título y explicación en inglés de cada celda, para la versión inglesa de la web (el código no cambia)
+EN = {
+    1: ("Load only what you need, with the right types",
+        "Reading 12 of 90 columns and turning repeated text into category cuts memory use. On large tables it is the difference between a process that fits in memory and one that does not."),
+    2: ("Profile data quality before calculating anything",
+        "A reusable function that reports, per column, the type, the share of nulls and the number of distinct values. It shows that a quarter of the listings publish no price."),
+    3: ("Chained cleaning, with checks",
+        "Method chaining with assign and pipe: each step reads top to bottom and leaves no intermediate variables. The asserts stop the process if something does not make sense."),
+    4: ("Named aggregations: a summary per municipality",
+        "groupby with named aggregations returns readable columns, ready for a report. Medians rather than means, because prices have a long tail."),
+    5: ("Pivot table with totals",
+        "pivot_table crosses two dimensions like an Excel pivot table, with total row and column (margins)."),
+    6: ("Join tables without losing rows on the way",
+        "A merge with validate (it fails if the relationship is not the expected one) and indicator, which finds orphans: calendar nights of listings that are no longer in the listings file."),
+    7: ("An average of averages is not the total",
+        "The most common dashboard mistake: averaging each municipality's percentages or medians. A village with 10 listings then weighs as much as one with 2,000. The Mallorca figure is computed over listings, not over municipalities."),
+    8: ("Time series: month, rolling average and year on year",
+        "resample groups by month, rolling smooths out seasonality and pct_change(12) compares each month with the same month a year earlier, which is the fair comparison in tourism."),
+    9: ("Concentration: how much income does the top 10% make?",
+        "qcut splits into deciles and transform computes each listing's weight within its municipality without losing rows. It is the basis of a Pareto analysis."),
+    10: ("Vectorise where it matters, and measure it",
+         "Assigning each listing to a segment row by row with apply(axis=1) versus column-wise with np.select. Same result, checked with assert. Note: with text, apply can be just as fast, which is why I measure before optimising."),
+    11: ("Reconcile pandas against SQL",
+         "The same metric computed in two ways must give the same answer. sqlite3 ships with Python: I load the table, repeat the calculation in SQL and compare with assert_frame_equal."),
+}
+assert len(EN) == len(CELDAS)
+
+
 def ejecutar(codigo: str, ns: dict):
     """Ejecuta como una celda de Jupyter: devuelve lo impreso y el valor de la última expresión."""
     arbol = ast.parse(codigo)
@@ -237,7 +265,7 @@ ns = {"DATOS": src, "__name__": "__cuaderno__"}
 web, nb_celdas = [], []
 for n, (titulo, explicacion, codigo) in enumerate(CELDAS, 1):
     impreso, valor, segundos = ejecutar(codigo, ns)
-    web.append({"n": n, "titulo": titulo, "explicacion": explicacion, "codigo": codigo,
+    web.append({"n": n, "titulo": titulo, "explicacion": explicacion, "titulo_en": EN[n][0], "explicacion_en": EN[n][1], "codigo": codigo,
                 "impreso": impreso.strip(), "tabla": celda_web(valor),
                 "texto": None if valor is None or isinstance(valor, (pd.DataFrame, pd.Series)) else repr(valor),
                 "segundos": round(segundos, 2)})

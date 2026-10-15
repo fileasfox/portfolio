@@ -7,6 +7,7 @@ Uso:
 Escribe sitio_src/auditoria.json (lo muestra la página Habilidades) y termina con código 1 si algo falla.
 """
 import json
+import posixpath
 import re
 import sys
 from collections import deque
@@ -15,7 +16,7 @@ from pathlib import Path
 
 RAIZ = Path(sys.argv[1] if len(sys.argv) > 1 else "sitio")
 SALIDA = Path(__file__).resolve().parent / "auditoria.json"
-HTML = sorted(RAIZ.glob("*.html"))
+HTML = sorted(RAIZ.glob("*.html")) + sorted((RAIZ / "en").glob("*.html"))   # español en la raíz, inglés en en/
 TEXTO = HTML + sorted((RAIZ / "assets").glob("*.js")) + sorted((RAIZ / "assets").glob("*.css"))
 leer = lambda p: p.read_text(encoding="utf-8", errors="replace")
 resultados = []
@@ -83,7 +84,7 @@ class P(HTMLParser):
 
 paginas = {}
 for p in HTML:
-    x = P(); x.feed(leer(p)); paginas[p.name] = x
+    x = P(); x.feed(leer(p)); paginas[p.relative_to(RAIZ).as_posix()] = x
 
 ext_mal = [f"{n}: {h}" for n, x in paginas.items() for h, rel, t in x.links
            if h.startswith("http") and not ("noopener" in rel and "noreferrer" in rel)]
@@ -109,7 +110,7 @@ guiones = [f"{p.name}: …{m.group(0)}…" for p in HTML for m in re.finditer(r"
 check("Sin guiones largos en el texto visible", not guiones, "Rangos y pausas con guion normal o con puntuación.", guiones)
 sin_skip = [n for n, x in paginas.items() if not any(h == "#contenido" for h, _, _ in x.links)]
 check("Enlace «Saltar al contenido» en todas las páginas", not sin_skip, "Para quien navega con teclado o lector de pantalla.", sin_skip)
-sin_icono = [p.name for p in HTML if 'rel="icon"' not in leer(p)]
+sin_icono = [p.relative_to(RAIZ).as_posix() for p in HTML if 'rel="icon"' not in leer(p)]
 check("Favicon y metadatos para compartir", not sin_icono and all('og:title' in leer(p) for p in HTML),
       "Icono propio, color de la barra del navegador y tarjeta Open Graph.", sin_icono)
 
@@ -124,19 +125,21 @@ check("Script de terceros con Subresource Integrity", sri_ok, "sql.js se carga d
 BASE = Path(__file__).resolve().parent / "innerhtml_revisado.json"
 revisadas = set(json.loads(BASE.read_text(encoding="utf-8"))["revisadas"]) if BASE.exists() else set()
 ASIGNACION = r"\.innerHTML\s*=([\s\S]*?);\s*\n"
+# Funciones que devuelven texto seguro: escapado (esc, hl), números formateados (fmt, eur, pc) o constantes por idioma (T)
+SEGURAS = r"\s*(esc|fmt|eur|pc|tr|T|hl|highlight|window\.PFhl)\("
 nuevas, total = [], 0
 for p in js:
     if p.name in {"datos.js", "playground.js"}: continue
     for m in re.finditer(ASIGNACION, leer(p)):
         total += 1
         for e in re.findall(r"\$\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}", m.group(1)):
-            if not re.match(r"\s*(esc|fmt|hl|highlight|window\.PFhl)\(", e) and e not in revisadas:
+            if not re.match(SEGURAS, e) and e not in revisadas:
                 nuevas.append(f"{p.name}: ${{{e[:50]}}}")
 if "--rebase" in sys.argv:   # tras revisar a mano, se aceptan las actuales como línea base
     todas = sorted({e for p in js if p.name not in {"datos.js", "playground.js"}
                     for m in re.finditer(ASIGNACION, leer(p))
                     for e in re.findall(r"\$\{([^{}]*(?:\{[^{}]*\}[^{}]*)*)\}", m.group(1))
-                    if not re.match(r"\s*(esc|fmt|hl|highlight|window\.PFhl)\(", e)})
+                    if not re.match(SEGURAS, e)})
     BASE.write_text(json.dumps({"nota": "Interpolaciones revisadas a mano: constantes, números o plantillas anidadas que ya escapan sus datos.",
                                 "revisadas": todas}, ensure_ascii=False, indent=2), encoding="utf-8")
     nuevas = []
@@ -166,10 +169,15 @@ for n, x in paginas.items():
 
 def enlaces(nodo):
     pag = nodo.split("#")[0]
+    carpeta = posixpath.dirname(pag)
     for h, _, _ in paginas[pag].links:
         if h.startswith(("http", "mailto")): continue
         destino = (pag + h) if h.startswith("#") else h
         base, _, frag = destino.partition("#")
+        if not h.startswith("#"):   # ruta relativa a la carpeta de la página: en/x.html, ../x.html, en/
+            base = posixpath.normpath(posixpath.join(carpeta, base or "."))
+            if base.endswith("en") or base == ".": base = posixpath.join(base, "index.html")
+            base = posixpath.normpath(base)
         if base in paginas:
             yield f"{base}#{frag}" if frag and f"{base}#{frag}" in destinos else base
 
@@ -194,6 +202,46 @@ desde_inicio = bfs("index.html")
 check("Cualquier sección a 3 clics o menos", peor <= 3,
       f"{len(destinos)} destinos ({len(paginas)} páginas y {len(destinos) - len(paginas)} secciones). "
       f"Peor caso desde cualquier página: {peor} clic(s); desde el inicio: {max(desde_inicio.get(t, 99) for t in destinos)}.", lejos)
+
+# Versión inglesa de cada control, para la página Habilidades en inglés
+EN = {
+    "Sin claves, tokens ni contraseñas": ("No keys, tokens or passwords", "Patterns for AWS, OpenAI, GitHub and Google keys and secret assignments."),
+    "Sin nombres internos de tablas, columnas ni clientes": ("No internal table, column or client names", "Tables and columns from the employer's data warehouse, client and supplier names."),
+    "Email no aparece completo en el código": ("Email never appears in full in the code", "The email is assembled in the browser from two parts."),
+    "Sin teléfono ni dirección postal": ("No phone number or postal address", "Phone and address from the PDF CV are left out."),
+    "Sin rutas locales del equipo": ("No local machine paths", "Windows or macOS paths that would reveal the user or the local folder structure."),
+    "Sin bases de datos, datos crudos ni código fuente publicado": ("No databases, raw data or source code published", "The site only publishes HTML, CSS, JS, images and aggregated data."),
+    "Enlaces externos con rel=\"noopener noreferrer\"": ("External links with rel=\"noopener noreferrer\"", "Stops the linked page from controlling this tab or receiving the referring URL."),
+    "Sin manejadores inline ni URLs javascript:": ("No inline handlers or javascript: URLs", "All behaviour lives in .js files (CSP-compatible)."),
+    "Content-Security-Policy en todas las páginas": ("Content-Security-Policy on every page", "Only own scripts and cdnjs; no plugins and no external forms."),
+    "Sin scripts externos en el HTML": ("No external scripts in the HTML", "The only static scripts are the site's own."),
+    "Sin recursos por HTTP sin cifrar": ("No resources over unencrypted HTTP", "Everything is served over HTTPS or from the site itself."),
+    "Ficheros de texto sin bytes nulos": ("Text files without null bytes", "A null byte breaks CSS or JS in some browsers."),
+    "Sin guiones largos en el texto visible": ("No long dashes in visible text", "Ranges and pauses use a plain hyphen or punctuation."),
+    "Enlace «Saltar al contenido» en todas las páginas": ("“Skip to content” link on every page", "For keyboard and screen reader users."),
+    "Favicon y metadatos para compartir": ("Favicon and sharing metadata", "Own icon, browser bar colour and Open Graph card."),
+    "Sin eval, new Function ni document.write": ("No eval, new Function or document.write", "Sinks that execute text as code."),
+    "Script de terceros con Subresource Integrity": ("Third-party script with Subresource Integrity", "sql.js loads from cdnjs with a SHA-384 hash and crossorigin."),
+    "innerHTML solo con datos escapados": ("innerHTML only with escaped data", None),
+    "Valores de localStorage validados": ("localStorage values validated", "The saved theme only accepts “light” or “dark”."),
+    "Imágenes sin metadatos EXIF ni GPS": ("Images without EXIF or GPS metadata", None),
+    "Identificadores seudonimizados en la consola": ("Pseudonymised IDs in the console", "Listing and host IDs are sequential, not Airbnb's."),
+    "Sin nombres de anfitriones en los datos": ("No host names in the data", "Only listing variables and aggregates."),
+    "Cualquier sección a 3 clics o menos": ("Any section within 3 clicks", None),
+}
+for r in resultados:
+    nombre, detalle = EN.get(r["control"], (r["control"], None))
+    if detalle is None:   # detalles con cifras: se traducen conservando los números
+        d = r["detalle"]
+        if r["control"].startswith("innerHTML"):
+            detalle = f"{re.search(r'\d+', d).group(0)} assignments reviewed: data goes through esc() and the rest is in a hand-reviewed baseline."
+        elif r["control"].startswith("Imágenes"):
+            detalle = f"{re.search(r'\d+', d).group(0)} images generated from canvas, without camera metadata."
+        else:
+            n = [int(x) for x in re.findall(r"\d+", d)]
+            detalle = (f"{n[0]} destinations ({n[1]} pages and {n[2]} sections). Worst case from any page: {n[3]} click(s); from the home page: {n[4]}."
+                       if len(n) >= 5 else d)
+    r["control_en"], r["detalle_en"] = nombre, detalle
 
 ok = sum(r["ok"] for r in resultados)
 SALIDA.write_text(json.dumps({"total": len(resultados), "ok": ok, "controles": resultados}, ensure_ascii=False, indent=2), encoding="utf-8")

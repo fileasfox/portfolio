@@ -1,0 +1,60 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="proyectos.html">Projects</a> / pandas notebook</nav>
+  <span class="eyebrow">Project 03, public data</span>
+  <h1>A pandas notebook with real data</h1>
+  <p class="lead">Eleven Python cells that do an analyst's job from start to finish: load, profile, clean, aggregate, join, compare over time and reconcile the result against SQL. The code really runs, and every output is the one from the last run.</p>
+  <div class="tags"><span class="tag">Python 3.14</span><span class="tag">pandas 3</span><span class="tag">numpy</span><span class="tag">sqlite3</span><span class="tag">Jupyter</span></div>
+  <div class="kpis">
+    <div class="kpi"><b>11</b><span>cells with their real output</span></div>
+    <div class="kpi"><b>5.4 M</b><span>calendar nights joined</span></div>
+    <div class="kpi"><b>84</b><span>orphan listings detected</span></div>
+    <div class="kpi"><b>53 / 53</b><span>municipalities reconciled with SQL</span></div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Notebook contents">
+    <span class="eyebrow">Cells</span>
+    <a href="#como" class="on">How to read it</a>
+    <a href="#celda-1">1 · Typed loading</a>
+    <a href="#celda-2">2 · Quality profile</a>
+    <a href="#celda-3">3 · Cleaning</a>
+    <a href="#celda-4">4 · groupby</a>
+    <a href="#celda-5">5 · pivot_table</a>
+    <a href="#celda-6">6 · merge</a>
+    <a href="#celda-7">7 · Averages</a>
+    <a href="#celda-8">8 · Time series</a>
+    <a href="#celda-9">9 · Concentration</a>
+    <a href="#celda-10">10 · Vectorising</a>
+    <a href="#celda-11">11 · SQL reconciliation</a>
+    <a href="#produccion">Taking it to production</a>
+  </nav>
+
+  <div>
+  <section class="chapter" id="como">
+    <div class="chapter-head"><h2>How to read this notebook</h2>
+      <p>Each cell starts with what it shows and why it matters in real work. Below are the code and its output. Variables carry over from one cell to the next, just like in Jupyter. Code identifiers are in Spanish, as in the original project.</p></div>
+    <div class="why">
+      <div><h4>How it is generated</h4><p><span class="mono">cuaderno.py</span> runs each cell, captures what it prints and its final value, and writes two files: the data for this page and an <span class="mono">.ipynb</span> with the same outputs.</p></div>
+      <div><h4>Where to see all of it</h4><p>The notebook opens directly on GitHub: <a href="https://github.com/fileasfox/portfolio/blob/main/proyecto_airbnb/cuaderno.ipynb" rel="noopener">cuaderno.ipynb</a>. The generator is in <a href="https://github.com/fileasfox/portfolio/blob/main/proyecto_airbnb/cuaderno.py" rel="noopener">cuaderno.py</a>.</p></div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-label="Notebook cells">
+    <!--CUADERNO-->
+  </section>
+
+  <section class="chapter" id="produccion">
+    <div class="chapter-head"><h2>What I would change to take it to production</h2>
+      <p>A notebook is for exploring and explaining. If this analysis had to run every week, I would do the following:</p></div>
+    <div class="findings">
+      <div class="finding"><b>Functions with tests</b><p>Move the cleaning into a module and test it with small hand-written cases: empty price, with a currency symbol, with thousands.</p></div>
+      <div class="finding"><b>Columnar format</b><p>Store the clean table as Parquet, or load it into BigQuery, so the compressed CSV is not read on every run.</p></div>
+      <div class="finding"><b>Reconciliations as alerts</b><p>The <span class="mono">assert</span> statements in this notebook would become checks that warn, rather than stop, when a figure drifts.</p></div>
+      <div class="finding good"><b>Already in place</b><p>Explicit types, side-effect-free cleaning, relationships validated on every merge and the result reconciled two ways.</p></div>
+    </div>
+  </section>
+  </div>
+</div>
+
+<!--PREVNEXT-->

@@ -1,0 +1,101 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="proyectos.html">Projects</a> / Market dashboard</nav>
+  <span class="eyebrow">Project 02, public data</span>
+  <h1>Mallorca holiday rental dashboard</h1>
+  <p class="lead">The kind of report I build every week in Looker Studio, rebuilt by hand so you can interact with it: pick an area, a host type or a home size and everything recalculates, always compared with the whole of Mallorca.</p>
+  <div class="tags"><span class="tag">pandas</span><span class="tag">Dashboard design</span><span class="tag">KPIs</span><span class="tag">Cross-filtering</span><span class="tag">JavaScript and SVG</span></div>
+  <nav class="jump" aria-label="On this page"><a href="#panel">Dashboard</a><a href="#decisiones">Design decisions</a><a href="#como">How it is built</a><a href="#definiciones">Definitions</a></nav>
+</header>
+
+<section class="dash" id="panel" aria-label="Interactive dashboard">
+  <div class="dash-bar" role="group" aria-label="Filters">
+    <label class="dash-f"><span>Municipality</span><select id="fMun"><option value="">All of Mallorca</option></select></label>
+    <div class="dash-f"><span id="lTramo">Host</span><div class="seg" id="fTramo" role="group" aria-labelledby="lTramo"></div></div>
+    <div class="dash-f"><span id="lCap">Guests</span><div class="seg" id="fCap" role="group" aria-labelledby="lCap"></div></div>
+    <div class="dash-tools">
+      <button class="btn sm ghost" type="button" id="dReset">Clear filters</button>
+      <button class="btn sm ghost" type="button" id="dCsv">Export CSV</button>
+      <button class="btn sm ghost" type="button" id="dLink">Copy link</button>
+    </div>
+  </div>
+
+  <p class="dash-read" id="dRead" aria-live="polite"></p>
+
+  <div class="dash-kpis" id="dKpis"></div>
+
+  <div class="dash-grid">
+    <figure class="panel wide">
+      <figcaption><h3>Unavailable nights, next 12 months</h3><p>Booked or blocked by the host. The grey line is Mallorca.</p></figcaption>
+      <svg id="dOcc" role="img" aria-label="Share of unavailable nights per month, selection against Mallorca"></svg>
+    </figure>
+    <figure class="panel">
+      <figcaption><h3>Median price by municipality</h3><p>Click a municipality to filter the whole dashboard.</p></figcaption>
+      <svg id="dMap" role="img" aria-label="Map of Mallorca by median price; each municipality filters the dashboard"></svg>
+      <div class="legend" id="dMapLegend"></div>
+    </figure>
+    <figure class="panel">
+      <figcaption><h3>Price per night distribution</h3><p>€50 bands. The line marks the selection's median.</p></figcaption>
+      <svg id="dHist" role="img" aria-label="Histogram of the selection's price per night"></svg>
+    </figure>
+    <figure class="panel">
+      <figcaption><h3>Demand: reviews per month</h3><p>Last 12 months in colour; the previous 12 in grey, to compare each month with the same month a year earlier.</p></figcaption>
+      <svg id="dRev" role="img" aria-label="Reviews per month, last 12 months against the previous 12"></svg>
+    </figure>
+    <figure class="panel">
+      <figcaption class="with-tools"><div><h3>Municipality ranking</h3><p>Top 10 with at least 30 listings. Click to filter.</p></div>
+        <label class="mini-select"><span class="sr-only">Sort by</span><select id="fRank">
+          <option value="n">Listings</option><option value="p">Median price</option><option value="o">Unavailable nights</option><option value="i">Median income</option>
+        </select></label></figcaption>
+      <svg id="dRank" role="img" aria-label="Municipality ranking by the chosen metric"></svg>
+    </figure>
+    <div class="panel wide">
+      <h3>By home size</h3>
+      <div class="scroll"><table class="dash-table" id="dTable">
+        <thead><tr><th scope="col">Guests</th><th scope="col">Listings</th><th scope="col">Median price</th><th scope="col">Unavail. nights</th><th scope="col">Median income</th><th scope="col">Rating</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+  </div>
+  <p class="dash-foot" id="dFoot"></p>
+</section>
+
+<div class="stack-lg">
+  <section class="case-block" id="decisiones">
+    <h3>Design decisions</h3>
+    <div class="findings">
+      <div class="finding"><b>Every figure with its benchmark</b><p>A KPI on its own does not say whether it is good or bad. Each one shows the difference against Mallorca, in points or percent depending on the metric.</p></div>
+      <div class="finding"><b>Medians, not means</b><p>Price and income have a long tail: a few luxury villas push the mean up. The median describes the typical listing.</p></div>
+      <div class="finding"><b>Ratios aggregated correctly</b><p>Unavailable nights are stored as numerator and denominator. When filtering, both are summed and divided at the end; percentages are never averaged.</p></div>
+      <div class="finding"><b>One meaningful colour</b><p>Red is the selection; grey is context. No decorative colours that send you looking for a legend.</p></div>
+      <div class="finding"><b>Small-sample warnings</b><p>Below 30 listings the dashboard says so and fades the figures. A median of 8 homes is not enough to decide anything.</p></div>
+      <div class="finding good"><b>Cross-filtering</b><p>The map and the ranking also filter, like chart interactions in Looker Studio. The state is kept in the link so it can be shared.</p></div>
+    </div>
+  </section>
+
+  <section class="case-block" id="como">
+    <h3>How it is built</h3>
+    <div class="why">
+      <div><h4>Preparation in pandas</h4><p><span class="mono">dashboard.py</span> reads the listings, the 5.4-million-night calendar and the reviews. It exports one row per listing (to compute medians when filtering) and a cube by municipality, host, size and month with numerators and denominators.</p></div>
+      <div><h4>Reconciled before publishing</h4><p>The script compares the cube total with a direct calculation on the calendar and stops if they differ. Mallorca's median price, €398, is the same as in the main project.</p></div>
+      <div><h4>Looker Studio equivalent</h4><p>A BigQuery source at the same grain, a calculated field <span class="mono">SUM(no_disp) / SUM(noches)</span>, filter controls and cross-filtering enabled between charts.</p></div>
+      <div><h4>What it does not show</h4><p>An unavailable night is not the same as a booked one: it includes host blocks. That is why I do not call it occupancy. 84 calendar listings that are no longer in the listings file are left out.</p></div>
+    </div>
+  </section>
+
+  <section class="case-block" id="definiciones">
+    <h3>Definitions</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Metric</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td>Listings</td><td class="wrap">Active listings in the Inside Airbnb scrape that match the filters</td></tr>
+        <tr><td>Median price</td><td class="wrap">Median published price per night. A quarter of listings publish no price and are not counted here</td></tr>
+        <tr><td>Unavailable nights</td><td class="wrap">Sum of booked or blocked nights divided by the sum of calendar nights, over the 12 months after the scrape</td></tr>
+        <tr><td>Median income</td><td class="wrap">Median estimated income over the last 12 months (Inside Airbnb's estimate), only listings with income above zero</td></tr>
+        <tr><td>Reviews, 12 months</td><td class="wrap">Reviews written in the 12 full months before the scrape. It is a demand indicator, not a count of bookings</td></tr>
+        <tr><td>Host</td><td class="wrap">Band by the host's number of listings: single (1), small (2-4), manager (5-19) and large manager (20 or more)</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+</div>
+
+<!--PREVNEXT-->

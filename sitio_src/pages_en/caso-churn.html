@@ -1,0 +1,83 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="proyectos.html">Projects</a> / Churn by ROI</nav>
+  <span class="eyebrow">Project 05, real case, anonymised</span>
+  <h1>Account health and churn risk by ROI</h1>
+  <p class="lead">Each hotel pays a fixed monthly fee. If what the product generates does not cover it, sooner or later the hotel cancels. The goal was to see it coming months in advance, not when the cancellation email arrives.</p>
+  <div class="tags"><span class="tag">BigQuery</span><span class="tag">SQL</span><span class="tag">Looker Studio</span><span class="tag">Metric definition</span></div>
+</header>
+
+<div class="stack-lg">
+  <section class="case-block">
+    <h3>First: separate two money flows</h3>
+    <div class="findings">
+      <div class="finding"><b>What the hotel pays</b><p>A fixed monthly fee by hotel type, regardless of what the product generates. It is the cost of the product.</p></div>
+      <div class="finding good"><b>What the guest pays</b><p>Room, service and upgrade chosen by the end customer. For the hotel it is <strong>revenue</strong>, and it is what the product has to justify.</p></div>
+    </div>
+    <p>Mixing them up is the easiest mistake: measuring only upgrades, or treating the hotel's revenue as if it were ours. ROI compares the two.</p>
+  </section>
+
+  <section class="case-block">
+    <h3>Defining the metric</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Concept</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td>Revenue generated</td><td class="wrap">Room price + upgrade + service, with each term set to 0 if missing, in EUR and <strong>excluding cancelled requests</strong></td></tr>
+        <tr><td>Conversion to EUR</td><td class="wrap">Latest rate per currency. The rate is in currency units per 1 EUR, so you <strong>divide</strong> by it</td></tr>
+        <tr><td>ROI</td><td class="wrap">Revenue generated in the month / monthly fee</td></tr>
+        <tr><td>Reading</td><td class="wrap">&lt; 1× does not cover the fee (risk); ≥ 1× works; ≥ 2× is the target</td></tr>
+        <tr><td>Hotels on a variable model</td><td class="wrap">Without a fixed fee ROI does not apply: they are assessed on conversion (≤ 5% is a risk) and revenue</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="case-block">
+    <h3>How I solved it</h3>
+    <ol class="steps">
+      <li><p>I agreed the definition with the accounts team before writing any SQL: what counts as revenue and what does not.</p></li>
+      <li><p>I built the currency conversion with the latest rate per currency and checked the direction of the rate against a known amount.</p></li>
+      <li><p>I excluded cancelled and test bookings with a null-tolerant filter.</p></li>
+      <li><p>I validated the fee table: every ID exists in the hotel master table, and it surfaced active accounts with no fee recorded.</p></li>
+      <li><p>I crossed ROI with conversion and classified each hotel with explicit rules.</p></li>
+      <li><p>I delivered it in Looker Studio, filterable by month and hotel, with the likely cause for each account manager.</p></li>
+    </ol>
+  </section>
+
+<template data-code="sql" data-label="BigQuery · revenue and ROI by hotel and month (simplified names)">
+WITH tasa AS (                                  -- latest rate per currency
+  SELECT currency, rate
+  FROM currency_rates
+  WHERE base_currency = 'EUR'
+  QUALIFY ROW_NUMBER() OVER (PARTITION BY currency ORDER BY last_update DESC) = 1
+),
+ingreso AS (
+  SELECT
+    b.hotel_id,
+    DATE_TRUNC(b.created_at, MONTH)                                  AS mes,
+    SUM((IFNULL(b.room_price, 0) + IFNULL(b.upgrade_price, 0)
+         + IFNULL(b.service_price, 0)) / t.rate)                     AS ingreso_eur
+  FROM bookings b
+  JOIN tasa t USING (currency)
+  WHERE b.status NOT IN ('Cancelled', 'Cancelled by Client')
+  GROUP BY 1, 2
+)
+SELECT
+  i.hotel_id, i.mes, i.ingreso_eur, f.monthly_fee,
+  SAFE_DIVIDE(i.ingreso_eur, NULLIF(f.monthly_fee, 0))               AS roi,
+  CASE
+    WHEN f.monthly_fee = 0                    THEN 'Variable: check conversion'
+    WHEN i.ingreso_eur < f.monthly_fee        THEN 'Risk'
+    WHEN i.ingreso_eur < 2 * f.monthly_fee    THEN 'Watch'
+    ELSE 'Healthy'
+  END                                                                AS estado
+FROM ingreso i
+JOIN fees f USING (hotel_id);
+</template>
+
+  <section class="case-block">
+    <h3>Result</h3>
+    <p>A monthly account-health view with three levels and a likely cause (low traffic, low conversion or low prices). The accounts team moves from reacting to a cancellation to preparing the conversation before the renewal.</p>
+    <div class="transfer"><h4>Where it applies</h4><p>Any B2B SaaS: value received against price paid, per account and per month. Customer Success, Revenue Operations and Account Management.</p></div>
+  </section>
+</div>
+
+<!--PREVNEXT-->

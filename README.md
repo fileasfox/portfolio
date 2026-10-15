@@ -12,8 +12,8 @@ Portafolio de data analyst en hospitality tech. Web estática, generada con Pyth
 | Carpeta | Contenido |
 |---|---|
 | `proyecto_airbnb/` | Análisis en Python (`analisis_mallorca.py`), consultas SQL (`sql/`), cuadre SQL frente a pandas (`ejecutar_sql.py`), datos del dashboard (`dashboard.py`) y cuaderno de pandas (`cuaderno.py`, que genera `cuaderno.ipynb`) |
-| `sitio_src/` | Páginas, estilos, scripts, generador (`build.py`) y auditoría (`auditoria.py`) |
-| `sitio/` | Web generada, la que se publica en GitHub Pages |
+| `sitio_src/` | Páginas en español (`pages/`) y en inglés (`pages_en/`), estilos, scripts, generador (`build.py`) y auditoría (`auditoria.py`) |
+| `sitio/` | Web generada, la que se publica en GitHub Pages (inglés en `sitio/en/`) |
 
 ## Reproducir
 

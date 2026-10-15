@@ -5,7 +5,12 @@
   "use strict";
   const $ = (s, r = document) => r.querySelector(s);
   const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  const fmt = (n, d = 0) => n == null ? "-" : Number(n).toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const I = window.PFi18n || { EN: false, T: es => es, tl: s => s };
+  const EN = I.EN, T = I.T, tl = I.tl;
+  const fmt = (n, d = 0) => n == null ? "-" : Number(n).toLocaleString(EN ? "en-GB" : "es-ES", { minimumFractionDigits: d, maximumFractionDigits: d });
+  const eur = n => EN ? "€" + fmt(n) : fmt(n) + " €";
+  // Carpeta de este script: la página puede estar en la raíz o en en/, y playground.js vive junto a él
+  const AQUI = document.currentScript ? new URL(".", document.currentScript.src).href : "assets/";
   const PF = window.PF || {};
   const hl = window.PFhl || (s => esc(s));
 
@@ -18,14 +23,14 @@
     const ta = $("#sqlInput"), code = $("#sqlHl"), pre = code.parentElement, out = $("#sqlOut"), st = $("#sqlStatus"), run = $("#runSql"), pres = $("#presets");
     const q = id => PF.sql.consultas.find(c => c.fichero.startsWith(id)).sql;
     const PRESETS = [
-      ["Vista al mar: comparación bruta", "-- Comparación sin controles: ¿cuánto más cobra un anuncio con vista al mar?\n-- (el modelo de la sección 05 corrige esta cifra por tamaño, zona, tipo y temporada)\nSELECT\n    vista_mar,\n    COUNT(*)              AS anuncios,\n    ROUND(AVG(precio))    AS precio_medio,\n    ROUND(AVG(bedrooms), 1) AS dormitorios_medios\nFROM listings_limpio\nWHERE room_type = 'Entire home/apt'\n  AND precio BETWEEN 71 AND 3870\nGROUP BY vista_mar;"],
-      ["Perfil de calidad", q("02")],
-      ["¿Faltan precios al azar?", q("03")],
-      ["Mediana por municipio", q("04")],
-      ["Deciles de ingreso", q("05")],
-      ["Anfitriones", q("06")],
-      ["Crecimiento anual", "-- Reseñas agregadas por año y variación con LAG()\nWITH anual AS (\n    SELECT anio, SUM(resenas) AS resenas\n    FROM reviews_mes\n    WHERE anio BETWEEN 2019 AND 2025\n    GROUP BY anio\n)\nSELECT\n    anio,\n    resenas,\n    ROUND(100.0 * (1.0 * resenas / LAG(resenas) OVER (ORDER BY anio) - 1), 1) AS crecimiento_pct\nFROM anual\nORDER BY anio;"],
-      ["Esquema de tablas", "-- Tablas disponibles en esta base de datos\nSELECT name AS tabla, sql AS definicion\nFROM sqlite_master\nWHERE type = 'table';"],
+      [T("Vista al mar: comparación bruta", "Sea view: raw comparison"), T("-- Comparación sin controles: ¿cuánto más cobra un anuncio con vista al mar?\n-- (el modelo de la sección 05 corrige esta cifra por tamaño, zona, tipo y temporada)\n", "-- Comparison without controls: how much more does a listing with a sea view charge?\n-- (the model in section 05 corrects this figure for size, area, type and season)\n") + "SELECT\n    vista_mar,\n    COUNT(*)              AS anuncios,\n    ROUND(AVG(precio))    AS precio_medio,\n    ROUND(AVG(bedrooms), 1) AS dormitorios_medios\nFROM listings_limpio\nWHERE room_type = 'Entire home/apt'\n  AND precio BETWEEN 71 AND 3870\nGROUP BY vista_mar;"],
+      [T("Perfil de calidad", "Quality profile"), q("02")],
+      [T("¿Faltan precios al azar?", "Are prices missing at random?"), q("03")],
+      [T("Mediana por municipio", "Median per municipality"), q("04")],
+      [T("Deciles de ingreso", "Income deciles"), q("05")],
+      [T("Anfitriones", "Hosts"), q("06")],
+      [T("Crecimiento anual", "Annual growth"), T("-- Reseñas agregadas por año y variación con LAG()\n", "-- Reviews per year and change with LAG()\n") + "WITH anual AS (\n    SELECT anio, SUM(resenas) AS resenas\n    FROM reviews_mes\n    WHERE anio BETWEEN 2019 AND 2025\n    GROUP BY anio\n)\nSELECT\n    anio,\n    resenas,\n    ROUND(100.0 * (1.0 * resenas / LAG(resenas) OVER (ORDER BY anio) - 1), 1) AS crecimiento_pct\nFROM anual\nORDER BY anio;"],
+      [T("Esquema de tablas", "Table schema"), T("-- Tablas disponibles en esta base de datos\n", "-- Tables available in this database\n") + "SELECT name AS tabla, sql AS definicion\nFROM sqlite_master\nWHERE type = 'table';"],
     ];
     let db = null, loading = null;
 
@@ -54,7 +59,7 @@
     const loadScript = (src, sri) => new Promise((ok, ko) => {
       const s = document.createElement("script"); s.src = src; s.onload = ok;
       if (sri) { s.integrity = sri; s.crossOrigin = "anonymous"; }
-      s.onerror = () => ko(new Error("No se pudo cargar " + src + ". Comprueba la conexión y vuelve a intentarlo."));
+      s.onerror = () => ko(new Error(T("No se pudo cargar ", "Could not load ") + src + T(". Comprueba la conexión y vuelve a intentarlo.", ". Check your connection and try again.")));
       document.head.append(s);
     });
 
@@ -63,11 +68,11 @@
       if (loading) return loading;
       loading = (async () => {
         const t0 = performance.now();
-        st.className = "status"; st.innerHTML = '<span class="spinner"></span>Cargando SQLite en tu navegador…';
+        st.className = "status"; st.innerHTML = '<span class="spinner"></span>' + T("Cargando SQLite en tu navegador…", "Loading SQLite in your browser…");
         await loadScript(SQLJS, SQLJS_SRI);
         const SQL = await window.initSqlJs();
-        st.innerHTML = '<span class="spinner"></span>Cargando 14.817 anuncios…';
-        if (!window.PG) await loadScript("assets/playground.js");
+        st.innerHTML = '<span class="spinner"></span>' + T("Cargando 14.817 anuncios…", "Loading 14,817 listings…");
+        if (!window.PG) await loadScript(AQUI + "playground.js");
         const d = new SQL.Database();
         for (const [name, t] of Object.entries(window.PG)) {
           const types = t.columnas.map((_, j) => {
@@ -81,7 +86,7 @@
           d.run("COMMIT"); ins.free();
         }
         db = d;
-        st.textContent = `Base lista en ${fmt((performance.now() - t0) / 1000, 1)} s · tablas: ${Object.keys(window.PG).join(", ")}`;
+        st.textContent = `${T("Base lista en", "Database ready in")} ${fmt((performance.now() - t0) / 1000, 1)} s · ${T("tablas", "tables")}: ${Object.keys(window.PG).join(", ")}`;
         return db;
       })().catch(e => { loading = null; throw e; });
       return loading;
@@ -99,7 +104,7 @@
 
     async function exec() {
       const sql = ta.value.trim();
-      if (!sql) { st.className = "status err"; st.textContent = "Escribe una consulta para ejecutarla."; return; }
+      if (!sql) { st.className = "status err"; st.textContent = T("Escribe una consulta para ejecutarla.", "Type a query to run it."); return; }
       run.disabled = true;
       try {
         const d = await ensureDb();
@@ -107,15 +112,15 @@
         const res = d.exec(sql);
         const ms = performance.now() - t;
         st.className = "status";
-        if (!res.length) { out.innerHTML = ""; st.textContent = `Ejecutada en ${fmt(ms, 1)} ms · sin filas de resultado`; }
+        if (!res.length) { out.innerHTML = ""; st.textContent = `${T("Ejecutada en", "Ran in")} ${fmt(ms, 1)} ms · ${T("sin filas de resultado", "no result rows")}`; }
         else {
           const r = res[res.length - 1];
           out.innerHTML = table(r);
-          st.textContent = `${fmt(r.values.length)} filas en ${fmt(ms, 1)} ms` + (r.values.length > 200 ? " · mostrando 200" : "");
+          st.textContent = `${fmt(r.values.length)} ${T("filas en", "rows in")} ${fmt(ms, 1)} ms` + (r.values.length > 200 ? T(" · mostrando 200", " · showing 200") : "");
         }
       } catch (e) {
         st.className = "status err"; st.textContent = "Error";
-        out.innerHTML = `<div class="errbox">${esc(e.message)}\n\nPista: las tablas son listings_limpio y reviews_mes. Usa «Esquema de tablas» para ver sus columnas, o «Restaurar datos» si has borrado algo.</div>`;
+        out.innerHTML = `<div class="errbox">${esc(e.message)}\n\n${T("Pista: las tablas son listings_limpio y reviews_mes. Usa «Esquema de tablas» para ver sus columnas, o «Restaurar datos» si has borrado algo.", "Hint: the tables are listings_limpio and reviews_mes. Use “Table schema” to see their columns, or “Reset data” if you deleted something.")}</div>`;
       } finally { run.disabled = false; }
     }
     run.addEventListener("click", exec);
@@ -123,7 +128,7 @@
     $("#resetDb").addEventListener("click", () => {
       if (db) db.close();
       db = null; loading = null; out.innerHTML = "";
-      st.className = "status"; st.textContent = "Datos restaurados: la próxima ejecución vuelve a cargar los 14.817 anuncios.";
+      st.className = "status"; st.textContent = T("Datos restaurados: la próxima ejecución vuelve a cargar los 14.817 anuncios.", "Data reset: the next run reloads the 14,817 listings.");
     });
     load(PRESETS[0][1], false, false);
   }
@@ -133,11 +138,12 @@
   const S = PF.res && PF.res.simulador;
   if (sim && S) {
     const mun = $("#simMun"), tipo = $("#simTipo"), mes = $("#simMes"), attrsBox = $("#simAttrs");
-    const MESES = { "2026-06": "Junio 2026", "2026-07": "Julio 2026", "2026-08": "Agosto 2026", "2026-09": "Septiembre 2026", "2026-10": "Octubre 2026" };
+    const MESES = EN ? { "2026-06": "June 2026", "2026-07": "July 2026", "2026-08": "August 2026", "2026-09": "September 2026", "2026-10": "October 2026" }
+                     : { "2026-06": "Junio 2026", "2026-07": "Julio 2026", "2026-08": "Agosto 2026", "2026-09": "Septiembre 2026", "2026-10": "Octubre 2026" };
     const sig = Object.fromEntries(PF.res.hedonico.atributos.map(a => [a.atributo, a.ic95[0] > 0 || a.ic95[1] < 0]));
     Object.entries(S.municipio_n).filter(([, n]) => n >= 40).sort((a, b) => b[1] - a[1])
       .forEach(([m, n]) => mun.add(new Option(`${m} (${fmt(n)})`, m, false, m === "Palma de Mallorca")));
-    Object.keys(S.tipo).forEach(t => tipo.add(new Option(t, t, false, t === "Apartamento")));
+    Object.keys(S.tipo).forEach(t => tipo.add(new Option(tl(t), t, false, t === "Apartamento")));
     Object.entries(MESES).forEach(([k, v]) => mes.add(new Option(v, k, false, k === "2026-07")));
     const ranges = { accommodates: "#simCap", bedrooms: "#simDor", bathrooms: "#simBan" };
     Object.entries(ranges).forEach(([k, sel]) => {
@@ -146,7 +152,7 @@
     });
     Object.keys(S.atributos).forEach(a => {
       const l = document.createElement("label"); l.className = "switch";
-      l.innerHTML = `<input type="checkbox" value="${esc(a)}"${a === "Vista al mar" ? " checked" : ""}><span>${esc(a)}${sig[a] ? "" : " (n.s.)"}</span>`;
+      l.innerHTML = `<input type="checkbox" value="${esc(a)}"${a === "Vista al mar" ? " checked" : ""}><span>${esc(tl(a))}${sig[a] ? "" : " (n.s.)"}</span>`;
       attrsBox.append(l);
     });
 
@@ -157,17 +163,17 @@
       on.forEach(a => (v += S.atributos[a]));
       return v;
     }
-    const eur = v => Math.exp(v) * S.smearing;
+    const aEur = v => Math.exp(v) * S.smearing;   // del logaritmo a euros, con el factor de Duan
     let last = 0;
     function update() {
       Object.values(ranges).forEach(sel => ($(sel + "Out").textContent = $(sel).value));
       const on = [...attrsBox.querySelectorAll("input:checked")].map(i => i.value);
-      const total = eur(xb(on)), base = eur(xb([]));
-      price.innerHTML = `${fmt(total)} €<small>/ noche</small>`;
+      const total = aEur(xb(on)), base = aEur(xb([]));
+      price.innerHTML = `${eur(total)}<small>${T("/ noche", "/ night")}</small>`;
       if (Math.round(total) !== Math.round(last)) { price.classList.add("bump"); setTimeout(() => price.classList.remove("bump"), 180); }
       last = total;
-      brk.innerHTML = `<li><span>Sin atributos</span><b>${fmt(base)} €</b></li>` +
-        on.map(a => { const d = total - eur(xb(on.filter(x => x !== a))); return `<li><span>${esc(a)}${sig[a] ? "" : " (n.s.)"}</span><b>${d >= 0 ? "+" : "−"}${fmt(Math.abs(d))} €</b></li>`; }).join("");
+      brk.innerHTML = `<li><span>${T("Sin atributos", "No attributes")}</span><b>${eur(base)}</b></li>` +
+        on.map(a => { const d = total - aEur(xb(on.filter(x => x !== a))); return `<li><span>${esc(tl(a))}${sig[a] ? "" : " (n.s.)"}</span><b>${d >= 0 ? "+" : "−"}${eur(Math.abs(d))}</b></li>`; }).join("");
     }
     sim.addEventListener("input", update);
     sim.addEventListener("change", update);

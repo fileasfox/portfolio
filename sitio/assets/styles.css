@@ -724,3 +724,8 @@ svg .row.click{cursor:pointer}
 .jump a{font:500 .72rem var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);text-underline-offset:4px}
 .vz-nice th[scope="row"],.dash-table th[scope="row"],.nb-table th[scope="row"]{font:500 .92rem/1.3 var(--f-body);text-transform:none;letter-spacing:0;color:var(--ink)}
 .nb-table th[scope="row"]{font-family:var(--f-mono);font-size:.8rem;color:var(--muted)}
+/* Selector de idioma: mismo tamaño que los botones de la cabecera */
+.lang-btn{border:1px solid var(--line);color:var(--ink);height:38px;min-width:38px;padding:0 9px;display:grid;place-items:center;font:500 .72rem var(--f-mono);letter-spacing:.12em;text-decoration:none;transition:background-color .2s,color .2s,transform .15s}
+.lang-btn:hover{background:var(--invert-bg);color:var(--invert-ink)}
+.lang-btn:active{transform:scale(.94)}
+.lang-btn:focus-visible{outline:2px solid var(--accent-mark);outline-offset:2px}

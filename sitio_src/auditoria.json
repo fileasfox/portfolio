@@ -6,97 +6,129 @@
       "control": "Sin claves, tokens ni contraseñas",
       "ok": true,
       "detalle": "Patrones de claves de AWS, OpenAI, GitHub, Google y asignaciones de secretos.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "No keys, tokens or passwords",
+      "detalle_en": "Patterns for AWS, OpenAI, GitHub and Google keys and secret assignments."
     },
     {
       "control": "Sin nombres internos de tablas, columnas ni clientes",
       "ok": true,
       "detalle": "Tablas y columnas del almacén de datos del empleador, nombres de clientes y proveedores.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "No internal table, column or client names",
+      "detalle_en": "Tables and columns from the employer's data warehouse, client and supplier names."
     },
     {
       "control": "Email no aparece completo en el código",
       "ok": true,
       "detalle": "El email se monta en el navegador a partir de dos partes.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "Email never appears in full in the code",
+      "detalle_en": "The email is assembled in the browser from two parts."
     },
     {
       "control": "Sin teléfono ni dirección postal",
       "ok": true,
       "detalle": "Teléfono y dirección del CV en PDF excluidos.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "No phone number or postal address",
+      "detalle_en": "Phone and address from the PDF CV are left out."
     },
     {
       "control": "Sin rutas locales del equipo",
       "ok": true,
       "detalle": "Rutas de Windows o macOS que delatarían el usuario o la estructura local.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "No local machine paths",
+      "detalle_en": "Windows or macOS paths that would reveal the user or the local folder structure."
     },
     {
       "control": "Sin bases de datos, datos crudos ni código fuente publicado",
       "ok": true,
       "detalle": "La web solo publica HTML, CSS, JS, imágenes y datos agregados.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "No databases, raw data or source code published",
+      "detalle_en": "The site only publishes HTML, CSS, JS, images and aggregated data."
     },
     {
       "control": "Enlaces externos con rel=\"noopener noreferrer\"",
       "ok": true,
       "detalle": "Evita que la página enlazada controle esta pestaña y que reciba la URL de origen.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "External links with rel=\"noopener noreferrer\"",
+      "detalle_en": "Stops the linked page from controlling this tab or receiving the referring URL."
     },
     {
       "control": "Sin manejadores inline ni URLs javascript:",
       "ok": true,
       "detalle": "Todo el comportamiento vive en ficheros .js (compatible con CSP).",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "No inline handlers or javascript: URLs",
+      "detalle_en": "All behaviour lives in .js files (CSP-compatible)."
     },
     {
       "control": "Content-Security-Policy en todas las páginas",
       "ok": true,
       "detalle": "Solo scripts propios y de cdnjs; sin plugins ni formularios externos.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "Content-Security-Policy on every page",
+      "detalle_en": "Only own scripts and cdnjs; no plugins and no external forms."
     },
     {
       "control": "Sin scripts externos en el HTML",
       "ok": true,
       "detalle": "Los únicos scripts estáticos son propios.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "No external scripts in the HTML",
+      "detalle_en": "The only static scripts are the site's own."
     },
     {
       "control": "Sin recursos por HTTP sin cifrar",
       "ok": true,
       "detalle": "Todo se sirve por HTTPS o desde el propio sitio.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "No resources over unencrypted HTTP",
+      "detalle_en": "Everything is served over HTTPS or from the site itself."
     },
     {
       "control": "Ficheros de texto sin bytes nulos",
       "ok": true,
       "detalle": "Un byte nulo rompe el CSS o el JS en algunos navegadores.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "Text files without null bytes",
+      "detalle_en": "A null byte breaks CSS or JS in some browsers."
     },
     {
       "control": "Sin guiones largos en el texto visible",
       "ok": true,
       "detalle": "Rangos y pausas con guion normal o con puntuación.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "No long dashes in visible text",
+      "detalle_en": "Ranges and pauses use a plain hyphen or punctuation."
     },
     {
       "control": "Enlace «Saltar al contenido» en todas las páginas",
       "ok": true,
       "detalle": "Para quien navega con teclado o lector de pantalla.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "“Skip to content” link on every page",
+      "detalle_en": "For keyboard and screen reader users."
     },
     {
       "control": "Favicon y metadatos para compartir",
       "ok": true,
       "detalle": "Icono propio, color de la barra del navegador y tarjeta Open Graph.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "Favicon and sharing metadata",
+      "detalle_en": "Own icon, browser bar colour and Open Graph card."
     },
     {
       "control": "Sin eval, new Function ni document.write",
       "ok": true,
       "detalle": "Sumideros que ejecutan texto como código.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "No eval, new Function or document.write",
+      "detalle_en": "Sinks that execute text as code."
     },
     {
       "control": "Script de terceros con Subresource Integrity",
@@ -104,43 +136,57 @@
       "detalle": "sql.js se carga desde cdnjs con hash SHA-384 y crossorigin.",
       "hallazgos": [
         "https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-asm.js"
-      ]
+      ],
+      "control_en": "Third-party script with Subresource Integrity",
+      "detalle_en": "sql.js loads from cdnjs with a SHA-384 hash and crossorigin."
     },
     {
       "control": "innerHTML solo con datos escapados",
       "ok": true,
       "detalle": "21 asignaciones revisadas: los datos pasan por esc() y el resto está en una línea base revisada a mano.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "innerHTML only with escaped data",
+      "detalle_en": "21 assignments reviewed: data goes through esc() and the rest is in a hand-reviewed baseline."
     },
     {
       "control": "Valores de localStorage validados",
       "ok": true,
       "detalle": "El tema guardado solo acepta «light» o «dark».",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "localStorage values validated",
+      "detalle_en": "The saved theme only accepts “light” or “dark”."
     },
     {
       "control": "Imágenes sin metadatos EXIF ni GPS",
       "ok": true,
       "detalle": "3 imágenes generadas desde canvas, sin metadatos de cámara.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "Images without EXIF or GPS metadata",
+      "detalle_en": "3 images generated from canvas, without camera metadata."
     },
     {
       "control": "Identificadores seudonimizados en la consola",
       "ok": true,
       "detalle": "Los IDs de anuncio y anfitrión son correlativos, no los de Airbnb.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "Pseudonymised IDs in the console",
+      "detalle_en": "Listing and host IDs are sequential, not Airbnb's."
     },
     {
       "control": "Sin nombres de anfitriones en los datos",
       "ok": true,
       "detalle": "Solo variables del anuncio y agregados.",
-      "hallazgos": []
+      "hallazgos": [],
+      "control_en": "No host names in the data",
+      "detalle_en": "Only listing variables and aggregates."
     },
     {
       "control": "Cualquier sección a 3 clics o menos",
       "ok": true,
-      "detalle": "56 destinos (12 páginas y 44 secciones). Peor caso desde cualquier página: 2 clic(s); desde el inicio: 2.",
-      "hallazgos": []
+      "detalle": "112 destinos (24 páginas y 88 secciones). Peor caso desde cualquier página: 3 clic(s); desde el inicio: 3.",
+      "hallazgos": [],
+      "control_en": "Any section within 3 clicks",
+      "detalle_en": "112 destinations (24 pages and 88 sections). Worst case from any page: 3 click(s); from the home page: 3."
     }
   ]
 }

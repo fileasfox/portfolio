@@ -1,0 +1,80 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="proyectos.html">Projects</a> / Dashboard ×2</nav>
+  <span class="eyebrow">Project 06, real case, anonymised</span>
+  <h1>The dashboard that counted double</h1>
+  <p class="lead">A client's dashboard showed about 2.2 times more entries than the official report. Two figures for the same question mean nobody trusts either of them.</p>
+  <div class="tags"><span class="tag">BigQuery</span><span class="tag">View modelling</span><span class="tag">Looker Studio</span><span class="tag">Validation</span></div>
+  <div class="kpis">
+    <div class="kpi"><b>2.2×</b><span>initial overcount</span></div>
+    <div class="kpi"><b>3</b><span>causes found</span></div>
+    <div class="kpi"><b>0</b><span>difference in entries</span></div>
+    <div class="kpi"><b>&lt; 0.1%</b><span>difference in requests</span></div>
+  </div>
+</header>
+
+<div class="stack-lg">
+  <section class="case-block">
+    <h3>Diagnosis: isolate before blaming the source</h3>
+    <div class="findings">
+      <div class="finding alert"><b>Events, not entities</b><p>The view counted every entry event. A guest who came in three times counted three times.</p></div>
+      <div class="finding alert"><b>Uniques summed across days</b><p>It added up daily uniques to get a month. The total for a date range did not match the official report, which counts uniques per month.</p></div>
+      <div class="finding alert"><b>A fragile test filter</b><p>It only caught “test” and “TEST”, and a CONCAT with null fields silently dropped whole rows.</p></div>
+      <div class="finding good"><b>The right grain</b><p>One row per booking, plus one row per hotel, month and entry locator, each type with its own columns.</p></div>
+    </div>
+  </section>
+
+  <section class="case-block">
+    <h3>One official definition per metric</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Metric</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td>Requests</td><td class="wrap">Distinct count of the external locator</td></tr>
+        <tr><td>Rooms</td><td class="wrap">Distinct count of the internal locator (one request can have several)</td></tr>
+        <tr><td>Entries</td><td class="wrap">Distinct count of locators entering the flow, only for valid entry types, per hotel and month</td></tr>
+        <tr><td>Conversion</td><td class="wrap">Requests / entries, as a calculated field. Never an average of percentages</td></tr>
+        <tr><td>Range rule</td><td class="wrap">Uniques per month, so that the total for a range = the sum of its months</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="case-block">
+    <h3>How I solved it</h3>
+    <ol class="steps">
+      <li><p>I fixed the reference: the accounts team's official report, with one specific hotel's figures month by month.</p></li>
+      <li><p>I isolated the rows that differed between the two sources, instead of comparing totals only.</p></li>
+      <li><p>I redesigned the view at booking grain and versioned it under a new name, without overwriting the old one.</p></li>
+      <li><p>I delivered numbered SQL validation blocks, each with its expected result in a comment.</p></li>
+      <li><p>I built the ratios as calculated fields in Looker Studio, named in the client's own language.</p></li>
+    </ol>
+  </section>
+
+  <div class="tabset">
+    <div class="tabs" role="tablist" aria-label="Case code">
+      <button type="button" role="tab">Test filter</button>
+      <button type="button" role="tab">Uniques per month (Looker)</button>
+    </div>
+    <div class="tabpanel" role="tabpanel">
+<template data-code="sql" data-label="BigQuery · NULL-safe, case-insensitive filter">
+WHERE NOT REGEXP_CONTAINS(
+  LOWER(CONCAT(IFNULL(localizador, ''), '|', IFNULL(nombre, ''), '|',
+               IFNULL(apellidos, ''), '|', IFNULL(dominio_email, ''))),
+  r'test')
+-- Without IFNULL, CONCAT returns NULL if a field is missing and the row silently disappears.
+</template>
+    </div>
+    <div class="tabpanel" role="tabpanel">
+<template data-code="sql" data-label="Looker Studio · calculated field “Entries”">
+COUNT_DISTINCT(CONCAT(acceso_id, "|", CAST(YEAR(fecha) * 100 + MONTH(fecha) AS TEXT)))
+-- An entry counts once per month: the total for a range matches the sum of its months.
+</template>
+    </div>
+  </div>
+
+  <section class="case-block">
+    <h3>Result</h3>
+    <p>Entries identical to the official report across the whole hotel group, and requests within 0.1%, a gap explained by the test filter. The client and the accounts team are looking at the same figure again.</p>
+    <div class="transfer"><h4>Where it applies</h4><p>Any company with more than one dashboard: reconcile against a reference before building, fix the grain and keep one definition per metric.</p></div>
+  </section>
+</div>
+
+<!--PREVNEXT-->

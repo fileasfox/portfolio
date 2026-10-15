@@ -1,0 +1,140 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="proyectos.html">Projects</a> / How I present data</nav>
+  <span class="eyebrow">Project 04, public data</span>
+  <h1>How I present data</h1>
+  <p class="lead">A good analysis that is badly presented changes no decisions. Here are six charts I often see in reports, each next to the version I would deliver, using the same real Mallorca data and the reason for every change.</p>
+  <div class="tags"><span class="tag">Data visualisation</span><span class="tag">Data storytelling</span><span class="tag">Management reporting</span><span class="tag">Accessibility</span></div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Contents">
+    <span class="eyebrow">On this page</span>
+    <a href="#principios" class="on">Principles</a>
+    <a href="#vz-tarta">Pie → bars</a>
+    <a href="#vz-eje">Truncated axis</a>
+    <a href="#vz-media">The misleading mean</a>
+    <a href="#vz-doble">Dual axis</a>
+    <a href="#vz-color">Colour</a>
+    <a href="#vz-tabla">Tables</a>
+    <a href="#informe">One-page report</a>
+    <a href="#checklist">Before sending</a>
+  </nav>
+
+  <div>
+  <section class="chapter" id="principios">
+    <div class="chapter-head"><h2>Four rules I always apply</h2></div>
+    <div class="findings">
+      <div class="finding"><b>The title is the conclusion</b><p>“Price by municipality” describes the chart. “Palma is a third cheaper than the island” says what to do with it.</p></div>
+      <div class="finding"><b>One idea per chart</b><p>If two ideas are needed, that means two aligned charts, not one with two axes.</p></div>
+      <div class="finding"><b>Colour signals</b><p>Grey for context and a single colour for what matters. The reader should know where to look without reading the legend.</p></div>
+      <div class="finding"><b>The figure with its benchmark</b><p>Against the total, the previous period or the target. A number on its own is neither good nor bad.</p></div>
+    </div>
+  </section>
+
+  <section class="chapter vz" id="vz-tarta">
+    <div class="chapter-head"><span class="eyebrow">01 · Comparing parts</span><h2 id="t-tarta"></h2></div>
+    <div class="vz-pair">
+      <figure class="vz-bad"><span class="vz-tag">Common</span><svg data-vz="tarta-mal" role="img" aria-label="Pie chart with 13 coloured slices"></svg>
+        <figcaption><b>What goes wrong.</b> Thirteen coloured slices force you back and forth to the legend, and the eye is poor at comparing angles: Santanyí and Palma look the same.</figcaption></figure>
+      <figure class="vz-good"><span class="vz-tag">Corrected</span><svg data-vz="tarta-bien" role="img" aria-label="Horizontal bars sorted by number of listings"></svg>
+        <figcaption><b>What I changed.</b> Sorted bars with the value next to each bar, the top three in colour and the rest grouped. The title states the conclusion.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter vz" id="vz-eje">
+    <div class="chapter-head"><span class="eyebrow">02 · Scale</span><h2 id="t-eje"></h2></div>
+    <div class="vz-pair">
+      <figure class="vz-bad"><span class="vz-tag">Common</span><svg data-vz="eje-mal" role="img" aria-label="Columns with the vertical axis starting at 250 euros"></svg>
+        <figcaption><b>What goes wrong.</b> The axis starts at €250. Felanitx looks eighteen times more expensive than Palma, when the real difference is 80%.</figcaption></figure>
+      <figure class="vz-good"><span class="vz-tag">Corrected</span><svg data-vz="eje-bien" role="img" aria-label="Bars from zero with Mallorca's median as a reference line"></svg>
+        <figcaption><b>What I changed.</b> The bars start at zero, because their length is the data. The island median is shown as a reference, and Palma, the exception, is in colour.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter vz" id="vz-media">
+    <div class="chapter-head"><span class="eyebrow">03 · Summarising a distribution</span><h2 id="t-media"></h2></div>
+    <div class="vz-pair">
+      <figure class="vz-bad"><span class="vz-tag">Common</span><div class="vz-kpi" id="vzMediaMal"></div>
+        <figcaption><b>What goes wrong.</b> In such an unequal distribution, a few listings drag the mean up. Two out of three listings earn less than that figure.</figcaption></figure>
+      <figure class="vz-good"><span class="vz-tag">Corrected</span><svg data-vz="media-bien" role="img" aria-label="Share of total income by decile of listings"></svg>
+        <figcaption><b>What I changed.</b> The median as the typical figure and, next to it, how income splits by decile. That is where the story is: concentration.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter vz" id="vz-doble">
+    <div class="chapter-head"><span class="eyebrow">04 · Two measures at once</span><h2 id="t-doble"></h2></div>
+    <div class="vz-pair">
+      <figure class="vz-bad"><span class="vz-tag">Common</span><svg data-vz="doble-mal" role="img" aria-label="Listing columns and a price line with two vertical axes"></svg>
+        <figcaption><b>What goes wrong.</b> With two axes, where the series cross is decided by whoever picks the scales. It suggests a link between volume and price that the data does not show.</figcaption></figure>
+      <figure class="vz-good"><span class="vz-tag">Corrected</span><svg data-vz="doble-bien" role="img" aria-label="Two bar panels aligned by municipality: listings and median price"></svg>
+        <figcaption><b>What I changed.</b> Two panels with the same municipality order, each with its own scale from zero. It reads row by row, with no tricks.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter vz" id="vz-color">
+    <div class="chapter-head"><span class="eyebrow">05 · Colour</span><h2>On a price map, darker should mean more expensive</h2></div>
+    <div class="vz-pair">
+      <figure class="vz-bad"><span class="vz-tag">Common</span><svg data-vz="color-mal" role="img" aria-label="Map of Mallorca with a rainbow scale"></svg><div class="legend" id="vzLegMal"></div>
+        <figcaption><b>What goes wrong.</b> A rainbow has no order: is green more expensive than orange? Red and green are also confused by people with colour blindness, which affects one in twelve men.</figcaption></figure>
+      <figure class="vz-good"><span class="vz-tag">Corrected</span><svg data-vz="color-bien" role="img" aria-label="Map of Mallorca with a single-hue sequential scale"></svg><div class="legend" id="vzLegBien"></div>
+        <figcaption><b>What I changed.</b> A single hue from light to dark, with four round price bands. The order is clear without a legend and survives greyscale printing.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter vz" id="vz-tabla">
+    <div class="chapter-head"><span class="eyebrow">06 · Tables</span><h2>Tables need design too</h2></div>
+    <div class="vz-pair stack">
+      <figure class="vz-bad"><span class="vz-tag">Common</span><div class="scroll"><table class="vz-raw" id="vzTablaMal"><thead></thead><tbody></tbody></table></div>
+        <figcaption><b>What goes wrong.</b> Technical column names, decimals nobody asked for, no units and alphabetical order. Finding what matters is left to the reader.</figcaption></figure>
+      <figure class="vz-good"><span class="vz-tag">Corrected</span><div class="scroll"><table class="vz-nice" id="vzTablaBien"><thead></thead><tbody></tbody></table></div>
+        <figcaption><b>What I changed.</b> Sorted by size, figures right-aligned with thousands separators and units, a bar that gives scale without reading numbers, and the price flagged against the island median.</figcaption></figure>
+    </div>
+  </section>
+
+  <section class="chapter" id="informe">
+    <div class="chapter-head"><h2>A one-page report for management</h2>
+      <p>This is how I hand a finding to someone with two minutes: the conclusion at the top, three figures, one chart, what I recommend and what I do not know. Everything else goes in the appendix.</p></div>
+    <article class="onepager" aria-label="Example executive report">
+      <header class="op-head"><span>To: Commercial management</span><span>From: Matteo Eiras</span><span>Data: July 2026</span></header>
+      <h3 class="op-title">A sea view justifies charging 27% more. A pool, 19%.</h3>
+      <p class="op-sub">Comparing Mallorca listings of the same size, area, type and date, these two attributes support the highest price premiums. It is the same logic as the surcharge for a room with a view in a hotel.</p>
+      <div class="op-kpis">
+        <div><b>+27%</b><span>sea view<br>(between +23% and +32%)</span></div>
+        <div><b>+19%</b><span>pool<br>(between +16% and +23%)</span></div>
+        <div><b>9,255</b><span>homes compared<br>with 6 controls</span></div>
+      </div>
+      <figure class="op-chart"><svg data-chart="prima" data-compact="1" role="img" aria-label="Price premium of the attributes that are distinguishable from zero"></svg>
+        <figcaption>Price premium by attribute with its 95% confidence interval. Only attributes with a clear effect.</figcaption></figure>
+      <div class="op-cols">
+        <div><h4>What I recommend</h4><ol>
+          <li>Price attributes separately, not only by room category.</li>
+          <li>Test a view surcharge between 15% and 25%, below the estimated effect so as not to lose conversion.</li>
+          <li>Measure upgrade conversion for one month before and one month after the change.</li>
+        </ol></div>
+        <div><h4>What I do not know yet</h4><ul>
+          <li>These are published prices, not prices paid.</li>
+          <li>It covers a single summer: the premium may change in low season.</li>
+          <li>It is a comparison with controls, not an experiment.</li>
+        </ul></div>
+      </div>
+      <footer class="op-foot">Source: Inside Airbnb, Mallorca, 14,817 listings. Full method and code in <a href="mallorca.html#modelo">the project</a>.</footer>
+    </article>
+  </section>
+
+  <section class="chapter" id="checklist">
+    <div class="chapter-head"><h2>What I check before sending a chart</h2></div>
+    <ol class="checklist">
+      <li><b>Does the title state the conclusion?</b> If someone only reads the title, do they know what is going on?</li>
+      <li><b>Does it match the official source?</b> At least one figure checked against a known reference.</li>
+      <li><b>Is the benchmark there?</b> Total, previous period or target, next to the figure.</li>
+      <li><b>Is the aggregation right?</b> Ratios as sum over sum; medians when there is a long tail.</li>
+      <li><b>Do the bars start at zero?</b> And if a line does not start at zero, make it obvious.</li>
+      <li><b>Is anything superfluous?</b> Borders, shadows, 3D, decimals and legends that could sit on the marks.</li>
+      <li><b>Does it work without colour?</b> For colour blindness, greyscale printing or a poor screen.</li>
+      <li><b>Does it state the sample size and date?</b> And what was left out.</li>
+    </ol>
+  </section>
+  </div>
+</div>
+
+<!--PREVNEXT-->

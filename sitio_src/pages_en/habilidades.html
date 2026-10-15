@@ -1,0 +1,83 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / Skills</nav>
+
+  <h1>Skills, with evidence</h1>
+  <p class="lead">Each skill has an honest level and a link to where you can see it applied. “Daily” is what I use at work, “Project” is what I have applied in this portfolio and “Learning” is what I am studying.</p>
+  <div class="legend"><span class="lv diario">Daily</span><span class="lv proyecto">Project</span><span class="lv formacion">Learning</span></div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Sections">
+    <span class="eyebrow">On this page</span>
+    <a href="#datos" class="on">Data</a>
+    <a href="#negocio">Business and tech</a>
+    <a href="#metodo">Method</a>
+    <a href="#formacion">Education</a>
+    <a href="#portal">This portfolio</a>
+  </nav>
+  <div>
+    <section class="chapter" id="datos">
+      <div class="chapter-head"><h2>Data and analysis</h2></div>
+      <div class="matrix">
+        <div class="mrow"><div><h3>SQL</h3><p>CTEs, window functions (ROW_NUMBER, NTILE, LAG), medians without MEDIAN(), conditional aggregates and indexes.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="mallorca.html#sql">8 queries and a SQL console</a><a href="caso-churn.html">ROI in BigQuery</a><a href="caso-cuadre.html">Reconciling views</a></div></div>
+        <div class="mrow"><div><h3>BigQuery</h3><p>Versioned views, currency conversion, null-tolerant filters and QUALIFY.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="caso-churn.html">Churn by ROI</a><a href="caso-cuadre.html">Dashboard ×2</a></div></div>
+        <div class="mrow"><div><h3>Python and pandas</h3><p>Cleaning, JSON parsing, groupby/agg, binning, merges with validation and reconciliations between sources.</p></div><span class="lv proyecto">Project</span><div class="ev"><a href="pandas.html">pandas notebook</a><a href="mallorca.html#python">Project code</a><a href="caso-facturacion.html">Billing data cleaning</a></div></div>
+        <div class="mrow"><div><h3>Applied statistics</h3><p>Regression with control variables, robust errors, selection bias and interpreting coefficients.</p></div><span class="lv proyecto">Project</span><div class="ev"><a href="mallorca.html#modelo">Model and simulator</a></div></div>
+        <div class="mrow"><div><h3>Looker Studio and dashboards</h3><p>Client-facing reports: ratios as calculated fields, date and hotel filters, cross-filtering and one definition per metric.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="dashboard.html">Market dashboard</a><a href="caso-cuadre.html">Uniques per month</a></div></div>
+        <div class="mrow"><div><h3>Data visualisation</h3><p>Choosing the right chart, conclusion-first titles, colour that signals, and one-page reports for management.</p></div><span class="lv proyecto">Project</span><div class="ev"><a href="visualizacion.html">Before and after</a></div></div>
+        <div class="mrow"><div><h3>Excel and Google Sheets</h3><p>Performance analysis and account reports.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="cv.html">Experience</a></div></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="negocio">
+      <div class="chapter-head"><h2>Business and tech</h2></div>
+      <div class="matrix">
+        <div class="mrow"><div><h3>Hotel business</h3><p>Distribution, booking engines, attribute-based upselling, the ROI of a SaaS product for the hotel.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="mallorca.html">Pricing by attribute</a><a href="caso-churn.html">ROI per hotel</a></div></div>
+        <div class="mrow"><div><h3>Integrations</h3><p>REST APIs, PMS and booking engines: validating data flows and synchronisation issues.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="caso-funnel.html">Connector alerts</a></div></div>
+        <div class="mrow"><div><h3>Web analytics</h3><p>Google Tag Manager, the Data Layer and JavaScript to measure funnels and validate event capture.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="cv.html">Experience</a></div></div>
+        <div class="mrow"><div><h3>Web development</h3><p>HTML, CSS and JavaScript without frameworks; C# and .NET in the DAW programme.</p></div><span class="lv formacion">Learning</span><div class="ev"><a href="#portal">This portfolio</a></div></div>
+        <div class="mrow"><div><h3>Client communication</h3><p>Quarterly business reviews (QBRs) with hotel chain management: from the figure to the decision.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="cv.html">Experience</a></div></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="metodo">
+      <div class="chapter-head"><h2>How I work</h2><p>Principles I apply, and that you can see in the projects.</p></div>
+      <div class="concepts">
+        <span>Reconcile before building</span><span>One definition per metric</span><span>The grain of a view</span><span>Uniques per period</span><span>NULL-safe filters</span><span>Selection bias</span><span>Control variables</span><span>Robust errors</span><span>Raw vs controlled</span><span>Versioned views</span><span>Checks with an expected result</span><span>From data to action</span>
+      </div>
+      <div class="callout"><h3>An example</h3><p>In the Mallorca project, the first SQL-pandas reconciliation failed because of rounding (€328.5), and the first version of the model gave the pool a negative premium because of a labelling bug. In both cases the error was in the data or the method, and documenting it is part of the job.</p></div>
+    </section>
+
+    <section class="chapter" id="formacion">
+      <div class="chapter-head"><h2>Education</h2><p>What each piece adds to the profile.</p></div>
+      <div class="grid-cards auto">
+        <div class="card"><span class="idx">2021 - 2025, UIB</span><h3>BA in Tourism</h3><p>Understanding the business: distribution, seasonality, customer experience and the sector's digital transformation. It is what gives the numbers meaning.</p></div>
+        <div class="card"><span class="idx">2026</span><h3>Web Application Development</h3><p>C#, .NET, HTML, CSS and JavaScript. The foundation for building my own tools, like this portfolio.</p></div>
+        <div class="card"><span class="idx">2026, Google</span><h3>Foundations of Data Science</h3><p>The life cycle of a data project, statistics and communicating results.</p></div>
+      </div>
+    </section>
+
+    <section class="chapter" id="portal">
+      <div class="chapter-head"><h2>How this portfolio is built</h2><p>No templates or frameworks: a Python generator and my own JavaScript.</p></div>
+      <ol class="stepper five" aria-label="Process"><li><b>Analysis</b><span>Python writes the results to JSON</span><span class="tool">pandas</span></li><li><b>Generator</b><span>build.py assembles each page in Spanish and English with header, footer and data</span><span class="tool">Python</span></li><li><b>Charts</b><span>SVG drawn with JavaScript from the JSON</span><span class="tool">JS and SVG</span></li><li><b>SQL console</b><span>SQLite compiled to JavaScript, running in your browser</span><span class="tool">sql.js</span></li><li><b>Design</b><span>Editorial system, red palette, light and dark themes</span><span class="tool">CSS</span></li></ol>
+<template data-code="py" data-label="build.py · simplified">
+for L in ("es", "en"):                       # one pass per language
+    destino = OUT / "en" if L == "en" else OUT
+    for fichero, *_ in PAGINAS:
+        titulo, desc, _ = meta_pagina(fichero)
+        html = pagina_completa(fichero, titulo, desc)   # header, footer, hreflang and data
+        (destino / fichero).write_text(html, encoding="utf-8")
+
+# The analysis results reach the site as data, never copied by hand
+datos = {"res": resultados, "sql": sql_resultados, "mapa": mapa}
+(OUT / "assets" / "datos.js").write_text("window.PF = " + json.dumps(datos) + ";")
+</template>
+      <div class="stack-sm">
+        <h3>Automatic audit before publishing</h3>
+        <p class="muted"><span class="mono">auditoria.py</span> checks the generated site in both languages: secrets, personal data, the employer's internal names, external links and scripts, CSP, JavaScript sinks, image metadata and that every section is within 3 clicks. If a check fails, nothing is published.</p>
+        <div class="audit" id="auditList"></div>
+      </div>
+      <p class="muted small">Tables, charts, the console and the simulator read the analysis results directly: if the data changes, rerunning the analysis and the generator is enough.</p>
+    </section>
+  </div>
+</div>

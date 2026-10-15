@@ -1,0 +1,70 @@
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="proyectos.html">Projects</a> / Billing data cleaning</nav>
+  <span class="eyebrow">Project 08, real case, anonymised</span>
+  <h1>Reproducible cleaning of billing data</h1>
+  <p class="lead">Each client's fee and tech stack lived in a hand-maintained spreadsheet. To use them in the ROI analysis they had to be loaded into BigQuery without errors, and the load had to be repeatable every time the sheet changed.</p>
+  <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">Regular expressions</span><span class="tag">BigQuery</span></div>
+</header>
+
+<div class="stack-lg">
+  <section class="case-block">
+    <h3>Problems in the original sheet</h3>
+    <div class="findings">
+      <div class="finding alert"><b>Formats</b><p>Decimals with commas and “TBC” values in numeric fields.</p></div>
+      <div class="finding alert"><b>Inconsistent names</b><p>The same supplier written in several ways, and in-house builds with free-text descriptions.</p></div>
+      <div class="finding alert"><b>Personal data</b><p>People's emails in a field meant to hold a company name.</p></div>
+      <div class="finding alert"><b>Names that do not join</b><p>Hotel names did not match the database because of dates, codes and accents. The join had to be by ID.</p></div>
+    </div>
+  </section>
+
+  <section class="case-block">
+    <h3>Cleaning rules</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Rule</th><th>Before</th><th>After</th></tr></thead>
+      <tbody>
+        <tr><td>Decimal</td><td class="mono">"1.234,50"</td><td class="mono">1234.50</td></tr>
+        <tr><td>Pending</td><td class="mono">TBC</td><td class="mono">NULL</td></tr>
+        <tr><td>Unified supplier</td><td class="mono">Synxis · SYNXIS</td><td class="mono">SynXis</td></tr>
+        <tr><td>In-house build</td><td class="mono">Custom (hotel website)</td><td class="mono">Custom</td></tr>
+        <tr><td>PMS variants</td><td class="mono">Opera Cloud v5 · OperaCloud</td><td class="mono">Opera Cloud</td></tr>
+        <tr><td>Personal data</td><td class="mono">a person's email</td><td class="mono">External agency</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="case-block">
+    <h3>How I solved it</h3>
+    <ol class="steps">
+      <li><p>A script with a single input (the original sheet) and three outputs: the clean file, the excluded rows and a log of every change.</p></li>
+      <li><p>Rules declared in an alias dictionary, so adding a new variant is one line.</p></li>
+      <li><p>Join on the numeric ID; the name always comes from the hotel master table.</p></li>
+      <li><p>Validation after loading: every ID exists in the master table, and active hotels without a fee are listed for review.</p></li>
+    </ol>
+  </section>
+
+<template data-code="py" data-label="limpieza.py · normalise supplier (simplified)">
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[a-z]{2,}$", re.I)
+ALIAS = {"synxis": "SynXis", "tecsoft": "Techsoft", "operacloud": "Opera Cloud"}
+
+def normaliza_proveedor(valor: str | None) -&gt; str | None:
+    if valor is None or valor.strip().upper() == "TBC":
+        return None
+    v = valor.strip()
+    if EMAIL_RE.match(v):                 # never store people's emails
+        return "External agency"
+    if v.lower().startswith("custom"):
+        return "Custom"
+    return ALIAS.get(v.lower().replace(" ", ""), v)
+
+df["pms"] = df["pms"].map(normaliza_proveedor)
+cambios = df_original.compare(df)          # log of what changed, cell by cell
+</template>
+
+  <section class="case-block">
+    <h3>Result</h3>
+    <p>More than 500 clients loaded with every key validated. The validation surfaced around twenty active accounts with no fee recorded, which went to billing for review. And the clean tech stack makes it possible to group technical failures by supplier in <a href="caso-funnel.html">case 07</a>.</p>
+    <div class="transfer"><h4>Where it applies</h4><p>Master spreadsheets with manual errors exist in every company. Turning them into a reproducible process is typical RevOps, finance and data quality work.</p></div>
+  </section>
+</div>
+
+<!--PREVNEXT-->

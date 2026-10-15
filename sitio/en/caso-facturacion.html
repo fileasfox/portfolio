@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Reproducible data cleaning with Python | Case</title>
+<meta name="description" content="From a hand-maintained billing sheet to a Python process with normalisation, key validation and a change log. A real, anonymised case.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#e9e8e4">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Matteo Eiras Pé">
+<link rel="canonical" href="https://fileasfox.github.io/portfolio/en/caso-facturacion.html">
+<link rel="alternate" hreflang="es" href="https://fileasfox.github.io/portfolio/caso-facturacion.html">
+<link rel="alternate" hreflang="en" href="https://fileasfox.github.io/portfolio/en/caso-facturacion.html">
+<link rel="alternate" hreflang="x-default" href="https://fileasfox.github.io/portfolio/caso-facturacion.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:site_name" content="Matteo Eiras Pé">
+<meta property="og:url" content="https://fileasfox.github.io/portfolio/en/caso-facturacion.html">
+<meta property="og:title" content="Reproducible data cleaning with Python | Case">
+<meta property="og:description" content="From a hand-maintained billing sheet to a Python process with normalisation, key validation and a change log. A real, anonymised case.">
+<meta property="og:image" content="https://fileasfox.github.io/portfolio/assets/img/retrato.jpg">
+<meta property="og:image:width" content="554">
+<meta property="og:image:height" content="693">
+<meta name="twitter:card" content="summary">
+<script src="../assets/tema.js?v=85e2a5d7"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/styles.css?v=371af605">
+</head>
+<body>
+<a class="skip" href="#contenido">Skip to content</a>
+<div class="topbar"><div class="wrap"><span class="avail"><i aria-hidden="true"></i>Open to new opportunities</span><nav aria-label="Quick links"><a href="cv.html">CV</a><a href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener noreferrer">LinkedIn</a></nav></div></div><header class="site-head"><div class="bar"><nav class="menu" id="menu" aria-label="Main"><a href="index.html">Home</a><div class="dd"><a href="proyectos.html" aria-current=page>Projects</a><button class="dd-btn" type="button" aria-expanded="false" aria-controls="ddp" aria-label="Show the list of projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="dd-panel" id="ddp"><a href="mallorca.html"><b>01 · Sea view in Mallorca</b><small>pandas, SQL, regression and console</small></a><a href="dashboard.html"><b>02 · Market dashboard</b><small>KPIs, filters and cross-filtering</small></a><a href="pandas.html"><b>03 · pandas notebook</b><small>11 cells with their real output</small></a><a href="visualizacion.html"><b>04 · How I present data</b><small>Before and after, executive report</small></a><a href="caso-churn.html"><b>05 · Churn by ROI</b><small>Customer Success · BigQuery</small></a><a href="caso-cuadre.html"><b>06 · Dashboard ×2</b><small>Metric reconciliation</small></a><a href="caso-funnel.html"><b>07 · Funnel and integrations</b><small>Connector alerts</small></a><a href="caso-facturacion.html"><b>08 · Billing data cleaning</b><small>Python · data quality</small></a><a href="habilidades.html#portal"><b>09 · This portfolio</b><small>Web development and audit</small></a><a class="all" href="proyectos.html">All projects, with filters →</a></div></div><a href="habilidades.html">Skills</a><a href="cv.html">CV</a></nav><a class="brand" href="index.html" aria-label="Matteo Eiras, home">Eiras<span class="dot">.</span></a><div class="head-tools"><a class="lang-btn" href="../caso-facturacion.html" hreflang="es" lang="es" aria-label="Leer esta página en español">ES</a><button class="icon-btn" id="themeBtn" type="button" aria-label="Switch theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg></button><button class="icon-btn burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div><span class="progress" aria-hidden="true"></span></div></header>
+<main class="wrap" id="contenido" tabindex="-1">
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="proyectos.html">Projects</a> / Billing data cleaning</nav>
+  <span class="eyebrow">Project 08, real case, anonymised</span>
+  <h1>Reproducible cleaning of billing data</h1>
+  <p class="lead">Each client's fee and tech stack lived in a hand-maintained spreadsheet. To use them in the ROI analysis they had to be loaded into BigQuery without errors, and the load had to be repeatable every time the sheet changed.</p>
+  <div class="tags"><span class="tag">Python</span><span class="tag">pandas</span><span class="tag">Regular expressions</span><span class="tag">BigQuery</span></div>
+</header>
+
+<div class="stack-lg">
+  <section class="case-block">
+    <h3>Problems in the original sheet</h3>
+    <div class="findings">
+      <div class="finding alert"><b>Formats</b><p>Decimals with commas and “TBC” values in numeric fields.</p></div>
+      <div class="finding alert"><b>Inconsistent names</b><p>The same supplier written in several ways, and in-house builds with free-text descriptions.</p></div>
+      <div class="finding alert"><b>Personal data</b><p>People's emails in a field meant to hold a company name.</p></div>
+      <div class="finding alert"><b>Names that do not join</b><p>Hotel names did not match the database because of dates, codes and accents. The join had to be by ID.</p></div>
+    </div>
+  </section>
+
+  <section class="case-block">
+    <h3>Cleaning rules</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Rule</th><th>Before</th><th>After</th></tr></thead>
+      <tbody>
+        <tr><td>Decimal</td><td class="mono">"1.234,50"</td><td class="mono">1234.50</td></tr>
+        <tr><td>Pending</td><td class="mono">TBC</td><td class="mono">NULL</td></tr>
+        <tr><td>Unified supplier</td><td class="mono">Synxis · SYNXIS</td><td class="mono">SynXis</td></tr>
+        <tr><td>In-house build</td><td class="mono">Custom (hotel website)</td><td class="mono">Custom</td></tr>
+        <tr><td>PMS variants</td><td class="mono">Opera Cloud v5 · OperaCloud</td><td class="mono">Opera Cloud</td></tr>
+        <tr><td>Personal data</td><td class="mono">a person's email</td><td class="mono">External agency</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="case-block">
+    <h3>How I solved it</h3>
+    <ol class="steps">
+      <li><p>A script with a single input (the original sheet) and three outputs: the clean file, the excluded rows and a log of every change.</p></li>
+      <li><p>Rules declared in an alias dictionary, so adding a new variant is one line.</p></li>
+      <li><p>Join on the numeric ID; the name always comes from the hotel master table.</p></li>
+      <li><p>Validation after loading: every ID exists in the master table, and active hotels without a fee are listed for review.</p></li>
+    </ol>
+  </section>
+
+<template data-code="py" data-label="limpieza.py · normalise supplier (simplified)">
+EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[a-z]{2,}$", re.I)
+ALIAS = {"synxis": "SynXis", "tecsoft": "Techsoft", "operacloud": "Opera Cloud"}
+
+def normaliza_proveedor(valor: str | None) -&gt; str | None:
+    if valor is None or valor.strip().upper() == "TBC":
+        return None
+    v = valor.strip()
+    if EMAIL_RE.match(v):                 # never store people's emails
+        return "External agency"
+    if v.lower().startswith("custom"):
+        return "Custom"
+    return ALIAS.get(v.lower().replace(" ", ""), v)
+
+df["pms"] = df["pms"].map(normaliza_proveedor)
+cambios = df_original.compare(df)          # log of what changed, cell by cell
+</template>
+
+  <section class="case-block">
+    <h3>Result</h3>
+    <p>More than 500 clients loaded with every key validated. The validation surfaced around twenty active accounts with no fee recorded, which went to billing for review. And the clean tech stack makes it possible to group technical failures by supplier in <a href="caso-funnel.html">case 07</a>.</p>
+    <div class="transfer"><h4>Where it applies</h4><p>Master spreadsheets with manual errors exist in every company. Turning them into a reproducible process is typical RevOps, finance and data quality work.</p></div>
+  </section>
+</div>
+
+<nav class="prevnext" aria-label="Other projects"><a href="caso-funnel.html"><span>← Previous</span><b>07 · Funnel and integrations</b></a><a class="next" href="habilidades.html#portal"><span>Next →</span><b>09 · This portfolio</b></a></nav>
+
+</main>
+<footer class="site-foot"><div class="wrap"><nav class="sitemap" aria-label="Site map"><div><h2>Projects</h2><a href="proyectos.html">All projects</a><a href="mallorca.html">Sea view in Mallorca</a><a href="dashboard.html">Market dashboard</a><a href="pandas.html">pandas notebook</a><a href="visualizacion.html">How I present data</a><a href="caso-churn.html">Churn by ROI</a><a href="caso-cuadre.html">Dashboard ×2</a><a href="caso-funnel.html">Funnel and integrations</a><a href="caso-facturacion.html">Billing data cleaning</a><a href="habilidades.html#portal">This portfolio</a></div><div><h2>Mallorca project</h2><a href="mallorca.html#datos">Data and quality</a><a href="mallorca.html#python">Python and pandas</a><a href="mallorca.html#sql">SQL and console</a><a href="mallorca.html#modelo">Model and simulator</a><a href="mallorca.html#hallazgos">Findings and map</a><a href="mallorca.html#conclusiones">Conclusions</a></div><div><h2>Skills</h2><a href="habilidades.html#datos">Data and analysis</a><a href="habilidades.html#negocio">Business and tech</a><a href="habilidades.html#metodo">How I work</a><a href="habilidades.html#formacion">Education</a><a href="habilidades.html#portal">This portfolio and audit</a></div><div><h2>About me</h2><a href="index.html#sobre-mi">About me</a><a href="index.html#trayectoria">Experience</a><a href="index.html#habilidades">Skills</a><a href="cv.html">CV</a><a href="index.html#contacto">Contact</a><a href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener noreferrer">LinkedIn</a></div></nav><div class="foot-meta"><span>Matteo Eiras Pé, Palma de Mallorca</span><span>Project data: Inside Airbnb (CC BY 4.0)</span></div><div class="foot-word" aria-hidden="true">Eiras.</div></div></footer>
+<script src="../assets/datos.js?v=fa5e6ca7"></script>
+<script src="../assets/app.js?v=959886a8"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>A dashboard that counted double | BI case</title>
+<meta name="description" content="Diagnosing a 2.2x overcount against the official report and redesigning the BigQuery view. One definition per metric. A real, anonymised case.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#e9e8e4">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Matteo Eiras Pé">
+<link rel="canonical" href="https://fileasfox.github.io/portfolio/en/caso-cuadre.html">
+<link rel="alternate" hreflang="es" href="https://fileasfox.github.io/portfolio/caso-cuadre.html">
+<link rel="alternate" hreflang="en" href="https://fileasfox.github.io/portfolio/en/caso-cuadre.html">
+<link rel="alternate" hreflang="x-default" href="https://fileasfox.github.io/portfolio/caso-cuadre.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:site_name" content="Matteo Eiras Pé">
+<meta property="og:url" content="https://fileasfox.github.io/portfolio/en/caso-cuadre.html">
+<meta property="og:title" content="A dashboard that counted double | BI case">
+<meta property="og:description" content="Diagnosing a 2.2x overcount against the official report and redesigning the BigQuery view. One definition per metric. A real, anonymised case.">
+<meta property="og:image" content="https://fileasfox.github.io/portfolio/assets/img/retrato.jpg">
+<meta property="og:image:width" content="554">
+<meta property="og:image:height" content="693">
+<meta name="twitter:card" content="summary">
+<script src="../assets/tema.js?v=85e2a5d7"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/styles.css?v=371af605">
+</head>
+<body>
+<a class="skip" href="#contenido">Skip to content</a>
+<div class="topbar"><div class="wrap"><span class="avail"><i aria-hidden="true"></i>Open to new opportunities</span><nav aria-label="Quick links"><a href="cv.html">CV</a><a href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener noreferrer">LinkedIn</a></nav></div></div><header class="site-head"><div class="bar"><nav class="menu" id="menu" aria-label="Main"><a href="index.html">Home</a><div class="dd"><a href="proyectos.html" aria-current=page>Projects</a><button class="dd-btn" type="button" aria-expanded="false" aria-controls="ddp" aria-label="Show the list of projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="dd-panel" id="ddp"><a href="mallorca.html"><b>01 · Sea view in Mallorca</b><small>pandas, SQL, regression and console</small></a><a href="dashboard.html"><b>02 · Market dashboard</b><small>KPIs, filters and cross-filtering</small></a><a href="pandas.html"><b>03 · pandas notebook</b><small>11 cells with their real output</small></a><a href="visualizacion.html"><b>04 · How I present data</b><small>Before and after, executive report</small></a><a href="caso-churn.html"><b>05 · Churn by ROI</b><small>Customer Success · BigQuery</small></a><a href="caso-cuadre.html"><b>06 · Dashboard ×2</b><small>Metric reconciliation</small></a><a href="caso-funnel.html"><b>07 · Funnel and integrations</b><small>Connector alerts</small></a><a href="caso-facturacion.html"><b>08 · Billing data cleaning</b><small>Python · data quality</small></a><a href="habilidades.html#portal"><b>09 · This portfolio</b><small>Web development and audit</small></a><a class="all" href="proyectos.html">All projects, with filters →</a></div></div><a href="habilidades.html">Skills</a><a href="cv.html">CV</a></nav><a class="brand" href="index.html" aria-label="Matteo Eiras, home">Eiras<span class="dot">.</span></a><div class="head-tools"><a class="lang-btn" href="../caso-cuadre.html" hreflang="es" lang="es" aria-label="Leer esta página en español">ES</a><button class="icon-btn" id="themeBtn" type="button" aria-label="Switch theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg></button><button class="icon-btn burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div><span class="progress" aria-hidden="true"></span></div></header>
+<main class="wrap" id="contenido" tabindex="-1">
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="proyectos.html">Projects</a> / Dashboard ×2</nav>
+  <span class="eyebrow">Project 06, real case, anonymised</span>
+  <h1>The dashboard that counted double</h1>
+  <p class="lead">A client's dashboard showed about 2.2 times more entries than the official report. Two figures for the same question mean nobody trusts either of them.</p>
+  <div class="tags"><span class="tag">BigQuery</span><span class="tag">View modelling</span><span class="tag">Looker Studio</span><span class="tag">Validation</span></div>
+  <div class="kpis">
+    <div class="kpi"><b>2.2×</b><span>initial overcount</span></div>
+    <div class="kpi"><b>3</b><span>causes found</span></div>
+    <div class="kpi"><b>0</b><span>difference in entries</span></div>
+    <div class="kpi"><b>&lt; 0.1%</b><span>difference in requests</span></div>
+  </div>
+</header>
+
+<div class="stack-lg">
+  <section class="case-block">
+    <h3>Diagnosis: isolate before blaming the source</h3>
+    <div class="findings">
+      <div class="finding alert"><b>Events, not entities</b><p>The view counted every entry event. A guest who came in three times counted three times.</p></div>
+      <div class="finding alert"><b>Uniques summed across days</b><p>It added up daily uniques to get a month. The total for a date range did not match the official report, which counts uniques per month.</p></div>
+      <div class="finding alert"><b>A fragile test filter</b><p>It only caught “test” and “TEST”, and a CONCAT with null fields silently dropped whole rows.</p></div>
+      <div class="finding good"><b>The right grain</b><p>One row per booking, plus one row per hotel, month and entry locator, each type with its own columns.</p></div>
+    </div>
+  </section>
+
+  <section class="case-block">
+    <h3>One official definition per metric</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Metric</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td>Requests</td><td class="wrap">Distinct count of the external locator</td></tr>
+        <tr><td>Rooms</td><td class="wrap">Distinct count of the internal locator (one request can have several)</td></tr>
+        <tr><td>Entries</td><td class="wrap">Distinct count of locators entering the flow, only for valid entry types, per hotel and month</td></tr>
+        <tr><td>Conversion</td><td class="wrap">Requests / entries, as a calculated field. Never an average of percentages</td></tr>
+        <tr><td>Range rule</td><td class="wrap">Uniques per month, so that the total for a range = the sum of its months</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section class="case-block">
+    <h3>How I solved it</h3>
+    <ol class="steps">
+      <li><p>I fixed the reference: the accounts team's official report, with one specific hotel's figures month by month.</p></li>
+      <li><p>I isolated the rows that differed between the two sources, instead of comparing totals only.</p></li>
+      <li><p>I redesigned the view at booking grain and versioned it under a new name, without overwriting the old one.</p></li>
+      <li><p>I delivered numbered SQL validation blocks, each with its expected result in a comment.</p></li>
+      <li><p>I built the ratios as calculated fields in Looker Studio, named in the client's own language.</p></li>
+    </ol>
+  </section>
+
+  <div class="tabset">
+    <div class="tabs" role="tablist" aria-label="Case code">
+      <button type="button" role="tab">Test filter</button>
+      <button type="button" role="tab">Uniques per month (Looker)</button>
+    </div>
+    <div class="tabpanel" role="tabpanel">
+<template data-code="sql" data-label="BigQuery · NULL-safe, case-insensitive filter">
+WHERE NOT REGEXP_CONTAINS(
+  LOWER(CONCAT(IFNULL(localizador, ''), '|', IFNULL(nombre, ''), '|',
+               IFNULL(apellidos, ''), '|', IFNULL(dominio_email, ''))),
+  r'test')
+-- Without IFNULL, CONCAT returns NULL if a field is missing and the row silently disappears.
+</template>
+    </div>
+    <div class="tabpanel" role="tabpanel">
+<template data-code="sql" data-label="Looker Studio · calculated field “Entries”">
+COUNT_DISTINCT(CONCAT(acceso_id, "|", CAST(YEAR(fecha) * 100 + MONTH(fecha) AS TEXT)))
+-- An entry counts once per month: the total for a range matches the sum of its months.
+</template>
+    </div>
+  </div>
+
+  <section class="case-block">
+    <h3>Result</h3>
+    <p>Entries identical to the official report across the whole hotel group, and requests within 0.1%, a gap explained by the test filter. The client and the accounts team are looking at the same figure again.</p>
+    <div class="transfer"><h4>Where it applies</h4><p>Any company with more than one dashboard: reconcile against a reference before building, fix the grain and keep one definition per metric.</p></div>
+  </section>
+</div>
+
+<nav class="prevnext" aria-label="Other projects"><a href="caso-churn.html"><span>← Previous</span><b>05 · Churn by ROI</b></a><a class="next" href="caso-funnel.html"><span>Next →</span><b>07 · Funnel and integrations</b></a></nav>
+
+</main>
+<footer class="site-foot"><div class="wrap"><nav class="sitemap" aria-label="Site map"><div><h2>Projects</h2><a href="proyectos.html">All projects</a><a href="mallorca.html">Sea view in Mallorca</a><a href="dashboard.html">Market dashboard</a><a href="pandas.html">pandas notebook</a><a href="visualizacion.html">How I present data</a><a href="caso-churn.html">Churn by ROI</a><a href="caso-cuadre.html">Dashboard ×2</a><a href="caso-funnel.html">Funnel and integrations</a><a href="caso-facturacion.html">Billing data cleaning</a><a href="habilidades.html#portal">This portfolio</a></div><div><h2>Mallorca project</h2><a href="mallorca.html#datos">Data and quality</a><a href="mallorca.html#python">Python and pandas</a><a href="mallorca.html#sql">SQL and console</a><a href="mallorca.html#modelo">Model and simulator</a><a href="mallorca.html#hallazgos">Findings and map</a><a href="mallorca.html#conclusiones">Conclusions</a></div><div><h2>Skills</h2><a href="habilidades.html#datos">Data and analysis</a><a href="habilidades.html#negocio">Business and tech</a><a href="habilidades.html#metodo">How I work</a><a href="habilidades.html#formacion">Education</a><a href="habilidades.html#portal">This portfolio and audit</a></div><div><h2>About me</h2><a href="index.html#sobre-mi">About me</a><a href="index.html#trayectoria">Experience</a><a href="index.html#habilidades">Skills</a><a href="cv.html">CV</a><a href="index.html#contacto">Contact</a><a href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener noreferrer">LinkedIn</a></div></nav><div class="foot-meta"><span>Matteo Eiras Pé, Palma de Mallorca</span><span>Project data: Inside Airbnb (CC BY 4.0)</span></div><div class="foot-word" aria-hidden="true">Eiras.</div></div></footer>
+<script src="../assets/datos.js?v=fa5e6ca7"></script>
+<script src="../assets/app.js?v=959886a8"></script>
+</body>
+</html>

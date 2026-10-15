@@ -1,5 +1,5 @@
 /* Dashboard de mercado y página «Cómo presento los datos».
-   Usa el tooltip (PFtip) y el mapa (PFmap) de app.js. Todo el texto entra con textContent. */
+   Usa el tooltip (PFtip), el mapa (PFmap) y el idioma (PFi18n) de app.js. Todo el texto entra con textContent. */
 (function () {
   "use strict";
   const $ = (s, r = document) => r.querySelector(s);
@@ -7,14 +7,21 @@
   const NS = "http://www.w3.org/2000/svg";
   const el = (n, a = {}, t) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (t != null) e.textContent = t; return e; };
   const h = (n, a = {}, t) => { const e = document.createElement(n); for (const k in a) e.setAttribute(k, a[k]); if (t != null) e.textContent = t; return e; };
-  const fmt = (n, d = 0) => n == null || Number.isNaN(n) ? "-" : Number(n).toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: "always" });
+  // Idioma: tr(español, inglés). Se llama tr y no T porque T es el margen superior en los gráficos.
+  const EN = document.documentElement.lang === "en";
+  const tr = (es, en) => EN ? en : es;
+  const fmt = (n, d = 0) => n == null || Number.isNaN(n) ? "-" : Number(n).toLocaleString(EN ? "en-GB" : "es-ES", { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: "always" });
+  const eur = (n, d = 0) => n == null ? "-" : EN ? "€" + fmt(n, d) : fmt(n, d) + " €";
+  const pc = (n, d = 0) => n == null ? "-" : fmt(n, d) + (EN ? "%" : " %");
   const signo = (v, d = 0) => (v > 0 ? "+" : v < 0 ? "−" : "") + fmt(Math.abs(v), d);
   const mediana = a => { if (!a.length) return null; const s = Float64Array.from(a).sort(), m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
   const suma = a => a.reduce((x, y) => x + y, 0);
   const tip = window.PFtip || { conTip: n => n, show() {}, hide() {} };
-  const MESES_LARGO = ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  const MESES_LARGO = EN ? ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+                         : ["enero", "febrero", "marzo", "abril", "mayo", "junio", "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre"];
+  const MESES = EN ? ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+                   : ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
   const r10 = v => v == null ? null : Math.round(v / 10) * 10;   // ingresos a decenas: sin precisión falsa
-  const MESES = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
   const mesCorto = s => { const [y, m] = s.split("-"); return MESES[+m - 1] + (m === "01" ? " " + y.slice(2) : ""); };
 
   // Dibuja al ancho real del contenedor y redibuja si cambia (el texto no encoge en móvil)
@@ -32,7 +39,7 @@
   const lienzo = (svg, W, H) => { svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("height", H); };
   const rejilla = (svg, x1, x2, y, solida) => svg.append(el("line", { x1, x2, y1: y, y2: y, stroke: "var(--line)", "stroke-dasharray": solida ? "0" : "3 4" }));
 
-  // Barras horizontales: filas [{k, v, color, tip, onclick}]; si min no es 0 se ve el truco
+  // Barras horizontales: filas [{k, v, color, tip, onclick}]
   function barrasH(svg, W, filas, o = {}) {
     const L = o.L || Math.min(170, W * .36), Rr = W - (o.rpad || 64), rowH = o.rowH || 28, T = o.top || 4;
     const H = T + filas.length * rowH + (o.ref != null ? 24 : 6);
@@ -58,7 +65,9 @@
   const D = window.PD, panel = $("#panel");
   if (D && panel) {
     const A = D.anuncios, N = A.m.length, MUN = D.municipios;
-    const TRAMOS = ["Particular", "2-4", "5-19", "20+"], TRAMOS_LARGO = ["particulares (1 anuncio)", "anfitriones con 2 a 4 anuncios", "gestores con 5 a 19 anuncios", "grandes gestores (20 o más)"];
+    const TRAMOS = [tr("Particular", "Single"), "2-4", "5-19", "20+"];
+    const TRAMOS_LARGO = EN ? ["single-listing hosts", "hosts with 2 to 4 listings", "managers with 5 to 19 listings", "large managers (20 or more)"]
+                            : ["particulares (1 anuncio)", "anfitriones con 2 a 4 anuncios", "gestores con 5 a 19 anuncios", "grandes gestores (20 o más)"];
     const st = { m: -1, t: -1, c: -1 };
 
     // Estado en el enlace: #m=Pollença&t=0&c=2
@@ -96,7 +105,7 @@
       .forEach(o => fMun.append(h("option", { value: o.m }, `${o.nombre} (${fmt(o.n)})`)));
     fMun.addEventListener("change", () => { st.m = fMun.value === "" ? -1 : +fMun.value; pintar(); });
     function segmentado(box, etiquetas, clave) {
-      ["Todos", ...etiquetas].forEach((t, k) => {
+      [tr("Todos", "All"), ...etiquetas].forEach((t, k) => {
         const b = h("button", { type: "button", class: "chip", "aria-pressed": "false" }, t);
         b.addEventListener("click", () => { st[clave] = k - 1; pintar(); });
         box.append(b);
@@ -108,17 +117,21 @@
     $("#fRank").addEventListener("change", () => pintar());
     const avisar = (b, txt) => { const o = b.textContent; b.textContent = txt; setTimeout(() => (b.textContent = o), 1800); };
     $("#dLink").addEventListener("click", e => {
-      if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(() => avisar(e.target, "Enlace copiado"), () => avisar(e.target, "Copia la barra de direcciones"));
-      else avisar(e.target, "Copia la barra de direcciones");
+      const fallo = tr("Copia la barra de direcciones", "Copy the address bar");
+      if (navigator.clipboard) navigator.clipboard.writeText(location.href).then(() => avisar(e.target, tr("Enlace copiado", "Link copied")), () => avisar(e.target, fallo));
+      else avisar(e.target, fallo);
     });
     $("#dCsv").addEventListener("click", () => {
       const filas = porMunicipio(st).filter(r => r.n > 0).sort((a, b) => b.n - a.n);
-      const q = v => /[;"\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
-      const num = (v, d = 0) => v == null ? "" : v.toFixed(d).replace(".", ",");
-      const csv = ["municipio;anuncios;precio_mediano_eur;noches_no_disponibles_pct;ingreso_mediano_eur;valoracion_media"]
-        .concat(filas.map(r => [q(r.nombre), r.n, num(r.precio), num(r.occ, 1), num(r.ingreso), num(r.valor, 2)].join(";"))).join("\r\n");
+      const q = v => /[;,"\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
+      // CSV a la española (punto y coma, coma decimal) o a la inglesa (coma, punto decimal)
+      const sep = EN ? "," : ";";
+      const num = (v, d = 0) => v == null ? "" : EN ? v.toFixed(d) : v.toFixed(d).replace(".", ",");
+      const cab = EN ? "municipality,listings,median_price_eur,unavailable_nights_pct,median_income_eur,average_rating"
+                     : "municipio;anuncios;precio_mediano_eur;noches_no_disponibles_pct;ingreso_mediano_eur;valoracion_media";
+      const csv = [cab].concat(filas.map(r => [q(r.nombre), r.n, num(r.precio), num(r.occ, 1), num(r.ingreso), num(r.valor, 2)].join(sep))).join("\r\n");
       const url = URL.createObjectURL(new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" }));
-      const a = h("a", { href: url, download: "mallorca-municipios.csv" }); document.body.append(a); a.click(); a.remove();
+      const a = h("a", { href: url, download: tr("mallorca-municipios.csv", "mallorca-municipalities.csv") }); document.body.append(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     });
 
@@ -127,8 +140,9 @@
       const p = [];
       if (st.m >= 0) p.push(MUN[st.m]);
       if (st.t >= 0) p.push(TRAMOS_LARGO[st.t]);
-      if (st.c >= 0) p.push(`viviendas para ${D.capacidad[st.c]} personas`);
-      return p.length ? p.join(", ") : "Toda Mallorca";
+      if (st.c >= 0) p.push(tr(`viviendas para ${D.capacidad[st.c]} personas`, `homes for ${D.capacidad[st.c]} guests`));
+      const txt = p.length ? p.join(", ") : tr("Toda Mallorca", "All of Mallorca");
+      return txt.charAt(0).toUpperCase() + txt.slice(1);   // abre la frase de la lectura automática
     };
     const hayFiltro = () => st.m >= 0 || st.t >= 0 || st.c >= 0;
 
@@ -136,12 +150,12 @@
       const box = $("#dKpis"); box.replaceChildren();
       const pct = (a, b) => a == null || b == null ? null : (a / b - 1) * 100;
       const items = [
-        ["Anuncios", fmt(S.n), hayFiltro() ? `${fmt(S.n / TOTAL.n * 100, 1)} % de la isla` : `${fmt(MUN.length)} municipios`, null],
-        ["Precio mediano / noche", S.precio == null ? "-" : fmt(S.precio) + " €", null, pct(S.precio, TOTAL.precio), "%"],
-        ["Noches no disponibles", S.occ == null ? "-" : fmt(S.occ, 1) + " %", null, S.occ == null ? null : S.occ - TOTAL.occ, "pp"],
-        ["Ingreso mediano 12 meses", S.ingreso == null ? "-" : fmt(S.ingreso) + " €", null, pct(S.ingreso, TOTAL.ingreso), "%"],
-        ["Reseñas 12 meses", fmt(S.rev12), S.revYoY == null ? "" : `${signo(S.revYoY, 1)} % frente al año anterior`, null],
-        ["Valoración media", S.valor == null ? "-" : fmt(S.valor, 2) + " / 5", null, S.valor == null ? null : S.valor - TOTAL.valor, "pt"],
+        [tr("Anuncios", "Listings"), fmt(S.n), hayFiltro() ? `${pc(S.n / TOTAL.n * 100, 1)} ${tr("de la isla", "of the island")}` : `${fmt(MUN.length)} ${tr("municipios", "municipalities")}`, null],
+        [tr("Precio mediano / noche", "Median price / night"), eur(S.precio), null, pct(S.precio, TOTAL.precio), "%"],
+        [tr("Noches no disponibles", "Unavailable nights"), pc(S.occ, 1), null, S.occ == null ? null : S.occ - TOTAL.occ, "pp"],
+        [tr("Ingreso mediano 12 meses", "Median income, 12 months"), eur(S.ingreso), null, pct(S.ingreso, TOTAL.ingreso), "%"],
+        [tr("Reseñas 12 meses", "Reviews, 12 months"), fmt(S.rev12), S.revYoY == null ? "" : `${signo(S.revYoY, 1)}${EN ? "%" : " %"} ${tr("frente al año anterior", "vs the previous year")}`, null],
+        [tr("Valoración media", "Average rating"), S.valor == null ? "-" : fmt(S.valor, 2) + " / 5", null, S.valor == null ? null : S.valor - TOTAL.valor, "pt"],
       ];
       items.forEach(([t, v, nota, delta, u]) => {
         const d = h("div", { class: "dk" });
@@ -149,9 +163,10 @@
         let txt = nota || "";
         if (delta != null && hayFiltro()) {
           const dec = u === "pt" ? 2 : 1, cero = Math.abs(delta) < (u === "pt" ? .005 : .05);
-          txt = cero ? "igual que Mallorca" : `${signo(delta, dec)} ${u === "%" ? "%" : u === "pp" ? "puntos" : ""} frente a Mallorca`.replace("  ", " ");
+          const unidad = u === "%" ? (EN ? "%" : " %") : u === "pp" ? tr(" puntos", " points") : "";
+          txt = cero ? tr("igual que Mallorca", "same as Mallorca") : `${signo(delta, dec)}${unidad} ${tr("frente a Mallorca", "vs Mallorca")}`;
           d.dataset.dir = cero ? "0" : delta > 0 ? "up" : "down";
-        } else if (delta != null) txt = "referencia de la isla";
+        } else if (delta != null) txt = tr("referencia de la isla", "island benchmark");
         d.append(h("span", { class: "dk-d" }, txt));
         box.append(d);
       });
@@ -160,18 +175,26 @@
 
     function lectura(S) {
       const box = $("#dRead");
-      if (!S.n) { box.textContent = "No hay anuncios con esta combinación de filtros."; return; }
+      if (!S.n) { box.textContent = tr("No hay anuncios con esta combinación de filtros.", "No listings match this combination of filters."); return; }
       if (!hayFiltro()) {
-        const pico = S.occMes.indexOf(Math.max(...S.occMes));
-        box.textContent = `Mallorca: ${fmt(S.n)} anuncios con un precio mediano de ${fmt(S.precio)} € por noche. El ${fmt(S.occ, 0)} % de las noches del próximo año ya no está disponible, con el pico en ${MESES_LARGO[+D.meses_cal[pico].slice(5) - 1]}, y las reseñas crecen un ${fmt(S.revYoY, 0)} % interanual. Usa los filtros o haz clic en el mapa.`;
+        const pico = MESES_LARGO[+D.meses_cal[S.occMes.indexOf(Math.max(...S.occMes))].slice(5) - 1];
+        box.textContent = EN
+          ? `Mallorca: ${fmt(S.n)} listings with a median price of ${eur(S.precio)} per night. ${pc(S.occ, 0)} of next year's nights are already unavailable, peaking in ${pico}, and reviews are up ${pc(S.revYoY, 0)} year on year. Use the filters or click on the map.`
+          : `Mallorca: ${fmt(S.n)} anuncios con un precio mediano de ${eur(S.precio)} por noche. El ${pc(S.occ, 0)} de las noches del próximo año ya no está disponible, con el pico en ${pico}, y las reseñas crecen un ${pc(S.revYoY, 0)} interanual. Usa los filtros o haz clic en el mapa.`;
         return;
       }
       const dp = S.precio != null ? (S.precio / TOTAL.precio - 1) * 100 : null, doc = S.occ - TOTAL.occ;
-      let t = `${etiquetaSel()}: ${fmt(S.n)} anuncios, el ${fmt(S.n / TOTAL.n * 100, 1)} % de la isla. `;
-      if (dp != null) t += Math.abs(dp) < 2 ? "El precio mediano está en línea con Mallorca" : `El precio mediano es un ${fmt(Math.abs(dp), 0)} % ${dp > 0 ? "más alto" : "más bajo"} que en Mallorca`;
-      t += Math.abs(doc) < 1 ? " y la disponibilidad es similar." : ` y tiene ${fmt(Math.abs(doc), 1)} puntos ${doc > 0 ? "más" : "menos"} de noches no disponibles.`;
-      if (S.revYoY != null) t += ` La demanda, medida en reseñas, ${S.revYoY >= 0 ? "crece" : "cae"} un ${fmt(Math.abs(S.revYoY), 0)} % interanual.`;
-      if (S.n < 30) t += " Atención: con menos de 30 anuncios estas cifras son poco fiables.";
+      let t = EN ? `${etiquetaSel()}: ${fmt(S.n)} listings, ${pc(S.n / TOTAL.n * 100, 1)} of the island. `
+                 : `${etiquetaSel()}: ${fmt(S.n)} anuncios, el ${pc(S.n / TOTAL.n * 100, 1)} de la isla. `;
+      if (dp != null) t += Math.abs(dp) < 2 ? tr("El precio mediano está en línea con Mallorca", "The median price is in line with Mallorca")
+        : EN ? `The median price is ${pc(Math.abs(dp), 0)} ${dp > 0 ? "higher" : "lower"} than in Mallorca`
+             : `El precio mediano es un ${pc(Math.abs(dp), 0)} ${dp > 0 ? "más alto" : "más bajo"} que en Mallorca`;
+      t += Math.abs(doc) < 1 ? tr(" y la disponibilidad es similar.", " and availability is similar.")
+        : EN ? `, with ${fmt(Math.abs(doc), 1)} points ${doc > 0 ? "more" : "fewer"} unavailable nights.`
+             : ` y tiene ${fmt(Math.abs(doc), 1)} puntos ${doc > 0 ? "más" : "menos"} de noches no disponibles.`;
+      if (S.revYoY != null) t += EN ? ` Demand, measured in reviews, is ${S.revYoY >= 0 ? "up" : "down"} ${pc(Math.abs(S.revYoY), 0)} year on year.`
+                                    : ` La demanda, medida en reseñas, ${S.revYoY >= 0 ? "crece" : "cae"} un ${pc(Math.abs(S.revYoY), 0)} interanual.`;
+      if (S.n < 30) t += tr(" Atención: con menos de 30 anuncios estas cifras son poco fiables.", " Note: with fewer than 30 listings these figures are unreliable.");
       box.textContent = t;
     }
 
@@ -182,7 +205,7 @@
     redibujar.push(responsivo($("#dOcc"), (svg, W) => {
       const L = 40, Rr = W - 14, T = 14, B = 190, H = 216, X = j => L + j * (Rr - L) / 11, Y = v => B - v / 100 * (B - T);
       lienzo(svg, W, H);
-      [0, 25, 50, 75, 100].forEach(t => { rejilla(svg, L, Rr, Y(t), t === 0); svg.append(el("text", { x: L - 8, y: Y(t) + 4, "text-anchor": "end" }, t + " %")); });
+      [0, 25, 50, 75, 100].forEach(t => { rejilla(svg, L, Rr, Y(t), t === 0); svg.append(el("text", { x: L - 8, y: Y(t) + 4, "text-anchor": "end" }, pc(t))); });
       D.meses_cal.forEach((m, j) => { if (W >= 520 || j % 2 === 0) svg.append(el("text", { x: X(j), y: B + 18, "text-anchor": "middle" }, mesCorto(m))); });
       const linea = (serie, c, w) => svg.append(el("polyline", { points: serie.map((v, j) => v == null ? "" : X(j) + "," + Y(v)).join(" "), fill: "none", stroke: c, "stroke-width": w, "stroke-linejoin": "round", "stroke-linecap": "round" }));
       linea(TOTAL.occMes, "var(--muted)", 2);
@@ -196,7 +219,7 @@
         cruz.setAttribute("x1", X(j)); cruz.setAttribute("x2", X(j)); cruz.setAttribute("opacity", .3);
         pA.setAttribute("cx", X(j)); pA.setAttribute("cy", Y(TOTAL.occMes[j])); pA.setAttribute("opacity", 1);
         if (hayFiltro() && S.occMes[j] != null) { pB.setAttribute("cx", X(j)); pB.setAttribute("cy", Y(S.occMes[j])); pB.setAttribute("opacity", 1); }
-        tip.show(`${mesCorto(D.meses_cal[j])} ${D.meses_cal[j].slice(0, 4)}\n` + (hayFiltro() ? `Selección: ${fmt(S.occMes[j], 1)} %\n` : "") + `Mallorca: ${fmt(TOTAL.occMes[j], 1)} %`, e.clientX, e.clientY);
+        tip.show(`${mesCorto(D.meses_cal[j])} ${D.meses_cal[j].slice(0, 4)}\n` + (hayFiltro() ? `${tr("Selección", "Selection")}: ${pc(S.occMes[j], 1)}\n` : "") + `Mallorca: ${pc(TOTAL.occMes[j], 1)}`, e.clientX, e.clientY);
       });
       capa.addEventListener("pointerleave", () => { [cruz, pA, pB].forEach(n => n.setAttribute("opacity", 0)); tip.hide(); });
     }));
@@ -211,7 +234,7 @@
       MAP.municipios.forEach(mm => {
         const r = porNombre[mm.nombre], v = r && r.nPrecio >= 5 ? r.precio : null, activo = r && r.m === st.m;
         const p = el("path", { d: mm.d, fill: ESC.color(v), stroke: activo ? "var(--ink)" : "var(--surface)", "stroke-width": activo ? 3 : 1, class: "mun" + (st.m >= 0 && !activo ? " dim" : "") });
-        tip.conTip(p, r ? `${mm.nombre}\n${v == null ? "Pocos precios publicados" : fmt(v) + " € de mediana"}\n${fmt(r.n)} anuncios · clic para ${activo ? "quitar el filtro" : "filtrar"}` : mm.nombre);
+        tip.conTip(p, r ? `${mm.nombre}\n${v == null ? tr("Pocos precios publicados", "Few published prices") : eur(v) + tr(" de mediana", " median")}\n${fmt(r.n)} ${tr("anuncios", "listings")} · ${activo ? tr("clic para quitar el filtro", "click to clear the filter") : tr("clic para filtrar", "click to filter")}` : mm.nombre);
         if (r) {
           const ir = () => { st.m = activo ? -1 : r.m; pintar(); };
           p.addEventListener("click", ir);
@@ -234,15 +257,16 @@
       [0, Math.round(max / 2), Math.floor(max)].forEach(t => { rejilla(svg, L, Rr, Y(t), t === 0); svg.append(el("text", { x: L - 6, y: Y(t) + 4, "text-anchor": "end" }, t + "%")); });
       hs.forEach((v, k) => {
         const r = el("rect", { x: X(k) + 1, y: Y(v), width: Math.max(1, bw - 2), height: B - Y(v), fill: hayFiltro() ? "var(--accent-mark)" : "var(--y2)", class: "mark" });
-        tip.conTip(r, `${k === NB ? "≥ " + fmt(NB * BIN) : fmt(k * BIN) + "-" + fmt(k * BIN + BIN - 1)} €\n${fmt(v, 1)} % de los anuncios` + (hayFiltro() ? `\nMallorca: ${fmt(HT[k], 1)} %` : ""));
+        const tramo = k === NB ? "≥ " + eur(NB * BIN) : EN ? `€${fmt(k * BIN)}-${fmt(k * BIN + BIN - 1)}` : `${fmt(k * BIN)}-${fmt(k * BIN + BIN - 1)} €`;
+        tip.conTip(r, `${tramo}\n${pc(v, 1)} ${tr("de los anuncios", "of listings")}` + (hayFiltro() ? `\nMallorca: ${pc(HT[k], 1)}` : ""));
         svg.append(r);
       });
       if (hayFiltro()) svg.append(el("polyline", { points: HT.flatMap((v, k) => [`${X(k)},${Y(v)}`, `${X(k + 1)},${Y(v)}`]).join(" "), fill: "none", stroke: "var(--muted)", "stroke-width": 1.5 }));
-      [0, 500, 1000, 1500].forEach(t => svg.append(el("text", { x: t === 1500 ? Rr : X(t / BIN), y: B + 16, "text-anchor": t === 1500 ? "end" : "start" }, (t === 1500 ? "≥ " : "") + fmt(t) + " €")));
+      [0, 500, 1000, 1500].forEach(t => svg.append(el("text", { x: t === 1500 ? Rr : X(t / BIN), y: B + 16, "text-anchor": t === 1500 ? "end" : "start" }, (t === 1500 ? "≥ " : "") + eur(t))));
       if (S.precio != null) {
         const xm = L + Math.min(S.precio, NB * BIN) / BIN * bw;
         svg.append(el("line", { x1: xm, x2: xm, y1: T - 6, y2: B, stroke: "var(--ink)", "stroke-width": 1.5, "stroke-dasharray": "4 3" }));
-        svg.append(el("text", { x: xm + 6, y: T - 8, class: "lbl" }, `mediana ${fmt(S.precio)} €`));
+        svg.append(el("text", { x: xm + 6, y: T - 8, class: "lbl" }, `${tr("mediana", "median")} ${eur(S.precio)}`));
       }
     }));
 
@@ -257,7 +281,7 @@
         g.append(el("rect", { x: x + gw * .12, y: Y(R0[j]), width: gw * .5, height: B - Y(R0[j]), fill: "var(--y1)" }));
         g.append(el("rect", { x: x + gw * .38, y: Y(R1[j]), width: gw * .5, height: B - Y(R1[j]), fill: "var(--accent-mark)" }));
         const yoy = R0[j] ? (R1[j] / R0[j] - 1) * 100 : null;
-        tip.conTip(g, `${mesCorto(m)} ${m.slice(0, 4)}: ${fmt(R1[j])} reseñas\nMismo mes del año anterior: ${fmt(R0[j])}` + (yoy == null ? "" : `\nVariación: ${signo(yoy, 1)} %`));
+        tip.conTip(g, `${mesCorto(m)} ${m.slice(0, 4)}: ${fmt(R1[j])} ${tr("reseñas", "reviews")}\n${tr("Mismo mes del año anterior", "Same month a year earlier")}: ${fmt(R0[j])}` + (yoy == null ? "" : `\n${tr("Variación", "Change")}: ${signo(yoy, 1)}${EN ? "%" : " %"}`));
         svg.append(g);
         if (W >= 520 || j % 2 === 0) svg.append(el("text", { x: x + gw / 2, y: B + 16, "text-anchor": "middle" }, mesCorto(m)));
       });
@@ -266,16 +290,16 @@
     // Ranking de municipios (al menos 30 anuncios) por la métrica elegida; clic para filtrar
     redibujar.push(responsivo($("#dRank"), (svg, W) => {
       const met = $("#fRank").value, val = { n: r => r.n, p: r => r.precio, o: r => r.occ, i: r => r.ingreso }[met];
-      const txt = { n: v => fmt(v), p: v => fmt(v) + " €", o: v => fmt(v, 1) + " %", i: v => fmt(v) + " €" }[met];
+      const txt = { n: v => fmt(v), p: v => eur(v), o: v => pc(v, 1), i: v => eur(v) }[met];
       const ok = PM.filter(r => r.n >= 30 && val(r) != null).sort((a, b) => val(b) - val(a));
       let top = ok.slice(0, 10);
       const selR = PM[st.m];
       if (selR && !top.includes(selR) && val(selR) != null) top = top.concat(selR);
-      if (!top.length) { lienzo(svg, W, 40); svg.append(el("text", { x: 0, y: 24 }, "Ningún municipio llega a 30 anuncios con estos filtros.")); return; }
+      if (!top.length) { lienzo(svg, W, 40); svg.append(el("text", { x: 0, y: 24 }, tr("Ningún municipio llega a 30 anuncios con estos filtros.", "No municipality reaches 30 listings with these filters."))); return; }
       barrasH(svg, W, top.map(r => ({
         k: r.nombre.replace("Palma de Mallorca", "Palma").replace("Sant Llorenç des Cardassar", "Sant Llorenç"), v: val(r), txt: txt(val(r)),
         color: r.m === st.m ? "var(--accent-mark)" : "var(--y1)", fuerte: r.m === st.m,
-        tip: `${r.nombre}\n${fmt(r.n)} anuncios · ${fmt(r.precio)} € · ${fmt(r.occ, 1)} % no disp.\nClic para ${r.m === st.m ? "quitar el filtro" : "filtrar"}`,
+        tip: `${r.nombre}\n${fmt(r.n)} ${tr("anuncios", "listings")} · ${eur(r.precio)} · ${pc(r.occ, 1)} ${tr("no disp.", "unavail.")}\n${r.m === st.m ? tr("Clic para quitar el filtro", "Click to clear the filter") : tr("Clic para filtrar", "Click to filter")}`,
         onclick: () => { st.m = r.m === st.m ? -1 : r.m; pintar(); },
       })), { L: Math.min(130, W * .34), rowH: 26, rpad: 70 });
     }));
@@ -284,10 +308,10 @@
     function tabla() {
       const tb = $("#dTable tbody"); tb.replaceChildren();
       D.capacidad.forEach((cap, c) => {
-        const r = calcular({ m: st.m, t: st.t, c }), tr = h("tr", { class: (st.c === c ? "on" : "") + (r.n < 30 ? " low" : "") });
-        tr.append(h("th", { scope: "row" }, cap + " personas"), h("td", {}, fmt(r.n)), h("td", {}, r.precio == null ? "-" : fmt(r.precio) + " €"),
-          h("td", {}, r.occ == null ? "-" : fmt(r.occ, 1) + " %"), h("td", {}, r.ingreso == null ? "-" : fmt(r.ingreso) + " €"), h("td", {}, r.valor == null ? "-" : fmt(r.valor, 2)));
-        tb.append(tr);
+        const r = calcular({ m: st.m, t: st.t, c }), fila = h("tr", { class: (st.c === c ? "on" : "") + (r.n < 30 ? " low" : "") });
+        fila.append(h("th", { scope: "row" }, cap + tr(" personas", " guests")), h("td", {}, fmt(r.n)), h("td", {}, eur(r.precio)),
+          h("td", {}, pc(r.occ, 1)), h("td", {}, eur(r.ingreso)), h("td", {}, r.valor == null ? "-" : fmt(r.valor, 2)));
+        tb.append(fila);
       });
     }
 
@@ -298,7 +322,10 @@
       $$("#fCap .chip").forEach((b, k) => b.setAttribute("aria-pressed", String(k - 1 === st.c)));
       $("#dReset").disabled = !hayFiltro();
       kpis(S); lectura(S); mapa(); tabla(); redibujar.forEach(f => f());
-      $("#dFoot").textContent = `Fuente: Inside Airbnb, extracción del ${D.fecha.split("-").reverse().join("/")} (CC BY 4.0). ${fmt(S.nPrecio)} de ${fmt(S.n)} anuncios de la selección publican precio. Calendario: ${D.meses_cal[0]} a ${D.meses_cal[11]}. Reseñas: ${D.meses_rev[0]} a ${D.meses_rev[23]}.`;
+      const fecha = D.fecha.split("-").reverse().join("/");
+      $("#dFoot").textContent = EN
+        ? `Source: Inside Airbnb, scraped on ${fecha} (CC BY 4.0). ${fmt(S.nPrecio)} of ${fmt(S.n)} listings in the selection publish a price. Calendar: ${D.meses_cal[0]} to ${D.meses_cal[11]}. Reviews: ${D.meses_rev[0]} to ${D.meses_rev[23]}.`
+        : `Fuente: Inside Airbnb, extracción del ${fecha} (CC BY 4.0). ${fmt(S.nPrecio)} de ${fmt(S.n)} anuncios de la selección publican precio. Calendario: ${D.meses_cal[0]} a ${D.meses_cal[11]}. Reseñas: ${D.meses_rev[0]} a ${D.meses_rev[23]}.`;
       try {
         const q = new URLSearchParams();
         if (st.m >= 0) q.set("m", MUN[st.m]); if (st.t >= 0) q.set("t", st.t); if (st.c >= 0) q.set("c", st.c);
@@ -318,10 +345,10 @@
 
     // 01 · Tarta → barras
     const top3 = suma(TOP.slice(0, 3).map(m => m.anuncios)) / TOTAL_N * 100;
-    titulo("#t-tarta", `Tres municipios concentran el ${fmt(top3, 0)} % de los anuncios de la isla`);
+    titulo("#t-tarta", EN ? `Three municipalities hold ${pc(top3, 0)} of the island's listings` : `Tres municipios concentran el ${pc(top3, 0)} de los anuncios de la isla`);
     const resto = TOTAL_N - suma(TOP.map(m => m.anuncios));
     $$("svg[data-vz='tarta-mal']").forEach(s => responsivo(s, (svg, W) => {
-      const datos = TOP.map(m => [m.municipio, m.anuncios]).concat([["Resto", resto]]);
+      const datos = TOP.map(m => [m.municipio, m.anuncios]).concat([[tr("Resto", "Rest"), resto]]);
       const estrecho = W < 420, r = estrecho ? W * .3 : Math.min(110, W * .22), cx = estrecho ? W / 2 : r + 10, cy = r + 10;
       const leyH = estrecho ? Math.ceil(datos.length / 2) * 17 + 10 : 0, H = Math.max(2 * r + 20, estrecho ? 0 : datos.length * 17 + 10) + leyH;
       lienzo(svg, W, H);
@@ -336,38 +363,37 @@
       });
     }));
     $$("svg[data-vz='tarta-bien']").forEach(s => responsivo(s, (svg, W) => {
-      const filas = TOP.slice(0, 8).map((m, i) => ({ k: corto(m.municipio), v: m.anuncios / TOTAL_N * 100, txt: fmt(m.anuncios / TOTAL_N * 100, 1) + " %", color: i < 3 ? "var(--accent-mark)" : "var(--y1)", fuerte: i < 3, tip: `${m.municipio}\n${fmt(m.anuncios)} anuncios` }));
+      const filas = TOP.slice(0, 8).map((m, i) => ({ k: corto(m.municipio), v: m.anuncios / TOTAL_N * 100, txt: pc(m.anuncios / TOTAL_N * 100, 1), color: i < 3 ? "var(--accent-mark)" : "var(--y1)", fuerte: i < 3, tip: `${m.municipio}\n${fmt(m.anuncios)} ${tr("anuncios", "listings")}` }));
       const nResto = TOTAL_N - suma(TOP.slice(0, 8).map(m => m.anuncios));
-      filas.push({ k: "Otros 45", v: nResto / TOTAL_N * 100, txt: fmt(nResto / TOTAL_N * 100, 1) + " %", color: "var(--surface-2)", tip: `Los otros 45 municipios\n${fmt(nResto)} anuncios` });
+      filas.push({ k: tr("Otros 45", "Other 45"), v: nResto / TOTAL_N * 100, txt: pc(nResto / TOTAL_N * 100, 1), color: "var(--surface-2)", tip: `${tr("Los otros 45 municipios", "The other 45 municipalities")}\n${fmt(nResto)} ${tr("anuncios", "listings")}` });
       barrasH(svg, W, filas, { L: Math.min(120, W * .32), rowH: 26, rpad: 56 });
     }));
 
     // 02 · Eje truncado
     const seis = TOP.slice(0, 6), palma = TOP.find(m => /^Palma/.test(m.municipio));
-    titulo("#t-eje", `Palma es un ${fmt((1 - palma.precio_mediano / MED) * 100, 0)} % más barata que la mediana de la isla`);
+    titulo("#t-eje", EN ? `Palma is ${pc((1 - palma.precio_mediano / MED) * 100, 0)} cheaper than the island median` : `Palma es un ${pc((1 - palma.precio_mediano / MED) * 100, 0)} más barata que la mediana de la isla`);
     $$("svg[data-vz='eje-mal']").forEach(s => responsivo(s, (svg, W) => {
       const L = 36, Rr = W - 6, T = 10, B = 190, H = 230, min = 250, max = 500, Y = v => B - (v - min) / (max - min) * (B - T), bw = (Rr - L) / seis.length;
       lienzo(svg, W, H);
       [250, 300, 350, 400, 450, 500].forEach(t => { rejilla(svg, L, Rr, Y(t), t === 250); svg.append(el("text", { x: L - 6, y: Y(t) + 4, "text-anchor": "end" }, t)); });
       seis.forEach((m, i) => {
         svg.append(el("rect", { x: L + i * bw + bw * .15, y: Y(m.precio_mediano), width: bw * .7, height: B - Y(m.precio_mediano), fill: "var(--y2)" }));
-        const t = el("text", { x: L + i * bw + bw / 2, y: B + 16, "text-anchor": "end", transform: `rotate(-30 ${L + i * bw + bw / 2} ${B + 16})` }, corto(m.municipio));
-        svg.append(t);
+        svg.append(el("text", { x: L + i * bw + bw / 2, y: B + 16, "text-anchor": "end", transform: `rotate(-30 ${L + i * bw + bw / 2} ${B + 16})` }, corto(m.municipio)));
       });
     }));
     $$("svg[data-vz='eje-bien']").forEach(s => responsivo(s, (svg, W) => {
       const filas = seis.slice().sort((a, b) => b.precio_mediano - a.precio_mediano).map(m => ({
-        k: corto(m.municipio), v: m.precio_mediano, txt: fmt(m.precio_mediano) + " €", color: m === palma ? "var(--accent-mark)" : "var(--y1)", fuerte: m === palma,
-        tip: `${m.municipio}: ${fmt(m.precio_mediano)} € por noche\n${signo((m.precio_mediano / MED - 1) * 100, 0)} % frente a la isla` }));
-      barrasH(svg, W, filas, { L: Math.min(110, W * .3), rowH: 28, rpad: 54, max: 520, ref: MED, refTxt: `Mallorca ${fmt(MED)} €` });
+        k: corto(m.municipio), v: m.precio_mediano, txt: eur(m.precio_mediano), color: m === palma ? "var(--accent-mark)" : "var(--y1)", fuerte: m === palma,
+        tip: `${m.municipio}: ${eur(m.precio_mediano)} ${tr("por noche", "per night")}\n${signo((m.precio_mediano / MED - 1) * 100, 0)}${EN ? "%" : " %"} ${tr("frente a la isla", "vs the island")}` }));
+      barrasH(svg, W, filas, { L: Math.min(110, W * .3), rowH: 28, rpad: 54, max: 520, ref: MED, refTxt: `Mallorca ${eur(MED)}` });
     }));
 
     // 03 · Media frente a mediana
     const V = PF.viz;
     if (V) {
-      titulo("#t-media", `El anuncio típico ingresa ${fmt(V.ingreso_mediano)} € al año, no ${fmt(V.ingreso_medio)} €`);
+      titulo("#t-media", EN ? `The typical listing earns ${eur(V.ingreso_mediano)} a year, not ${eur(V.ingreso_medio)}` : `El anuncio típico ingresa ${eur(V.ingreso_mediano)} al año, no ${eur(V.ingreso_medio)}`);
       const k = $("#vzMediaMal");
-      if (k) k.append(h("span", {}, "Ingreso medio por anuncio"), h("b", {}, fmt(V.ingreso_medio) + " €"), h("small", {}, "últimos 12 meses"));
+      if (k) k.append(h("span", {}, tr("Ingreso medio por anuncio", "Average income per listing")), h("b", {}, eur(V.ingreso_medio)), h("small", {}, tr("últimos 12 meses", "last 12 months")));
     }
     const S5 = PF.sql && PF.sql.consultas.find(c => c.fichero.startsWith("05"));
     $$("svg[data-vz='media-bien']").forEach(s => responsivo(s, (svg, W) => {
@@ -375,28 +401,28 @@
       const iP = S5.columnas.indexOf("pct_ingreso"), rows = S5.filas, L = 34, B = 172, T = 46, H = 196, max = 40, bw = (W - L) / rows.length;
       lienzo(svg, W, H);
       if (V) {
-        svg.append(el("text", { x: 0, y: 16, class: "lbl" }, `Mediana: ${fmt(V.ingreso_mediano)} € · media: ${fmt(V.ingreso_medio)} €`));
-        svg.append(el("text", { x: 0, y: 32 }, `${fmt(V.bajo_media_pct, 0)} % de los anuncios ingresa menos que la media`));
+        svg.append(el("text", { x: 0, y: 16, class: "lbl" }, `${tr("Mediana", "Median")}: ${eur(V.ingreso_mediano)} · ${tr("media", "mean")}: ${eur(V.ingreso_medio)}`));
+        svg.append(el("text", { x: 0, y: 32 }, `${pc(V.bajo_media_pct, 0)} ${tr("de los anuncios ingresa menos que la media", "of listings earn less than the mean")}`));
       }
       [0, 20, 40].forEach(t => { const y = B - t / max * (B - T); rejilla(svg, L, W, y, t === 0); svg.append(el("text", { x: L - 6, y: y + 4, "text-anchor": "end" }, t + "%")); });
       rows.forEach((r, i) => {
         const v = r[iP], hh = v / max * (B - T), x = L + i * bw + bw * .15;
         const b = el("rect", { x, y: B - hh, width: bw * .7, height: hh, fill: i === 0 ? "var(--accent-mark)" : "var(--y1)", class: "mark" });
-        tip.conTip(b, `Decil ${r[0]}: ${fmt(v, 1)} % del ingreso total`); svg.append(b);
-        if (i === 0) svg.append(el("text", { x: x + bw * .8, y: B - hh + 12, class: "lbl" }, `el 10 % de arriba: ${fmt(v, 1)} %`));
+        tip.conTip(b, `${tr("Decil", "Decile")} ${r[0]}: ${pc(v, 1)} ${tr("del ingreso total", "of total income")}`); svg.append(b);
+        if (i === 0) svg.append(el("text", { x: x + bw * .8, y: B - hh + 12, class: "lbl" }, `${tr("el 10 % de arriba", "top 10%")}: ${pc(v, 1)}`));
         svg.append(el("text", { x: x + bw * .35, y: B + 16, "text-anchor": "middle" }, (W < 420 ? "" : "D") + r[0]));
       });
     }));
 
     // 04 · Doble eje → dos paneles alineados
     const ocho = TOP.slice(0, 8);
-    titulo("#t-doble", "Tener más anuncios no significa cobrar más");
+    titulo("#t-doble", tr("Tener más anuncios no significa cobrar más", "More listings does not mean higher prices"));
     $$("svg[data-vz='doble-mal']").forEach(s => responsivo(s, (svg, W) => {
       const L = 40, Rr = W - 40, T = 10, B = 180, H = 222, bw = (Rr - L) / ocho.length, maxN = 2400, minP = 240, maxP = 480;
       const YN = v => B - v / maxN * (B - T), YP = v => B - (v - minP) / (maxP - minP) * (B - T);
       lienzo(svg, W, H);
       [0, 800, 1600, 2400].forEach(t => { rejilla(svg, L, Rr, YN(t), t === 0); svg.append(el("text", { x: L - 6, y: YN(t) + 4, "text-anchor": "end" }, fmt(t))); });
-      [240, 320, 400, 480].forEach(t => svg.append(el("text", { x: Rr + 6, y: YP(t) + 4, fill: ARCO[0] }, t + "€")));
+      [240, 320, 400, 480].forEach(t => svg.append(el("text", { x: Rr + 6, y: YP(t) + 4, fill: ARCO[0] }, EN ? "€" + t : t + "€")));
       ocho.forEach((m, i) => {
         svg.append(el("rect", { x: L + i * bw + bw * .15, y: YN(m.anuncios), width: bw * .7, height: B - YN(m.anuncios), fill: ARCO[6] }));
         svg.append(el("text", { x: L + i * bw + bw / 2, y: B + 14, "text-anchor": "end", transform: `rotate(-35 ${L + i * bw + bw / 2} ${B + 14})` }, corto(m.municipio).slice(0, 9)));
@@ -407,7 +433,7 @@
       const L = Math.min(118, W * .3), gap = 18, pw = (W - L - gap) / 2, rowH = 24, T = 22, H = T + ocho.length * rowH + 6;
       lienzo(svg, W, H);
       const maxN = Math.max(...ocho.map(m => m.anuncios)), maxP = 520;
-      svg.append(el("text", { x: L, y: 12, class: "lbl" }, "Anuncios"), el("text", { x: L + pw + gap, y: 12, class: "lbl" }, "Precio mediano"));
+      svg.append(el("text", { x: L, y: 12, class: "lbl" }, tr("Anuncios", "Listings")), el("text", { x: L + pw + gap, y: 12, class: "lbl" }, tr("Precio mediano", "Median price")));
       ocho.forEach((m, i) => {
         const y = T + i * rowH, g = el("g", { class: "row" });
         g.append(el("rect", { x: 0, y, width: W, height: rowH, class: "hit" }));
@@ -417,8 +443,8 @@
         g.append(el("text", { x: L + wN + 5, y: y + rowH / 2 + 4, class: "val" }, fmt(m.anuncios)));
         const caro = m.precio_mediano >= MED;
         g.append(el("rect", { x: L + pw + gap, y: y + 5, width: wP, height: rowH - 10, fill: caro ? "var(--accent-mark)" : "var(--y1)" }));
-        g.append(el("text", { x: L + pw + gap + wP + 5, y: y + rowH / 2 + 4, class: "val" }, fmt(m.precio_mediano) + " €"));
-        tip.conTip(g, `${m.municipio}\n${fmt(m.anuncios)} anuncios · ${fmt(m.precio_mediano)} € de mediana\n${caro ? "Por encima" : "Por debajo"} de la mediana de la isla`);
+        g.append(el("text", { x: L + pw + gap + wP + 5, y: y + rowH / 2 + 4, class: "val" }, eur(m.precio_mediano)));
+        tip.conTip(g, `${m.municipio}\n${fmt(m.anuncios)} ${tr("anuncios", "listings")} · ${eur(m.precio_mediano)} ${tr("de mediana", "median")}\n${caro ? tr("Por encima", "Above") : tr("Por debajo", "Below")} ${tr("de la mediana de la isla", "the island median")}`);
         svg.append(g);
       });
     }));
@@ -432,7 +458,7 @@
       svg.setAttribute("viewBox", `-4 -4 ${MAPD.w + 8} ${MAPD.h + 8}`);
       MAPD.municipios.forEach(m => {
         const p = el("path", { d: m.d, fill: color(m.precio_mediano), stroke: "var(--surface)", "stroke-width": 1, class: "mun" });
-        tip.conTip(p, m.precio_mediano == null ? m.nombre : `${m.nombre}\n${fmt(m.precio_mediano)} € de mediana`);
+        tip.conTip(p, m.precio_mediano == null ? m.nombre : `${m.nombre}\n${eur(m.precio_mediano)} ${tr("de mediana", "median")}`);
         svg.append(p);
       });
     };
@@ -440,7 +466,8 @@
     $$("svg[data-vz='color-bien']").forEach(s => ESC && pintaMapa(s, ESC.color));
     const legMal = $("#vzLegMal");
     if (legMal) ["< 250", "250-299", "300-349", "350-399", "400-449", "450-499", "≥ 500"].forEach((t, i) => {
-      const sp = h("span"), ic = h("i"); ic.style.background = ARCO[[0, 4, 2, 6, 1, 8, 3][i]]; ic.style.height = "10px"; sp.append(ic, t + " €"); legMal.append(sp);
+      const sp = h("span"), ic = h("i"); ic.style.background = ARCO[[0, 4, 2, 6, 1, 8, 3][i]]; ic.style.height = "10px";
+      sp.append(ic, EN ? t.replace(/(\d+)/, "€$1") : t + " €"); legMal.append(sp);
     });
     ESC && ESC.legend($("#vzLegBien"));
 
@@ -450,21 +477,22 @@
       const cols = ["municipio", "anuncios", "precio_mediano", "ingreso_mediano", "piscina_pct"];
       const trh = h("tr"); cols.forEach(c => trh.append(h("th", {}, c))); tm.tHead.append(trh);
       TOP.slice().sort((a, b) => a.municipio.localeCompare(b.municipio)).slice(0, 8).forEach(m => {
-        const tr = h("tr"); cols.forEach(c => tr.append(h("td", {}, typeof m[c] === "number" ? m[c].toFixed(1) : m[c]))); tm.tBodies[0].append(tr);
+        const fila = h("tr"); cols.forEach(c => fila.append(h("td", {}, typeof m[c] === "number" ? m[c].toFixed(1) : m[c]))); tm.tBodies[0].append(fila);
       });
     }
     if (tbn) {
       const trh = h("tr");
-      [["Municipio", ""], ["Anuncios", "num"], ["Precio mediano", "num"], ["frente a la isla", "num"], ["Ingreso mediano", "num"]].forEach(([t, c]) => trh.append(h("th", { scope: "col", class: c }, t)));
+      [[tr("Municipio", "Municipality"), ""], [tr("Anuncios", "Listings"), "num"], [tr("Precio mediano", "Median price"), "num"], [tr("frente a la isla", "vs island"), "num"], [tr("Ingreso mediano", "Median income"), "num"]]
+        .forEach(([t, c]) => trh.append(h("th", { scope: "col", class: c }, t)));
       tbn.tHead.append(trh);
       const maxN = TOP[0].anuncios;
       TOP.slice(0, 8).forEach(m => {
-        const tr = h("tr"), d = (m.precio_mediano / MED - 1) * 100;
+        const fila = h("tr"), d = (m.precio_mediano / MED - 1) * 100;
         const cN = h("td", { class: "num" }), barra = h("span", { class: "inbar", "aria-hidden": "true" }); barra.style.setProperty("--w", (m.anuncios / maxN * 100).toFixed(1) + "%");
         cN.append(barra, document.createTextNode(fmt(m.anuncios)));
-        const cD = h("td", { class: "num " + (d > 2 ? "up" : d < -2 ? "down" : "") }, Math.abs(d) <= 2 ? "≈" : signo(d, 0) + " %");
-        tr.append(h("th", { scope: "row" }, m.municipio), cN, h("td", { class: "num" }, fmt(m.precio_mediano) + " €"), cD, h("td", { class: "num" }, fmt(m.ingreso_mediano) + " €"));
-        tbn.tBodies[0].append(tr);
+        const cD = h("td", { class: "num " + (d > 2 ? "up" : d < -2 ? "down" : "") }, Math.abs(d) <= 2 ? "≈" : signo(d, 0) + (EN ? "%" : " %"));
+        fila.append(h("th", { scope: "row" }, m.municipio), cN, h("td", { class: "num" }, eur(m.precio_mediano)), cD, h("td", { class: "num" }, eur(m.ingreso_mediano)));
+        tbn.tBodies[0].append(fila);
       });
     }
   }
