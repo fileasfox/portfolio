@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>pandas notebook with real data | Python for analysis</title>
+<meta name="description" content="Eleven pandas cells run on 5.9 million rows of Inside Airbnb data: typed loading, cleaning, groupby, pivot, merge, time series and a reconciliation with SQL.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#e9e8e4">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Matteo Eiras Pé">
+<link rel="canonical" href="https://fileasfox.github.io/portfolio/en/pandas.html">
+<link rel="alternate" hreflang="es" href="https://fileasfox.github.io/portfolio/pandas.html">
+<link rel="alternate" hreflang="en" href="https://fileasfox.github.io/portfolio/en/pandas.html">
+<link rel="alternate" hreflang="x-default" href="https://fileasfox.github.io/portfolio/pandas.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:site_name" content="Matteo Eiras Pé">
+<meta property="og:url" content="https://fileasfox.github.io/portfolio/en/pandas.html">
+<meta property="og:title" content="pandas notebook with real data | Python for analysis">
+<meta property="og:description" content="Eleven pandas cells run on 5.9 million rows of Inside Airbnb data: typed loading, cleaning, groupby, pivot, merge, time series and a reconciliation with SQL.">
+<meta property="og:image" content="https://fileasfox.github.io/portfolio/assets/img/retrato.jpg">
+<meta property="og:image:width" content="554">
+<meta property="og:image:height" content="693">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "headline": "pandas notebook with real data", "inLanguage": "en", "url": "https://fileasfox.github.io/portfolio/en/pandas.html", "image": "https://fileasfox.github.io/portfolio/assets/img/retrato.jpg", "author": {"@type": "Person", "name": "Matteo Eiras Pé", "url": "https://fileasfox.github.io/portfolio/en/"}, "isBasedOn": {"@type": "Dataset", "name": "Inside Airbnb: Mallorca", "url": "https://insideairbnb.com/get-the-data/", "license": "https://creativecommons.org/licenses/by/4.0/"}}]}</script>
+<script src="../assets/tema.js?v=85e2a5d7"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/styles.css?v=371af605">
+</head>
+<body>
+<a class="skip" href="#contenido">Skip to content</a>
+<div class="topbar"><div class="wrap"><span class="avail"><i aria-hidden="true"></i>Open to new opportunities</span><nav aria-label="Quick links"><a href="cv.html">CV</a><a href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener noreferrer">LinkedIn</a></nav></div></div><header class="site-head"><div class="bar"><nav class="menu" id="menu" aria-label="Main"><a href="index.html">Home</a><div class="dd"><a href="proyectos.html" aria-current=page>Projects</a><button class="dd-btn" type="button" aria-expanded="false" aria-controls="ddp" aria-label="Show the list of projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="dd-panel" id="ddp"><a href="mallorca.html"><b>01 · Sea view in Mallorca</b><small>pandas, SQL, regression and console</small></a><a href="dashboard.html"><b>02 · Market dashboard</b><small>KPIs, filters and cross-filtering</small></a><a href="pandas.html"><b>03 · pandas notebook</b><small>11 cells with their real output</small></a><a href="visualizacion.html"><b>04 · How I present data</b><small>Before and after, executive report</small></a><a href="caso-churn.html"><b>05 · Churn by ROI</b><small>Customer Success · BigQuery</small></a><a href="caso-cuadre.html"><b>06 · Dashboard ×2</b><small>Metric reconciliation</small></a><a href="caso-funnel.html"><b>07 · Funnel and integrations</b><small>Connector alerts</small></a><a href="caso-facturacion.html"><b>08 · Billing data cleaning</b><small>Python · data quality</small></a><a href="habilidades.html#portal"><b>09 · This portfolio</b><small>Web development and audit</small></a><a class="all" href="proyectos.html">All projects, with filters →</a></div></div><a href="habilidades.html">Skills</a><a href="cv.html">CV</a></nav><a class="brand" href="index.html" aria-label="Matteo Eiras, home">Eiras<span class="dot">.</span></a><div class="head-tools"><a class="lang-btn" href="../pandas.html" hreflang="es" lang="es" aria-label="Leer esta página en español">ES</a><button class="icon-btn" id="themeBtn" type="button" aria-label="Switch theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg></button><button class="icon-btn burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div><span class="progress" aria-hidden="true"></span></div></header>
+<main class="wrap" id="contenido" tabindex="-1">
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="proyectos.html">Projects</a> / pandas notebook</nav>
+  <span class="eyebrow">Project 03, public data</span>
+  <h1>A pandas notebook with real data</h1>
+  <p class="lead">Eleven Python cells that do an analyst's job from start to finish: load, profile, clean, aggregate, join, compare over time and reconcile the result against SQL. The code really runs, and every output is the one from the last run.</p>
+  <div class="tags"><span class="tag">Python 3.14</span><span class="tag">pandas 3</span><span class="tag">numpy</span><span class="tag">sqlite3</span><span class="tag">Jupyter</span></div>
+  <div class="kpis">
+    <div class="kpi"><b>11</b><span>cells with their real output</span></div>
+    <div class="kpi"><b>5.4 M</b><span>calendar nights joined</span></div>
+    <div class="kpi"><b>84</b><span>orphan listings detected</span></div>
+    <div class="kpi"><b>53 / 53</b><span>municipalities reconciled with SQL</span></div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Notebook contents">
+    <span class="eyebrow">Cells</span>
+    <a href="#como" class="on">How to read it</a>
+    <a href="#celda-1">1 · Typed loading</a>
+    <a href="#celda-2">2 · Quality profile</a>
+    <a href="#celda-3">3 · Cleaning</a>
+    <a href="#celda-4">4 · groupby</a>
+    <a href="#celda-5">5 · pivot_table</a>
+    <a href="#celda-6">6 · merge</a>
+    <a href="#celda-7">7 · Averages</a>
+    <a href="#celda-8">8 · Time series</a>
+    <a href="#celda-9">9 · Concentration</a>
+    <a href="#celda-10">10 · Vectorising</a>
+    <a href="#celda-11">11 · SQL reconciliation</a>
+    <a href="#produccion">Taking it to production</a>
+  </nav>
+
+  <div>
+  <section class="chapter" id="como">
+    <div class="chapter-head"><h2>How to read this notebook</h2>
+      <p>Each cell starts with what it shows and why it matters in real work. Below are the code and its output. Variables carry over from one cell to the next, just like in Jupyter. Code identifiers are in Spanish, as in the original project.</p></div>
+    <div class="why">
+      <div><h4>How it is generated</h4><p><span class="mono">cuaderno.py</span> runs each cell, captures what it prints and its final value, and writes two files: the data for this page and an <span class="mono">.ipynb</span> with the same outputs.</p></div>
+      <div><h4>Where to see all of it</h4><p>The notebook opens directly on GitHub: <a href="https://github.com/fileasfox/portfolio/blob/main/proyecto_airbnb/cuaderno.ipynb" rel="noopener noreferrer">cuaderno.ipynb</a>. The generator is in <a href="https://github.com/fileasfox/portfolio/blob/main/proyecto_airbnb/cuaderno.py" rel="noopener noreferrer">cuaderno.py</a>.</p></div>
+    </div>
+  </section>
+
+  <section class="chapter" aria-label="Notebook cells">
+    <article class="nb-cell" id="celda-1"><div class="nb-head"><span class="nb-n">[1]</span><div><h3>Load only what you need, with the right types</h3><p>Reading 12 of 90 columns and turning repeated text into category cuts memory use. On large tables it is the difference between a process that fits in memory and one that does not.</p></div></div><template data-code="py" data-label="cuaderno.py · cell 1">import numpy as np
+import pandas as pd
+
+COLS = ["id", "host_id", "neighbourhood_cleansed", "room_type", "accommodates", "bedrooms",
+        "bathrooms", "price", "number_of_reviews_ltm", "estimated_revenue_l365d",
+        "review_scores_rating", "calculated_host_listings_count"]
+
+completo = pd.read_csv(DATOS / "listings.csv.gz", low_memory=False)
+l = pd.read_csv(DATOS / "listings.csv.gz", usecols=COLS)
+l_cat = l.astype({"neighbourhood_cleansed": "category", "room_type": "category"})
+
+mb = lambda d: d.memory_usage(deep=True).sum() / 2**20
+pd.DataFrame({"columnas": [completo.shape[1], l.shape[1], l_cat.shape[1]],
+              "memoria_MB": [mb(completo), mb(l), mb(l_cat)]},
+             index=["fichero completo", "12 columnas", "12 columnas + category"]).round(1)</template><div class="nb-out" aria-label="Output of cell 1"><span class="nb-lbl">Output · 0.7 s</span><div class="scroll"><table class="nb-table"><thead><tr><th></th><th>columnas</th><th>memoria_MB</th></tr></thead><tbody><tr><th scope="row">fichero completo</th><td>90</td><td>74,7</td></tr><tr><th scope="row">12 columnas</th><td>12</td><td>3,6</td></tr><tr><th scope="row">12 columnas + category</th><td>12</td><td>1,8</td></tr></tbody></table></div></div></article><article class="nb-cell" id="celda-2"><div class="nb-head"><span class="nb-n">[2]</span><div><h3>Profile data quality before calculating anything</h3><p>A reusable function that reports, per column, the type, the share of nulls and the number of distinct values. It shows that a quarter of the listings publish no price.</p></div></div><template data-code="py" data-label="cuaderno.py · cell 2">def perfil(df: pd.DataFrame) -&gt; pd.DataFrame:
+    return pd.DataFrame({
+        "tipo": df.dtypes.astype(str),
+        "nulos_pct": df.isna().mean().mul(100).round(1),
+        "distintos": df.nunique(),
+        "ejemplo": df.apply(lambda s: s.dropna().iloc[0] if s.notna().any() else None),
+    }).sort_values("nulos_pct", ascending=False)
+
+print(f"{len(l)} filas · {l['id'].duplicated().sum()} ids duplicados · {l.shape[1]} columnas")
+perfil(l).head(6)</template><div class="nb-out" aria-label="Output of cell 2"><span class="nb-lbl">Output · 0.0 s</span><pre class="nb-print">14817 filas · 0 ids duplicados · 12 columnas</pre><div class="scroll"><table class="nb-table"><thead><tr><th></th><th>tipo</th><th>nulos_pct</th><th>distintos</th><th>ejemplo</th></tr></thead><tbody><tr><th scope="row">estimated_revenue_l365d</th><td>float64</td><td>25,4</td><td>6.336</td><td>19.176</td></tr><tr><th scope="row">price</th><td>str</td><td>25,4</td><td>6.181</td><td>$319.60</td></tr><tr><th scope="row">review_scores_rating</th><td>float64</td><td>21,7</td><td>147</td><td>5</td></tr><tr><th scope="row">bathrooms</th><td>float64</td><td>11,2</td><td>28</td><td>1</td></tr><tr><th scope="row">bedrooms</th><td>float64</td><td>3,4</td><td>18</td><td>3</td></tr><tr><th scope="row">neighbourhood_cleansed</th><td>str</td><td>0</td><td>53</td><td>Alcúdia</td></tr></tbody></table></div></div></article><article class="nb-cell" id="celda-3"><div class="nb-head"><span class="nb-n">[3]</span><div><h3>Chained cleaning, with checks</h3><p>Method chaining with assign and pipe: each step reads top to bottom and leaves no intermediate variables. The asserts stop the process if something does not make sense.</p></div></div><template data-code="py" data-label="cuaderno.py · cell 3">def recortar(df, col, q=(0.01, 0.99)):
+    lo, hi = df[col].quantile(list(q))
+    return df.assign(**{f"{col}_atipico": ~df[col].between(lo, hi) &amp; df[col].notna()})
+
+limpio = (l
+    .rename(columns={"neighbourhood_cleansed": "municipio"})
+    .assign(
+        precio=lambda d: pd.to_numeric(d["price"].str.replace(r"[$,]", "", regex=True), errors="coerce"),
+        tramo=lambda d: pd.cut(d["calculated_host_listings_count"], [0, 1, 4, 19, np.inf],
+                               labels=["1", "2-4", "5-19", "20+"]),
+        ingreso=lambda d: d["estimated_revenue_l365d"].where(d["estimated_revenue_l365d"] &gt; 0),
+    )
+    .pipe(recortar, "precio")
+    .drop(columns=["price", "estimated_revenue_l365d"]))
+
+assert limpio["id"].is_unique
+assert limpio["precio"].dropna().gt(0).all()
+limpio[["municipio", "accommodates", "precio", "precio_atipico", "tramo", "ingreso"]].head(5)</template><div class="nb-out" aria-label="Output of cell 3"><span class="nb-lbl">Output · 0.0 s</span><div class="scroll"><table class="nb-table"><thead><tr><th></th><th>municipio</th><th>accommodates</th><th>precio</th><th>precio_atipico</th><th>tramo</th><th>ingreso</th></tr></thead><tbody><tr><th scope="row">0</th><td>Alcúdia</td><td>5</td><td>NaN</td><td>False</td><td>20+</td><td>NaN</td></tr><tr><th scope="row">1</th><td>Búger</td><td>6</td><td>319,6</td><td>False</td><td>1</td><td>19.176</td></tr><tr><th scope="row">2</th><td>Pollença</td><td>2</td><td>201,43</td><td>False</td><td>20+</td><td>NaN</td></tr><tr><th scope="row">3</th><td>Sant Llorenç des Cardassar</td><td>8</td><td>330,71</td><td>False</td><td>20+</td><td>NaN</td></tr><tr><th scope="row">4</th><td>Pollença</td><td>5</td><td>554,5</td><td>False</td><td>20+</td><td>11.090</td></tr></tbody></table></div></div></article><article class="nb-cell" id="celda-4"><div class="nb-head"><span class="nb-n">[4]</span><div><h3>Named aggregations: a summary per municipality</h3><p>groupby with named aggregations returns readable columns, ready for a report. Medians rather than means, because prices have a long tail.</p></div></div><template data-code="py" data-label="cuaderno.py · cell 4">resumen = (limpio
+    .groupby("municipio", observed=True)
+    .agg(anuncios=("id", "size"),
+         precio_mediano=("precio", "median"),
+         ingreso_mediano=("ingreso", "median"),
+         valoracion=("review_scores_rating", "mean"),
+         pct_profesional=("tramo", lambda s: s.isin(["5-19", "20+"]).mean() * 100))
+    .sort_values("anuncios", ascending=False))
+
+resumen.head(8).round({"precio_mediano": 0, "ingreso_mediano": 0, "valoracion": 2, "pct_profesional": 1})</template><div class="nb-out" aria-label="Output of cell 4"><span class="nb-lbl">Output · 0.0 s</span><div class="scroll"><table class="nb-table"><thead><tr><th>municipio</th><th>anuncios</th><th>precio_mediano</th><th>ingreso_mediano</th><th>valoracion</th><th>pct_profesional</th></tr></thead><tbody><tr><th scope="row">Pollença</th><td>2.271</td><td>427</td><td>15.156</td><td>4,63</td><td>80,2</td></tr><tr><th scope="row">Alcúdia</th><td>1.372</td><td>427</td><td>18.412</td><td>4,64</td><td>73,5</td></tr><tr><th scope="row">Santanyí</th><td>1.014</td><td>416</td><td>16.794</td><td>4,65</td><td>68,7</td></tr><tr><th scope="row">Palma de Mallorca</th><td>949</td><td>262</td><td>24.233</td><td>4,71</td><td>51,4</td></tr><tr><th scope="row">Manacor</th><td>800</td><td>351</td><td>14.618</td><td>4,74</td><td>67,6</td></tr><tr><th scope="row">Felanitx</th><td>676</td><td>472</td><td>15.828</td><td>4,66</td><td>73,5</td></tr><tr><th scope="row">Santa Margalida</th><td>631</td><td>329</td><td>16.940</td><td>4,67</td><td>68,1</td></tr><tr><th scope="row">Capdepera</th><td>522</td><td>383</td><td>12.816</td><td>4,66</td><td>68,4</td></tr></tbody></table></div></div></article><article class="nb-cell" id="celda-5"><div class="nb-head"><span class="nb-n">[5]</span><div><h3>Pivot table with totals</h3><p>pivot_table crosses two dimensions like an Excel pivot table, with total row and column (margins).</p></div></div><template data-code="py" data-label="cuaderno.py · cell 5">capacidad = pd.cut(limpio["accommodates"], [0, 2, 4, 6, np.inf], labels=["1-2", "3-4", "5-6", "7+"])
+top5 = resumen.index[:5]
+
+(limpio.assign(capacidad=capacidad)
+    .query("municipio in @top5")
+    .pivot_table(index="municipio", columns="capacidad", values="precio",
+                 aggfunc="median", margins=True, margins_name="Total", observed=True)
+    .round(0))</template><div class="nb-out" aria-label="Output of cell 5"><span class="nb-lbl">Output · 0.0 s</span><div class="scroll"><table class="nb-table"><thead><tr><th>municipio</th><th>1-2</th><th>3-4</th><th>5-6</th><th>7+</th><th>Total</th></tr></thead><tbody><tr><th scope="row">Alcúdia</th><td>193</td><td>340</td><td>424</td><td>648</td><td>427</td></tr><tr><th scope="row">Manacor</th><td>184</td><td>257</td><td>347</td><td>633</td><td>351</td></tr><tr><th scope="row">Palma de Mallorca</th><td>147</td><td>201</td><td>371</td><td>856</td><td>262</td></tr><tr><th scope="row">Pollença</th><td>229</td><td>299</td><td>410</td><td>739</td><td>427</td></tr><tr><th scope="row">Santanyí</th><td>199</td><td>258</td><td>456</td><td>785</td><td>416</td></tr><tr><th scope="row">Total</th><td>187</td><td>280</td><td>411</td><td>724</td><td>391</td></tr></tbody></table></div></div></article><article class="nb-cell" id="celda-6"><div class="nb-head"><span class="nb-n">[6]</span><div><h3>Join tables without losing rows on the way</h3><p>A merge with validate (it fails if the relationship is not the expected one) and indicator, which finds orphans: calendar nights of listings that are no longer in the listings file.</p></div></div><template data-code="py" data-label="cuaderno.py · cell 6">cal = pd.read_csv(DATOS / "calendar.csv.gz", usecols=["listing_id", "date", "available"],
+                  parse_dates=["date"])
+
+cruce = cal.merge(limpio[["id", "municipio"]], left_on="listing_id", right_on="id",
+                  how="left", validate="many_to_one", indicator=True)
+
+(cruce.groupby("_merge", observed=True)
+    .agg(noches=("listing_id", "size"), anuncios=("listing_id", "nunique")))</template><div class="nb-out" aria-label="Output of cell 6"><span class="nb-lbl">Output · 2.6 s</span><div class="scroll"><table class="nb-table"><thead><tr><th>_merge</th><th>noches</th><th>anuncios</th></tr></thead><tbody><tr><th scope="row">left_only</th><td>30.660</td><td>84</td></tr><tr><th scope="row">both</th><td>5.408.205</td><td>14.817</td></tr></tbody></table></div></div></article><article class="nb-cell" id="celda-7"><div class="nb-head"><span class="nb-n">[7]</span><div><h3>An average of averages is not the total</h3><p>The most common dashboard mistake: averaging each municipality&#x27;s percentages or medians. A village with 10 listings then weighs as much as one with 2,000. The Mallorca figure is computed over listings, not over municipalities.</p></div></div><template data-code="py" data-label="cuaderno.py · cell 7">profesional = limpio["tramo"].isin(["5-19", "20+"])
+
+pd.DataFrame({
+    "media_de_municipios": [resumen["pct_profesional"].mean(), resumen["precio_mediano"].mean()],
+    "calculo_correcto": [profesional.mean() * 100, limpio["precio"].median()],
+}, index=["% anuncios de anfitriones con 5+", "precio mediano por noche (€)"]).assign(
+    diferencia=lambda d: d["media_de_municipios"] - d["calculo_correcto"]).round(1)</template><div class="nb-out" aria-label="Output of cell 7"><span class="nb-lbl">Output · 0.0 s</span><div class="scroll"><table class="nb-table"><thead><tr><th></th><th>media_de_municipios</th><th>calculo_correcto</th><th>diferencia</th></tr></thead><tbody><tr><th scope="row">% anuncios de anfitriones con 5+</th><td>64,9</td><td>68,5</td><td>-3,7</td></tr><tr><th scope="row">precio mediano por noche (€)</th><td>411,7</td><td>397,6</td><td>14,1</td></tr></tbody></table></div></div></article><article class="nb-cell" id="celda-8"><div class="nb-head"><span class="nb-n">[8]</span><div><h3>Time series: month, rolling average and year on year</h3><p>resample groups by month, rolling smooths out seasonality and pct_change(12) compares each month with the same month a year earlier, which is the fair comparison in tourism.</p></div></div><template data-code="py" data-label="cuaderno.py · cell 8">rv = pd.read_csv(DATOS / "reviews.csv", usecols=["date"], parse_dates=["date"])
+
+mensual = (rv.set_index("date").resample("MS").size().rename("reseñas")
+    .loc["2023-01":"2025-12"].to_frame()
+    .rename(index=lambda d: d.strftime("%Y-%m"))
+    .assign(media_movil_12m=lambda d: d["reseñas"].rolling(12).mean(),
+            interanual_pct=lambda d: d["reseñas"].pct_change(12) * 100))
+
+mensual.tail(6).round(1)</template><div class="nb-out" aria-label="Output of cell 8"><span class="nb-lbl">Output · 0.3 s</span><div class="scroll"><table class="nb-table"><thead><tr><th>date</th><th>reseñas</th><th>media_movil_12m</th><th>interanual_pct</th></tr></thead><tbody><tr><th scope="row">2025-07</th><td>11.129</td><td>6.623</td><td>16,7</td></tr><tr><th scope="row">2025-08</th><td>11.255</td><td>6.763</td><td>17,5</td></tr><tr><th scope="row">2025-09</th><td>11.388</td><td>6.913</td><td>18,9</td></tr><tr><th scope="row">2025-10</th><td>9.684</td><td>7.031</td><td>17</td></tr><tr><th scope="row">2025-11</th><td>3.145</td><td>7.062</td><td>13,4</td></tr><tr><th scope="row">2025-12</th><td>1.614</td><td>7.072</td><td>8,6</td></tr></tbody></table></div></div></article><article class="nb-cell" id="celda-9"><div class="nb-head"><span class="nb-n">[9]</span><div><h3>Concentration: how much income does the top 10% make?</h3><p>qcut splits into deciles and transform computes each listing&#x27;s weight within its municipality without losing rows. It is the basis of a Pareto analysis.</p></div></div><template data-code="py" data-label="cuaderno.py · cell 9">con_ingreso = limpio.dropna(subset=["ingreso"]).copy()
+con_ingreso["decil"] = pd.qcut(con_ingreso["ingreso"].rank(method="first", ascending=False),
+                               10, labels=[f"D{i}" for i in range(1, 11)])
+con_ingreso["peso_en_municipio"] = (con_ingreso["ingreso"]
+    / con_ingreso.groupby("municipio", observed=True)["ingreso"].transform("sum"))
+
+(con_ingreso.groupby("decil", observed=True)["ingreso"].sum()
+    .div(con_ingreso["ingreso"].sum()).mul(100)
+    .to_frame("pct_del_ingreso")
+    .assign(acumulado=lambda d: d["pct_del_ingreso"].cumsum())
+    .head(4).round(1))</template><div class="nb-out" aria-label="Output of cell 9"><span class="nb-lbl">Output · 0.0 s</span><div class="scroll"><table class="nb-table"><thead><tr><th>decil</th><th>pct_del_ingreso</th><th>acumulado</th></tr></thead><tbody><tr><th scope="row">D1</th><td>34,8</td><td>34,8</td></tr><tr><th scope="row">D2</th><td>18</td><td>52,8</td></tr><tr><th scope="row">D3</th><td>13</td><td>65,8</td></tr><tr><th scope="row">D4</th><td>9,9</td><td>75,8</td></tr></tbody></table></div></div></article><article class="nb-cell" id="celda-10"><div class="nb-head"><span class="nb-n">[10]</span><div><h3>Vectorise where it matters, and measure it</h3><p>Assigning each listing to a segment row by row with apply(axis=1) versus column-wise with np.select. Same result, checked with assert. Note: with text, apply can be just as fast, which is why I measure before optimising.</p></div></div><template data-code="py" data-label="cuaderno.py · cell 10">import time
+
+base = limpio.dropna(subset=["precio"])
+
+def fila_a_fila(d):
+    def segmento(f):
+        if f["precio"] &gt;= 600 and f["accommodates"] &gt;= 7:
+            return "lujo grupos"
+        if f["precio"] &gt;= 600:
+            return "lujo"
+        if f["accommodates"] &gt;= 7:
+            return "grupos"
+        return "estandar"
+    return d.apply(segmento, axis=1)
+
+def por_columnas(d):
+    caro, grande = d["precio"].ge(600), d["accommodates"].ge(7)
+    return pd.Series(np.select([caro &amp; grande, caro, grande], ["lujo grupos", "lujo", "grupos"],
+                               default="estandar"), index=d.index)
+
+tiempos = {}
+for nombre, f in [("apply(axis=1)", fila_a_fila), ("np.select", por_columnas)]:
+    t0 = time.perf_counter()
+    resultado = f(base)
+    tiempos[nombre] = (time.perf_counter() - t0) * 1000
+
+assert fila_a_fila(base).equals(por_columnas(base))
+pd.Series(tiempos, name="milisegundos").to_frame().assign(
+    veces_mas_lento=lambda d: d["milisegundos"] / d["milisegundos"].min()).round(1)</template><div class="nb-out" aria-label="Output of cell 10"><span class="nb-lbl">Output · 0.2 s</span><div class="scroll"><table class="nb-table"><thead><tr><th></th><th>milisegundos</th><th>veces_mas_lento</th></tr></thead><tbody><tr><th scope="row">apply(axis=1)</th><td>104,9</td><td>55,8</td></tr><tr><th scope="row">np.select</th><td>1,9</td><td>1</td></tr></tbody></table></div></div></article><article class="nb-cell" id="celda-11"><div class="nb-head"><span class="nb-n">[11]</span><div><h3>Reconcile pandas against SQL</h3><p>The same metric computed in two ways must give the same answer. sqlite3 ships with Python: I load the table, repeat the calculation in SQL and compare with assert_frame_equal.</p></div></div><template data-code="py" data-label="cuaderno.py · cell 11">import sqlite3
+
+con = sqlite3.connect(":memory:")
+limpio[["municipio", "precio", "ingreso"]].astype({"municipio": str}).to_sql("anuncios", con, index=False)
+
+sql = pd.read_sql("""
+    SELECT municipio, COUNT(*) AS anuncios, AVG(precio) AS precio_medio, SUM(ingreso) AS ingreso_total
+    FROM anuncios GROUP BY municipio ORDER BY municipio
+""", con).set_index("municipio")
+
+pandas_ = (limpio.astype({"municipio": str}).groupby("municipio")
+    .agg(anuncios=("id", "size"), precio_medio=("precio", "mean"), ingreso_total=("ingreso", "sum")))
+
+pd.testing.assert_frame_equal(sql, pandas_, check_dtype=False)
+print(f"Cuadre correcto en {len(sql)} municipios y 3 métricas")</template><div class="nb-out" aria-label="Output of cell 11"><span class="nb-lbl">Output · 0.1 s</span><pre class="nb-print">Cuadre correcto en 53 municipios y 3 métricas</pre></div></article>
+  </section>
+
+  <section class="chapter" id="produccion">
+    <div class="chapter-head"><h2>What I would change to take it to production</h2>
+      <p>A notebook is for exploring and explaining. If this analysis had to run every week, I would do the following:</p></div>
+    <div class="findings">
+      <div class="finding"><b>Functions with tests</b><p>Move the cleaning into a module and test it with small hand-written cases: empty price, with a currency symbol, with thousands.</p></div>
+      <div class="finding"><b>Columnar format</b><p>Store the clean table as Parquet, or load it into BigQuery, so the compressed CSV is not read on every run.</p></div>
+      <div class="finding"><b>Reconciliations as alerts</b><p>The <span class="mono">assert</span> statements in this notebook would become checks that warn, rather than stop, when a figure drifts.</p></div>
+      <div class="finding good"><b>Already in place</b><p>Explicit types, side-effect-free cleaning, relationships validated on every merge and the result reconciled two ways.</p></div>
+    </div>
+  </section>
+  </div>
+</div>
+
+<nav class="prevnext" aria-label="Other projects"><a href="dashboard.html"><span>← Previous</span><b>02 · Market dashboard</b></a><a class="next" href="visualizacion.html"><span>Next →</span><b>04 · How I present data</b></a></nav>
+
+</main>
+<footer class="site-foot"><div class="wrap"><nav class="sitemap" aria-label="Site map"><div><h2>Projects</h2><a href="proyectos.html">All projects</a><a href="mallorca.html">Sea view in Mallorca</a><a href="dashboard.html">Market dashboard</a><a href="pandas.html">pandas notebook</a><a href="visualizacion.html">How I present data</a><a href="caso-churn.html">Churn by ROI</a><a href="caso-cuadre.html">Dashboard ×2</a><a href="caso-funnel.html">Funnel and integrations</a><a href="caso-facturacion.html">Billing data cleaning</a><a href="habilidades.html#portal">This portfolio</a></div><div><h2>Mallorca project</h2><a href="mallorca.html#datos">Data and quality</a><a href="mallorca.html#python">Python and pandas</a><a href="mallorca.html#sql">SQL and console</a><a href="mallorca.html#modelo">Model and simulator</a><a href="mallorca.html#hallazgos">Findings and map</a><a href="mallorca.html#conclusiones">Conclusions</a></div><div><h2>Skills</h2><a href="habilidades.html#datos">Data and analysis</a><a href="habilidades.html#negocio">Business and tech</a><a href="habilidades.html#metodo">How I work</a><a href="habilidades.html#formacion">Education</a><a href="habilidades.html#portal">This portfolio and audit</a></div><div><h2>About me</h2><a href="index.html#sobre-mi">About me</a><a href="index.html#trayectoria">Experience</a><a href="index.html#habilidades">Skills</a><a href="cv.html">CV</a><a href="index.html#contacto">Contact</a><a href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener noreferrer">LinkedIn</a></div></nav><div class="foot-meta"><span>Matteo Eiras Pé, Palma de Mallorca</span><span>Project data: Inside Airbnb (CC BY 4.0)</span></div><div class="foot-word" aria-hidden="true">Eiras.</div></div></footer>
+<script src="../assets/datos.js?v=fa5e6ca7"></script>
+<script src="../assets/app.js?v=959886a8"></script>
+</body>
+</html>

@@ -6,8 +6,27 @@
   const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
   const NS = "http://www.w3.org/2000/svg";
   const el = (n, a = {}, t) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (t != null) e.textContent = t; return e; };
+  // Idioma de la página: las de en/ llevan <html lang="en">. Textos, números, euros y porcentajes se adaptan.
+  const EN = document.documentElement.lang === "en";
+  const tr = (es, en) => EN ? en : es;   // no se llama T: T es el margen superior en los gráficos
   // Separador de miles siempre (en español, Intl omite el punto en números de 4 cifras: "9000" frente a "12.000")
-  const fmt = (n, d = 0) => n == null ? "-" : Number(n).toLocaleString("es-ES", { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: "always" });
+  const fmt = (n, d = 0) => n == null ? "-" : Number(n).toLocaleString(EN ? "en-GB" : "es-ES", { minimumFractionDigits: d, maximumFractionDigits: d, useGrouping: "always" });
+  const eur = (n, d = 0) => n == null ? "-" : EN ? "€" + fmt(n, d) : fmt(n, d) + " €";
+  const pc = (n, d = 0) => n == null ? "-" : fmt(n, d) + (EN ? "%" : " %");
+  // Etiquetas que llegan en español dentro de los datos
+  const DATA_EN = {
+    "Piscina": "Pool", "Vista al mar": "Sea view", "Acceso a playa": "Beach access", "Aire acondicionado": "Air conditioning",
+    "Jacuzzi": "Hot tub", "Parking gratuito": "Free parking", "Barbacoa": "Barbecue", "Cargador VE": "EV charger", "Gimnasio": "Gym",
+    "Apartamento": "Apartment", "Casa / otros": "House / other", "Villa / finca": "Villa / country house",
+    "Precio mediano por municipio (SQL con ventanas vs pandas .median())": "Median price per municipality (SQL window functions vs pandas .median())",
+    "Anuncios sin precio": "Listings without a price", "Reseñas 2023–2025": "Reviews 2023-2025",
+    "% de anuncios de anfitriones con 20+": "% of listings from hosts with 20+",
+    "53 de 53 municipios": "53 of 53 municipalities", "53 municipios": "53 municipalities",
+    "Con redondeo a entero salían 52 de 53: Lloret de Vistalegre (328,5 €) → 328 en pandas y 329 en SQLite.":
+      "Rounded to whole euros it was 52 of 53: Lloret de Vistalegre (€328.5) → 328 in pandas and 329 in SQLite.",
+  };
+  const tl = s => (EN && DATA_EN[s]) || s;
+  window.PFi18n = { EN, T: tr, fmt, eur, pc, tl };
   const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const PF = window.PF || {};
 
@@ -19,7 +38,7 @@
   if (tbtn) tbtn.addEventListener("click", () => {
     const dark = root.dataset.theme === "dark";
     root.dataset.theme = dark ? "light" : "dark";
-    tbtn.setAttribute("aria-label", dark ? "Activar tema oscuro" : "Activar tema claro");
+    tbtn.setAttribute("aria-label", dark ? tr("Activar tema oscuro", "Switch to dark theme") : tr("Activar tema claro", "Switch to light theme"));
     try { localStorage.setItem("tema", root.dataset.theme); } catch (e) {}
   });
 
@@ -51,8 +70,8 @@
     const t = $(b.dataset.copy);
     const select = () => { const r = document.createRange(); r.selectNodeContents(t); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
     const label = b.textContent; const done = m => { b.textContent = m; setTimeout(() => (b.textContent = label), 2000); };
-    if (navigator.clipboard) navigator.clipboard.writeText(t.textContent.trim()).then(() => done("Copiado"), () => { select(); done("Seleccionado"); });
-    else { select(); done("Seleccionado"); }
+    if (navigator.clipboard) navigator.clipboard.writeText(t.textContent.trim()).then(() => done(tr("Copiado", "Copied")), () => { select(); done(tr("Seleccionado", "Selected")); });
+    else { select(); done(tr("Seleccionado", "Selected")); }
   }));
 
   /* ---------- Filtros de proyectos ---------- */
@@ -82,12 +101,12 @@
   window.PFhl = highlight;
   function codeBlock(code, lang, label) {
     const w = document.createElement("div"); w.className = "code";
-    w.innerHTML = '<div class="code-bar"><span>' + esc(label || lang.toUpperCase()) + '</span><button type="button">Copiar</button></div><pre><code></code></pre>';
+    w.innerHTML = '<div class="code-bar"><span>' + esc(label || lang.toUpperCase()) + '</span><button type="button">' + tr("Copiar", "Copy") + '</button></div><pre><code></code></pre>';
     $("code", w).innerHTML = highlight(code, lang);
     const b = $("button", w);
     b.addEventListener("click", () => {
-      const ok = () => { b.textContent = "Copiado"; setTimeout(() => (b.textContent = "Copiar"), 1800); };
-      if (navigator.clipboard) navigator.clipboard.writeText(code).then(ok, () => { b.textContent = "Selecciona y copia"; });
+      const ok = () => { b.textContent = tr("Copiado", "Copied"); setTimeout(() => (b.textContent = tr("Copiar", "Copy")), 1800); };
+      if (navigator.clipboard) navigator.clipboard.writeText(code).then(ok, () => { b.textContent = tr("Selecciona y copia", "Select and copy"); });
     });
     return w;
   }
@@ -187,17 +206,17 @@
     const X = v => L + (v - min) / (max - min) * (Rr - L);
     (compact ? [0, 10, 20, 30] : [-10, 0, 10, 20, 30]).forEach(t => {
       svg.append(el("line", { x1: X(t), x2: X(t), y1: top - 4, y2: top + A.length * rowH, stroke: t === 0 ? "var(--ink)" : "var(--line)", "stroke-dasharray": t === 0 ? "0" : "3 4" }));
-      if (!estrecho || t % 20 === 0) svg.append(el("text", { x: X(t), y: H - 6, "text-anchor": "middle" }, (t > 0 ? "+" : "") + t + " %"));
+      if (!estrecho || t % 20 === 0) svg.append(el("text", { x: X(t), y: H - 6, "text-anchor": "middle" }, (t > 0 ? "+" : "") + pc(t)));
     });
     A.forEach((a, i) => {
       const y = top + i * rowH + rowH / 2, sig = a.ic95[0] > 0 || a.ic95[1] < 0, c = sig ? "var(--accent-mark)" : "var(--muted)";
       const g = el("g", { class: "row" });
       g.append(el("rect", { x: 0, y: y - rowH / 2, width: W, height: rowH, class: "hit" }));
-      g.append(el("text", { x: L - 12, y: y + 4, "text-anchor": "end", class: "lbl" }, estrecho ? a.atributo.replace("Aire acondicionado", "Aire acond.").replace("Parking gratuito", "Parking") : a.atributo));
+      g.append(el("text", { x: L - 12, y: y + 4, "text-anchor": "end", class: "lbl" }, estrecho ? tl(a.atributo).replace("Aire acondicionado", "Aire acond.").replace("Air conditioning", "Air con.").replace(/^(Parking gratuito|Free parking)$/, "Parking") : tl(a.atributo)));
       g.append(el("line", { x1: X(Math.max(a.ic95[0], min)), x2: X(Math.min(a.ic95[1], max)), y1: y, y2: y, stroke: c, "stroke-width": compact ? 4 : 3, "stroke-opacity": .35, "stroke-linecap": "round" }));
       g.append(el("circle", { cx: X(a.prima_pct), cy: y, r: compact ? 7 : 6, fill: c, stroke: "var(--surface)", "stroke-width": 2 }));
-      g.append(el("text", { x: X(Math.min(a.ic95[1], max)) + 10, y: y + 4, class: sig ? "lbl val" : "val" }, (a.prima_pct > 0 ? "+" : "") + fmt(a.prima_pct, 1) + " %"));
-      conTip(g, `${a.atributo}: ${(a.prima_pct > 0 ? "+" : "") + fmt(a.prima_pct, 1)} %\nIC 95 %: ${fmt(a.ic95[0], 1)} a ${fmt(a.ic95[1], 1)} %\n${fmt(a.pct_anuncios, 1)} % de los anuncios lo tiene${sig ? "" : "\nNo se distingue de cero"}`);
+      g.append(el("text", { x: X(Math.min(a.ic95[1], max)) + 10, y: y + 4, class: sig ? "lbl val" : "val" }, (a.prima_pct > 0 ? "+" : "") + pc(a.prima_pct, 1)));
+      conTip(g, `${tl(a.atributo)}: ${(a.prima_pct > 0 ? "+" : "") + pc(a.prima_pct, 1)}\n${tr("IC 95 %", "95% CI")}: ${fmt(a.ic95[0], 1)} ${tr("a", "to")} ${pc(a.ic95[1], 1)}\n${pc(a.pct_anuncios, 1)} ${tr("de los anuncios lo tiene", "of listings have it")}${sig ? "" : tr("\nNo se distingue de cero", "\nNot distinguishable from zero")}`);
       svg.append(g);
     });
   }
@@ -207,15 +226,16 @@
   const host = $("#hostSvg");
   if (host && R) responsivo(host, (svg, W) => {
     const d = R.mercado.anuncios_por_tramo_anfitrion_pct, keys = ["1", "2-4", "5-19", "20+"];
-    const names = { "1": "1 anuncio", "2-4": "2 a 4 anuncios", "5-19": "5 a 19 anuncios", "20+": "20 o más" };
+    const names = EN ? { "1": "1 listing", "2-4": "2 to 4 listings", "5-19": "5 to 19 listings", "20+": "20 or more" }
+                       : { "1": "1 anuncio", "2-4": "2 a 4 anuncios", "5-19": "5 a 19 anuncios", "20+": "20 o más" };
     const estrecho = W < 560, H = estrecho ? 44 + keys.length * 22 : 96;
     svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("height", H);
     let x = 0;
     keys.forEach((k, i) => {
       const w = W * d[k] / 100;
-      conTip(svg.appendChild(el("rect", { x, y: 4, width: Math.max(w - 2, 0), height: 32, fill: `var(--seq${i + 1})`, class: "mark" })), `Anfitriones con ${names[k]}\n${fmt(d[k], 1)} % de los anuncios`);
-      if (!estrecho) { svg.append(el("text", { x: x + 2, y: 58, class: "lbl" }, names[k])); svg.append(el("text", { x: x + 2, y: 76 }, fmt(d[k], 1) + " %")); }
-      else { const y = 58 + i * 22; svg.append(el("rect", { x: 0, y: y - 10, width: 12, height: 12, fill: `var(--seq${i + 1})` })); svg.append(el("text", { x: 20, y, class: "lbl" }, names[k])); svg.append(el("text", { x: W, y, "text-anchor": "end" }, fmt(d[k], 1) + " %")); }
+      conTip(svg.appendChild(el("rect", { x, y: 4, width: Math.max(w - 2, 0), height: 32, fill: `var(--seq${i + 1})`, class: "mark" })), `${tr("Anfitriones con", "Hosts with")} ${names[k]}\n${pc(d[k], 1)} ${tr("de los anuncios", "of listings")}`);
+      if (!estrecho) { svg.append(el("text", { x: x + 2, y: 58, class: "lbl" }, names[k])); svg.append(el("text", { x: x + 2, y: 76 }, pc(d[k], 1))); }
+      else { const y = 58 + i * 22; svg.append(el("rect", { x: 0, y: y - 10, width: 12, height: 12, fill: `var(--seq${i + 1})` })); svg.append(el("text", { x: 20, y, class: "lbl" }, names[k])); svg.append(el("text", { x: W, y, "text-anchor": "end" }, pc(d[k], 1))); }
       x += w;
     });
   });
@@ -226,11 +246,11 @@
     const q = S.consultas.find(c => c.fichero.startsWith("05")), iP = q.columnas.indexOf("pct_ingreso"), iN = q.columnas.indexOf("anuncios"), iA = q.columnas.indexOf("pct_acumulado");
     const rows = q.filas, L = 40, B = 196, T = 22, H = 222, bw = (W - L) / rows.length, max = 40, gap = Math.max(4, bw * .18);
     svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("height", H);
-    [0, 10, 20, 30, 40].forEach(t => { const y = B - t / max * (B - T); eje(svg, L, W, y, t > 0); svg.append(el("text", { x: L - 8, y: y + 4, "text-anchor": "end" }, t + " %")); });
+    [0, 10, 20, 30, 40].forEach(t => { const y = B - t / max * (B - T); eje(svg, L, W, y, t > 0); svg.append(el("text", { x: L - 8, y: y + 4, "text-anchor": "end" }, pc(t))); });
     rows.forEach((r, k) => {
       const v = r[iP], h = v / max * (B - T), x = L + k * bw + gap / 2, w = bw - gap, rad = Math.min(4, w / 2, h);
       const p = el("path", { d: `M${x},${B}V${B - h + rad}Q${x},${B - h} ${x + rad},${B - h}H${x + w - rad}Q${x + w},${B - h} ${x + w},${B - h + rad}V${B}Z`, fill: k === 0 ? "var(--accent-mark)" : "var(--y1)", class: "mark" });
-      conTip(p, `Decil ${r[0]}: ${fmt(v, 1)} % del ingreso\n${fmt(r[iN])} anuncios\nAcumulado: ${fmt(r[iA], 1)} %`);
+      conTip(p, `${tr("Decil", "Decile")} ${r[0]}: ${pc(v, 1)} ${tr("del ingreso", "of income")}\n${fmt(r[iN])} ${tr("anuncios", "listings")}\n${tr("Acumulado", "Cumulative")}: ${pc(r[iA], 1)}`);
       svg.append(p);
       if (k === 0 || W >= 560) svg.append(el("text", { x: x + w / 2, y: B - h - 7, "text-anchor": "middle", class: k === 0 ? "lbl" : "" }, fmt(v, 1)));
       svg.append(el("text", { x: x + w / 2, y: B + 18, "text-anchor": "middle" }, (W < 480 ? "" : "D") + r[0]));
@@ -241,7 +261,7 @@
   const seas = $("#seasSvg");
   if (seas && R) responsivo(seas, (svg, W) => {
     const Y = R["reseñas_por_mes"], years = Object.keys(Y), lg = $("#seasLegend"), L = 56, Rr = W - 16, T = 18, B = 214, H = 244, max = 12000;
-    const meses = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+    const meses = EN ? ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"] : ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
     svg.setAttribute("viewBox", `0 0 ${W} ${H}`); svg.setAttribute("height", H);
     const X = i => L + i * (Rr - L) / 11, YY = v => B - v / max * (B - T);
     [0, 3000, 6000, 9000, 12000].forEach(t => { eje(svg, L, Rr, YY(t), t > 0); svg.append(el("text", { x: L - 8, y: YY(t) + 4, "text-anchor": "end" }, fmt(t))); });
@@ -258,18 +278,18 @@
     const mostrar = (i, cx, cy) => {
       cruz.setAttribute("x1", X(i)); cruz.setAttribute("x2", X(i)); cruz.setAttribute("opacity", .35);
       years.forEach((y, k) => { puntos[k].setAttribute("cx", X(i)); puntos[k].setAttribute("cy", YY(Y[y][i])); puntos[k].setAttribute("opacity", 1); });
-      tipShow(`${meses[i]}\n` + years.slice().reverse().map(y => `${y}: ${fmt(Y[y][i])} reseñas`).join("\n"), cx, cy);
+      tipShow(`${meses[i]}\n` + years.slice().reverse().map(y => `${y}: ${fmt(Y[y][i])} ${tr("reseñas", "reviews")}`).join("\n"), cx, cy);
     };
     const ocultar = () => { cruz.setAttribute("opacity", 0); puntos.forEach(p => p.setAttribute("opacity", 0)); tipHide(); };
     capa.addEventListener("pointermove", e => { const b = svg.getBoundingClientRect(), x = (e.clientX - b.left) * W / b.width; mostrar(Math.max(0, Math.min(11, Math.round((x - L) / ((Rr - L) / 11)))), e.clientX, e.clientY); });
     capa.addEventListener("pointerleave", ocultar);
-    if (lg && !lg.childElementCount) years.forEach(y => { const [c, w] = sty[y] || ["var(--muted)", 2]; const sp = document.createElement("span"); sp.innerHTML = `<i style="background:${c};height:${w}px"></i>${esc(y)}: ${fmt(Y[y].reduce((a, b) => a + b, 0))} reseñas`; lg.append(sp); });
+    if (lg && !lg.childElementCount) years.forEach(y => { const [c, w] = sty[y] || ["var(--muted)", 2]; const sp = document.createElement("span"); sp.innerHTML = `<i style="background:${c};height:${w}px"></i>${esc(y)}: ${fmt(Y[y].reduce((a, b) => a + b, 0))} ${tr("reseñas", "reviews")}`; lg.append(sp); });
   });
 
   /* Escala secuencial de 4 clases (un solo tono, de claro a oscuro), validada con dataviz/validate_palette.js */
   const MAPA = {
     breaks: [300, 400, 500],
-    labels: ["< 300 €", "300-399 €", "400-499 €", "≥ 500 €"],
+    labels: EN ? ["< €300", "€300-399", "€400-499", "≥ €500"] : ["< 300 €", "300-399 €", "400-499 €", "≥ 500 €"],
     color: v => v == null ? "var(--surface-2)" : `var(--seq${[300, 400, 500].filter(b => v >= b).length + 1})`,
     legend(box) { if (box && !box.childElementCount) this.labels.forEach((t, i) => { const sp = document.createElement("span"); sp.innerHTML = `<i style="background:var(--seq${i + 1});height:10px;width:16px"></i>${t}`; box.append(sp); }); },
     mini(svg) {   // mapa pequeño sin interacción, para tarjetas y miniaturas
@@ -284,7 +304,7 @@
       M.municipios.forEach(m => {
         const has = m.precio_mediano != null;
         const p = el("path", { d: m.d, fill: MAPA.color(m.precio_mediano), stroke: "var(--surface)", "stroke-width": 1, class: "mun" });
-        const txt = has ? `${m.nombre}\n${fmt(m.precio_mediano)} € de mediana por noche\n${fmt(m.anuncios)} anuncios` : `${m.nombre}\nSin precio publicado`;
+        const txt = has ? `${m.nombre}\n${eur(m.precio_mediano)} ${tr("de mediana por noche", "median per night")}\n${fmt(m.anuncios)} ${tr("anuncios", "listings")}` : `${m.nombre}\n${tr("Sin precio publicado", "No published price")}`;
         conTip(p, txt);
         const fijar = () => { if (fijo) fijo.textContent = txt.replace(/\n/g, ", "); svg.append(p); };
         ["pointerenter", "focus", "click"].forEach(e => p.addEventListener(e, fijar));
@@ -298,13 +318,22 @@
 
   const mt = $("#munTable tbody");
   if (mt && R) R.municipios_top_anuncios.forEach(m => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td>${esc(m.municipio)}</td><td class="r">${fmt(m.anuncios)}</td><td class="r">${fmt(m.precio_mediano)} €</td><td class="r">${fmt(m.ingreso_mediano)} €</td><td class="r">${fmt(m.piscina_pct)} %</td>`;
-    mt.append(tr);
+    const fila = document.createElement("tr");
+    fila.innerHTML = `<td>${esc(m.municipio)}</td><td class="r">${fmt(m.anuncios)}</td><td class="r">${eur(m.precio_mediano)}</td><td class="r">${eur(m.ingreso_mediano)}</td><td class="r">${pc(m.piscina_pct)}</td>`;
+    mt.append(fila);
   });
 
   /* ================= SQL: consultas reales con su resultado ================= */
-  const META = {
+  const META = EN ? {
+    "01": ["A clean view over the raw data", "Price arrives as text with a currency symbol and thousands separator. I clean it once in a view and every query starts from there.", ["CREATE VIEW", "CAST", "NULLIF", "REPLACE"]],
+    "02": ["Data quality profile in one pass", "Before analysing: volume, duplicates, blanks and outliers.", ["Conditional aggregates", "SUM(expr IS NULL)"]],
+    "03": ["Are prices missing at random?", "If listings without a price are different, excluding them biases the result. I check by comparing their activity.", ["CASE", "GROUP BY"]],
+    "04": ["Median per municipality without a MEDIAN function", "SQLite has no MEDIAN(). I compute it with window functions, as in engines without percentiles.", ["CTE", "ROW_NUMBER() OVER", "COUNT() OVER", "PARTITION BY"]],
+    "05": ["Income concentration by decile", "What share of income each 10% of listings earns, with the running total in the same query.", ["NTILE", "SUM() OVER ()", "Running total with a window"]],
+    "06": ["How professional is the supply?", "Listings and hosts by the size of the host's portfolio.", ["CASE", "COUNT(DISTINCT)", "% of total with a window"]],
+    "07": ["Year-on-year growth", "Change in activity year on year without self-joins.", ["LAG() OVER", "strftime", "CTE"]],
+    "08": ["Calendar: 5.4 million rows", "Unavailable nights per month. I indexed the date so the query is workable.", ["Indexes", "Aggregation over a large table"]],
+  } : {
     "01": ["Vista limpia sobre los datos crudos", "El precio llega como texto con símbolo y separador de miles. Lo limpio una sola vez en una vista y todas las consultas parten de ahí.", ["CREATE VIEW", "CAST", "NULLIF", "REPLACE"]],
     "02": ["Perfil de calidad en una pasada", "Antes de analizar: volumen, duplicados, vacíos y extremos.", ["Agregados condicionales", "SUM(expr IS NULL)"]],
     "03": ["¿Faltan los precios al azar?", "Si los anuncios sin precio son distintos, excluirlos sesga el resultado. Lo compruebo comparando su actividad.", ["CASE", "GROUP BY"]],
@@ -321,19 +350,19 @@
       const card = document.createElement("article"); card.className = "sql-card"; card.id = "sql-" + id;
       card.innerHTML = `<header><span class="eyebrow">${esc(q.fichero)}</span><h4>${esc(title)}</h4><p class="muted" style="font-size:.95rem">${esc(why)}</p>
         <div class="skills-used">${skills.map(s => `<span class="tag">${esc(s)}</span>`).join("")}</div>
-        <div class="meta"><span>${q.columnas.length ? fmt(q.filas.length) + " filas de resultado" : "crea la vista"}</span><span>${fmt(q.ms)} ms</span></div></header>
-        <details${id === "04" ? " open" : ""}><summary>Ver la consulta</summary></details>`;
+        <div class="meta"><span>${q.columnas.length ? fmt(q.filas.length) + tr(" filas de resultado", " result rows") : tr("crea la vista", "creates the view")}</span><span>${fmt(q.ms)} ms</span></div></header>
+        <details${id === "04" ? " open" : ""}><summary>${tr("Ver la consulta", "Show the query")}</summary></details>`;
       $("details", card).append(codeBlock(q.sql, "sql", q.fichero));
       if (q.columnas.length) {
         const rows = q.filas.slice(0, 13);
         const res = document.createElement("div"); res.className = "result";
         res.innerHTML = `<table><thead><tr>${q.columnas.map(c => `<th${typeof q.filas[0][q.columnas.indexOf(c)] === "number" ? ' class="r"' : ""}>${esc(c)}</th>`).join("")}</tr></thead><tbody>${rows.map(r => `<tr>${r.map(v => typeof v === "number" ? `<td class="r">${fmt(v, Number.isInteger(v) ? 0 : (Math.abs(v) < 100 ? 1 : 0))}</td>` : `<td>${v == null ? "-" : esc(v)}</td>`).join("")}</tr>`).join("")}</tbody></table>`
-          + (q.filas.length > rows.length ? `<p class="muted" style="font-size:.82rem;padding:8px 12px">Mostrando ${rows.length} de ${q.filas.length} filas.</p>` : "");
+          + (q.filas.length > rows.length ? `<p class="muted" style="font-size:.82rem;padding:8px 12px">${tr("Mostrando", "Showing")} ${fmt(rows.length)} ${tr("de", "of")} ${fmt(q.filas.length)} ${tr("filas", "rows")}.</p>` : "");
         card.append(res);
       }
       if (["02", "03", "04", "05", "06"].includes(id)) {
         const row = document.createElement("div"); row.className = "open-row";
-        row.innerHTML = '<button class="btn sm ghost" type="button">Ejecutar en la consola <span class="arr">→</span></button>';
+        row.innerHTML = '<button class="btn sm ghost" type="button">' + tr("Ejecutar en la consola", "Run in the console") + ' <span class="arr">→</span></button>';
         $("button", row).addEventListener("click", () => window.PFconsole && window.PFconsole.load(q.sql, true));
         $("header", card).after(row);
       }
@@ -342,17 +371,17 @@
   }
   const ct = $("#cuadreTable tbody");
   if (ct && S) S.cuadres.forEach(c => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `<td class="wrap">${esc(c.control)}${c.nota ? `<br><span class="muted small">${esc(c.nota)}</span>` : ""}</td><td class="r">${esc(typeof c.sql === "number" ? fmt(c.sql, Number.isInteger(c.sql) ? 0 : 1) : c.sql)}</td><td class="r">${esc(typeof c.pandas === "number" ? fmt(c.pandas, Number.isInteger(c.pandas) ? 0 : 1) : c.pandas)}</td><td>${c.ok ? '<span class="ok-mark">✓ cuadra</span>' : '<span class="ko-mark">✗ revisar</span>'}</td>`;
-    ct.append(tr);
+    const fila = document.createElement("tr");
+    fila.innerHTML = `<td class="wrap">${esc(tl(c.control))}${c.nota ? `<br><span class="muted small">${esc(tl(c.nota))}</span>` : ""}</td><td class="r">${esc(typeof c.sql === "number" ? fmt(c.sql, Number.isInteger(c.sql) ? 0 : 1) : tl(c.sql))}</td><td class="r">${esc(typeof c.pandas === "number" ? fmt(c.pandas, Number.isInteger(c.pandas) ? 0 : 1) : tl(c.pandas))}</td><td>${c.ok ? `<span class="ok-mark">✓ ${tr("cuadra", "matches")}</span>` : `<span class="ko-mark">✗ ${tr("revisar", "check")}</span>`}</td>`;
+    ct.append(fila);
   });
   const au = $("#auditList");
   if (au && PF.audit) {
-    au.innerHTML = `<p class="audit-total">${fmt(PF.audit.ok)} de ${fmt(PF.audit.total)} controles superados</p><ul>` +
-      PF.audit.controles.map(c => `<li><span class="st ${c.ok ? "ok" : "warn"}">${c.ok ? "✓" : "✗"}</span><span><b>${esc(c.control)}</b><br><small>${esc(c.detalle)}</small></span></li>`).join("") + "</ul>";
+    au.innerHTML = `<p class="audit-total">${fmt(PF.audit.ok)} ${tr("de", "of")} ${fmt(PF.audit.total)} ${tr("controles superados", "checks passed")}</p><ul>` +
+      PF.audit.controles.map(c => `<li><span class="st ${c.ok ? "ok" : "warn"}">${c.ok ? "✓" : "✗"}</span><span><b>${esc(EN && c.control_en || c.control)}</b><br><small>${esc(EN && c.detalle_en || c.detalle)}</small></span></li>`).join("") + "</ul>";
   }
   const carga = $("#cargaTable tbody");
   if (carga && S) Object.entries(S.carga).forEach(([t, v]) => {
-    const tr = document.createElement("tr"); tr.innerHTML = `<td class="mono">${esc(t)}</td><td class="r">${fmt(v.filas)}</td><td class="r">${fmt(v.segundos, 1)} s</td>`; carga.append(tr);
+    const fila = document.createElement("tr"); fila.innerHTML = `<td class="mono">${esc(t)}</td><td class="r">${fmt(v.filas)}</td><td class="r">${fmt(v.segundos, 1)} s</td>`; carga.append(fila);
   });
 })();

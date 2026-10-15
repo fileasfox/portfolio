@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>What is a sea view worth in Mallorca? | Data project</title>
+<meta name="description" content="Analysis of 14,817 Airbnb listings in Mallorca with pandas, SQL and regression: a sea view adds 27% to the price. With an in-browser SQL console and simulator.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#e9e8e4">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Matteo Eiras Pé">
+<link rel="canonical" href="https://fileasfox.github.io/portfolio/en/mallorca.html">
+<link rel="alternate" hreflang="es" href="https://fileasfox.github.io/portfolio/mallorca.html">
+<link rel="alternate" hreflang="en" href="https://fileasfox.github.io/portfolio/en/mallorca.html">
+<link rel="alternate" hreflang="x-default" href="https://fileasfox.github.io/portfolio/mallorca.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:site_name" content="Matteo Eiras Pé">
+<meta property="og:url" content="https://fileasfox.github.io/portfolio/en/mallorca.html">
+<meta property="og:title" content="What is a sea view worth in Mallorca? | Data project">
+<meta property="og:description" content="Analysis of 14,817 Airbnb listings in Mallorca with pandas, SQL and regression: a sea view adds 27% to the price. With an in-browser SQL console and simulator.">
+<meta property="og:image" content="https://fileasfox.github.io/portfolio/assets/img/retrato.jpg">
+<meta property="og:image:width" content="554">
+<meta property="og:image:height" content="693">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "headline": "What is a sea view worth in Mallorca?", "inLanguage": "en", "url": "https://fileasfox.github.io/portfolio/en/mallorca.html", "image": "https://fileasfox.github.io/portfolio/assets/img/retrato.jpg", "author": {"@type": "Person", "name": "Matteo Eiras Pé", "url": "https://fileasfox.github.io/portfolio/en/"}, "isBasedOn": {"@type": "Dataset", "name": "Inside Airbnb: Mallorca", "url": "https://insideairbnb.com/get-the-data/", "license": "https://creativecommons.org/licenses/by/4.0/"}}]}</script>
+<script src="../assets/tema.js?v=85e2a5d7"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/styles.css?v=371af605">
+</head>
+<body>
+<a class="skip" href="#contenido">Skip to content</a>
+<div class="topbar"><div class="wrap"><span class="avail"><i aria-hidden="true"></i>Open to new opportunities</span><nav aria-label="Quick links"><a href="cv.html">CV</a><a href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener noreferrer">LinkedIn</a></nav></div></div><header class="site-head"><div class="bar"><nav class="menu" id="menu" aria-label="Main"><a href="index.html">Home</a><div class="dd"><a href="proyectos.html" aria-current=page>Projects</a><button class="dd-btn" type="button" aria-expanded="false" aria-controls="ddp" aria-label="Show the list of projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="dd-panel" id="ddp"><a href="mallorca.html"><b>01 · Sea view in Mallorca</b><small>pandas, SQL, regression and console</small></a><a href="dashboard.html"><b>02 · Market dashboard</b><small>KPIs, filters and cross-filtering</small></a><a href="pandas.html"><b>03 · pandas notebook</b><small>11 cells with their real output</small></a><a href="visualizacion.html"><b>04 · How I present data</b><small>Before and after, executive report</small></a><a href="caso-churn.html"><b>05 · Churn by ROI</b><small>Customer Success · BigQuery</small></a><a href="caso-cuadre.html"><b>06 · Dashboard ×2</b><small>Metric reconciliation</small></a><a href="caso-funnel.html"><b>07 · Funnel and integrations</b><small>Connector alerts</small></a><a href="caso-facturacion.html"><b>08 · Billing data cleaning</b><small>Python · data quality</small></a><a href="habilidades.html#portal"><b>09 · This portfolio</b><small>Web development and audit</small></a><a class="all" href="proyectos.html">All projects, with filters →</a></div></div><a href="habilidades.html">Skills</a><a href="cv.html">CV</a></nav><a class="brand" href="index.html" aria-label="Matteo Eiras, home">Eiras<span class="dot">.</span></a><div class="head-tools"><a class="lang-btn" href="../mallorca.html" hreflang="es" lang="es" aria-label="Leer esta página en español">ES</a><button class="icon-btn" id="themeBtn" type="button" aria-label="Switch theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg></button><button class="icon-btn burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div><span class="progress" aria-hidden="true"></span></div></header>
+<main class="wrap" id="contenido" tabindex="-1">
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="proyectos.html">Projects</a> / Mallorca</nav>
+  <span class="eyebrow">Project 01, public data</span>
+  <h1>What is a sea view worth in Mallorca?</h1>
+  <p class="lead">Which features of a holiday rental justify a higher price, once size, area, property type and season are taken into account. It is the same question a hotel asks when it prices a room with a view or an upgrade.</p>
+  <div class="tags"><span class="tag">Python 3</span><span class="tag">pandas</span><span class="tag">numpy</span><span class="tag">SQLite</span><span class="tag">Hedonic regression</span><span class="tag">SVG and JavaScript</span></div>
+  <div class="kpis">
+    <div class="kpi"><b>14,817</b><span>listings and 5.9 M rows in total</span></div>
+    <div class="kpi"><b>+27%</b><span>sea-view premium</span></div>
+    <div class="kpi"><b>8</b><span>SQL queries with their real output</span></div>
+    <div class="kpi"><b>4 / 4</b><span>SQL vs pandas reconciliations</span></div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Project contents">
+    <span class="eyebrow">On this page</span>
+    <a href="#resumen" class="on">Summary</a>
+    <a href="#datos">Data</a>
+    <a href="#python">Python</a>
+    <a href="#sql">SQL</a>
+    <a href="#modelo">Model</a>
+    <a href="#hallazgos">Findings</a>
+    <a href="#conclusiones">Conclusions</a>
+  </nav>
+
+  <div>
+  <!-- ================================================= SUMMARY -->
+  <section class="chapter" id="resumen">
+    <div class="chapter-head"><h2>From raw files to a business answer</h2></div>
+    <div class="findings">
+      <div class="finding good"><b>The answer</b><p>For the same size, area, type and season, a sea view is associated with a <strong>27%</strong> higher price, a pool with <strong>19%</strong> and air conditioning with <strong>12%</strong>.</p></div>
+      <div class="finding alert"><b>The trap</b><p>Comparing medians without controls, a pool seems to be worth <strong>+73%</strong>. That figure overstates the feature almost four times.</p></div>
+    </div>
+    <ol class="stepper" aria-label="Process"><li><b>Extract</b><span>3 CSV files and a GeoJSON from Inside Airbnb</span><span class="tool">curl</span></li><li><b>Clean</b><span>Prices as text, amenities as JSON, outliers</span><span class="tool">pandas</span></li><li><b>Query</b><span>Load into SQLite and 8 queries with CTEs and windows</span><span class="tool">SQL</span></li><li><b>Reconcile</b><span>Every key figure computed twice and compared</span><span class="tool">SQL and pandas</span></li><li><b>Model</b><span>Regression with robust errors, in 3 iterations</span><span class="tool">numpy</span></li><li><b>Publish</b><span>Results as JSON and charts on this site</span><span class="tool">JS and SVG</span></li></ol>
+  </section>
+
+  <!-- ================================================= DATA -->
+  <section class="chapter" id="datos">
+    <div class="chapter-head"><h2>What data, and what problems it had</h2>
+      <p>Inside Airbnb, Mallorca, scraped on 23/06/2026, CC BY 4.0 licence.</p></div>
+    <figure>
+      <div class="scroll"><table>
+        <thead><tr><th>File</th><th class="r">Rows</th><th>Grain</th><th>Use in the project</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">listings.csv.gz</td><td class="r">14,817</td><td>1 listing · 93 columns</td><td class="wrap">Price, features, municipality, host, estimated income</td></tr>
+          <tr><td class="mono">calendar.csv.gz</td><td class="r">5,438,865</td><td>1 listing × 1 night</td><td class="wrap">Availability over the next 12 months</td></tr>
+          <tr><td class="mono">reviews.csv</td><td class="r">410,856</td><td>1 review (id and date)</td><td class="wrap">Indicator of stays per month and year</td></tr>
+          <tr><td class="mono">neighbourhoods.geojson</td><td class="r">53</td><td>1 municipality</td><td class="wrap">Map by municipality</td></tr>
+        </tbody>
+      </table></div>
+    </figure>
+    <div class="findings">
+      <div class="finding alert"><b>25.4% without a price, and not at random</b><p>The 3,760 listings without a price average 2.6 reviews in the last year, against 6.9 for those with one, and 48% had no activity. They are barely active listings: they are excluded from the model, and that is stated (<a href="#sql-03">query 03</a>).</p></div>
+      <div class="finding alert"><b>The price is a quote</b><p>Each price refers to specific check-in dates between June and January. Without controlling for month, the model would confuse season with features.</p></div>
+      <div class="finding alert"><b>“Pool” is not always a pool</b><p>With a free-text search, “pool table” and “pool view” counted as a pool, and 5,482 listings say just “pool” even when it is private. The fix was to read the amenities list item by item.</p></div>
+      <div class="finding"><b>Prices up to €22,260</b><p>For the model I use the 1st to 99th percentile range (€71 to €3,870) and the log of price, so luxury villas do not dominate.</p></div>
+    </div>
+  </section>
+
+  <!-- ================================================= PYTHON -->
+  <section class="chapter" id="python">
+    <div class="chapter-head"><h2>The code that does the work</h2>
+      <p>Excerpts from <span class="mono">analisis_mallorca.py</span>, simplified to read here. Each tab explains what the code does and why I wrote it that way. Identifiers are in Spanish, as in the original project.</p></div>
+    <div class="tabset">
+      <div class="tabs" role="tablist" aria-label="Python excerpts">
+        <button type="button" role="tab">Cleaning</button>
+        <button type="button" role="tab">Amenities</button>
+        <button type="button" role="tab">Aggregation</button>
+        <button type="button" role="tab">Regression</button>
+      </div>
+      <div class="tabpanel" role="tabpanel">
+<template data-code="py" data-label="analisis_mallorca.py · cleaning">
+# Price arrives as text: "$1,035.00"
+l["precio"] = pd.to_numeric(
+    l["price"].astype(str).str.replace(r"[$,]", "", regex=True),
+    errors="coerce",                      # anything that is not a number becomes NaN instead of crashing
+)
+p1, p99 = l["precio"].quantile([0.01, 0.99])
+
+# Are prices missing at random? Compare the activity of both groups
+sesgo = l.groupby(l["precio"].isna())["number_of_reviews_ltm"].median()
+
+# Model sample: entire homes within the p1-p99 range
+m = l[(l["room_type"] == "Entire home/apt") &amp; l["precio"].between(p1, p99)].copy()
+m = m.dropna(subset=["accommodates", "bedrooms", "bathrooms"])
+m["log_precio"] = np.log(m["precio"])
+</template>
+        <div class="why"><div><h4>What it does</h4><p>Converts price from text to a number, computes the percentiles used to trim outliers and prepares the model sample.</p></div><div><h4>Why this way</h4><p><span class="mono">errors="coerce"</span> stops an odd value from bringing the process down. The log turns coefficients into price percentages.</p></div></div>
+      </div>
+      <div class="tabpanel" role="tabpanel">
+<template data-code="py" data-label="analisis_mallorca.py · amenities">
+# amenities is a JSON list per listing: '["Wifi", "Private pool", ...]'
+items = l["amenities"].fillna("[]").map(lambda s: [a.lower() for a in json.loads(s)])
+
+ATRIBUTOS = {
+    "Piscina":      r"^(private |shared )?(outdoor |indoor )?pool\b(?! table| view)",
+    "Vista al mar": r"^(sea|ocean|beach) views?\b",
+    "Aire acondicionado": r"air conditioning|central air",
+    # ...
+}
+for k, rx in ATRIBUTOS.items():
+    pat = re.compile(rx)
+    l[k] = items.map(lambda xs: any(pat.search(x) for x in xs)).astype(float)
+</template>
+        <div class="why"><div><h4>What it does</h4><p>Reads each listing's amenities list and creates a 0/1 variable per feature.</p></div><div><h4>Why this way</h4><p>The first version searched free text and counted “pool table” as a pool. By evaluating each item separately, with anchors and a negative lookahead, the pool premium went from −5.5% to +19.1%.</p></div></div>
+      </div>
+      <div class="tabpanel" role="tabpanel">
+<template data-code="py" data-label="analisis_mallorca.py · aggregation">
+# Summary per municipality in a single pass
+g = l.groupby("neighbourhood_cleansed").agg(
+    anuncios=("id", "size"),
+    precio_mediano=("precio", "median"),
+    ingreso_mediano=("estimated_revenue_l365d", lambda s: s[s &gt; 0].median()),
+    piscina_pct=("Piscina", "mean"),
+)
+
+# Host portfolio bands
+tramo = pd.cut(l["calculated_host_listings_count"],
+               [0, 1, 4, 19, 10**6], labels=["1", "2-4", "5-19", "20+"])
+reparto = tramo.value_counts(normalize=True, sort=False) * 100
+
+# Seasonality: reviews per year and month
+ym = rv.groupby([rv["date"].dt.year, rv["date"].dt.month]).size()
+</template>
+        <div class="why"><div><h4>What it does</h4><p>Aggregates by municipality with several metrics at once, bands the host portfolio and counts reviews per year and month.</p></div><div><h4>Why this way</h4><p>With <span class="mono">agg</span> and explicit names, the table comes out ready to publish. Median income excludes zeros so inactive listings are not mixed in.</p></div></div>
+      </div>
+      <div class="tabpanel" role="tabpanel">
+<template data-code="py" data-label="analisis_mallorca.py · regression">
+X = pd.concat([
+    m[["accommodates", "bedrooms", "bathrooms"]],
+    m[attrs],
+    pd.get_dummies(m["neighbourhood_cleansed"], prefix="mun", drop_first=True, dtype=float),
+    pd.get_dummies(m["tipo_propiedad"],        prefix="tipo", drop_first=True, dtype=float),
+    pd.get_dummies(m["mes_entrada"],           prefix="mes", drop_first=True, dtype=float),
+], axis=1)
+X.insert(0, "const", 1.0)
+
+beta, *_ = np.linalg.lstsq(X, y, rcond=None)          # least squares
+resid = y - X @ beta
+XtX_inv = np.linalg.pinv(X.T @ X)
+meat = (X * resid[:, None] ** 2).T @ X                # HC1 robust errors
+se = np.sqrt(np.diag(XtX_inv @ meat @ XtX_inv) * n / (n - k))
+prima_pct = (np.exp(beta) - 1) * 100                  # from log-price to % of price
+</template>
+        <div class="why"><div><h4>What it does</h4><p>Builds the matrix with features and controls (dummy variables for municipality, type and month) and estimates the regression with robust errors.</p></div><div><h4>Why this way</h4><p>I coded it with numpy instead of a library to understand every step. HC1 errors do not assume the same variance for villas and apartments.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================= SQL -->
+  <section class="chapter" id="sql">
+    <div class="chapter-head"><h2>The same questions, in SQL, and reconciled</h2>
+      <p>I loaded the raw files into SQLite and ran 8 queries. What you see below are the queries and the real results of that run. I then computed the key figures in pandas as well and compared them.</p></div>
+    <div class="console" id="sqlConsole">
+      <div class="console-top"><span class="dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="t">mallorca.db · SQLite running in your browser</span></div>
+      <div class="presets" id="presets" role="group" aria-label="Example queries"></div>
+      <div class="editor"><pre aria-hidden="true"><code id="sqlHl"></code></pre><textarea id="sqlInput" spellcheck="false" autocapitalize="off" autocomplete="off" aria-label="Editable SQL query"></textarea></div>
+      <div class="run-bar"><button class="btn" id="runSql" type="button">Run <span class="arr">▶</span></button><span><kbd>Ctrl</kbd> + <kbd>Enter</kbd></span><button class="btn sm ghost" id="resetDb" type="button">Reset data</button><span class="status" id="sqlStatus">Edit the query or pick an example. When you run it, the 14,817 listings load into SQLite inside your browser (only once).</span></div>
+      <div class="console-out" id="sqlOut"></div>
+    </div>
+    <p class="muted small">Try writing your own query: for example, the average price with a pool by municipality. The tables are <span class="mono">listings_limpio</span> (one listing per row, with <span class="mono">piscina</span>, <span class="mono">vista_mar</span> and <span class="mono">aire_acondicionado</span> as 0/1) and <span class="mono">reviews_mes</span>.</p>
+    <div class="findings">
+      <figure><h3>Loading into SQLite</h3><div class="scroll"><table id="cargaTable"><thead><tr><th>Table</th><th class="r">Rows</th><th class="r">Load</th></tr></thead><tbody></tbody></table></div></figure>
+      <div class="callout"><h3>Why reconcile</h3><p>In my job, two reports with two different figures mean nobody trusts either. That is why I compute every key figure two ways before publishing it.</p></div>
+    </div>
+    <figure>
+      <h3>SQL vs pandas reconciliation</h3>
+      <div class="scroll"><table id="cuadreTable"><thead><tr><th>Check</th><th class="r">SQL</th><th class="r">pandas</th><th>Status</th></tr></thead><tbody></tbody></table></div>
+      <figcaption>The first median reconciliation failed, with 52 of 53 municipalities matching. It was not a data error: pandas rounds 328.5 to even (328) and SQLite rounds up (329). Compared without rounding, all 53 match.</figcaption>
+    </figure>
+    <div class="sql-list" id="sqlList"></div>
+  </section>
+
+  <!-- ================================================= MODEL -->
+  <section class="chapter" id="modelo">
+    <div class="chapter-head"><h2>Price premium by feature</h2>
+      <p>Regression on the log of price. Sample: 9,255 entire homes. Controls: capacity, bedrooms, bathrooms, municipality, property type and check-in month.</p></div>
+    <figure>
+      <h3>Iteration log</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Version</th><th>Change</th><th class="r">R²</th><th class="r">Pool</th><th class="r">Beach access</th><th class="r">Sea view</th></tr></thead>
+        <tbody>
+          <tr><td>v1</td><td class="wrap">Size and municipality; features searched as free text</td><td class="r">0.398</td><td class="r">−6.3%*</td><td class="r">−13.5%</td><td class="r">+26.0%</td></tr>
+          <tr><td>v2</td><td class="wrap">+ property type and check-in month</td><td class="r">0.535</td><td class="r">−5.5%*</td><td class="r">−3.9%</td><td class="r">+25.3%</td></tr>
+          <tr class="hl"><td>v3</td><td class="wrap">Amenities read item by item</td><td class="r">0.541</td><td class="r">+19.1%</td><td class="r">−1.9% (n.s.)</td><td class="r">+27.2%</td></tr>
+        </tbody>
+      </table></div>
+      <figcaption>* In v1 and v2 the variable was “private pool” and it was compared with listings that also had a pool, but labelled just “pool”. A negative sign for a pool was the clue that something was wrong in the data, not in the market.</figcaption>
+    </figure>
+    <figure>
+      <svg data-chart="prima" role="img" aria-label="Estimated price premium by feature with a 95% confidence interval"></svg>
+      <div class="legend"><span><i class="dot" style="background:var(--accent-mark)"></i>Significant premium</span><span><i class="dot" style="background:var(--muted)"></i>Not distinguishable from zero</span><span><i style="background:var(--muted)"></i>95% confidence interval</span></div>
+      <figcaption>Sea view: +27% (between +23% and +32%). It is an association, not a causal effect: the barbecue probably reflects having a garden or terrace.</figcaption>
+    </figure>
+    <div class="callout">
+      <h3>The analyst's lesson</h3>
+      <p>Listings with a pool have a median of €488 against €282, 73% more. With controls, the premium is 19%: most of the gap is explained by homes with pools being larger and being villas.</p>
+    </div>
+    <div class="stack-sm">
+      <h3>Try it: price simulator</h3>
+      <p class="muted">It applies the real coefficients of model v3. Change the area, size or features and see how the estimated price changes.</p>
+    </div>
+    <div class="sim" id="sim">
+      <div class="sim-in">
+        <div class="sim-row">
+          <div class="field"><label for="simMun">Municipality</label><select id="simMun"></select></div>
+          <div class="field"><label for="simTipo">Type</label><select id="simTipo"></select></div>
+          <div class="field"><label for="simMes">Check-in</label><select id="simMes"></select></div>
+        </div>
+        <div class="sim-row">
+          <div class="field"><label for="simCap">Guests <output id="simCapOut"></output></label><input type="range" id="simCap"></div>
+          <div class="field"><label for="simDor">Bedrooms <output id="simDorOut"></output></label><input type="range" id="simDor"></div>
+          <div class="field"><label for="simBan">Bathrooms <output id="simBanOut"></output></label><input type="range" id="simBan"></div>
+        </div>
+        <div class="field"><label>Features</label><div class="switches" id="simAttrs"></div></div>
+      </div>
+      <div class="sim-out" aria-live="polite">
+        <span class="eyebrow">Estimated price per night</span>
+        <div class="price" id="simPrice">-</div>
+        <ul id="simBreak"></ul>
+        <p class="note">Model estimate (R² 0.54) with Duan's smearing correction when undoing the log. Use it to compare scenarios, not as a rate. n.s. = not significant.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================= FINDINGS -->
+  <section class="chapter" id="hallazgos">
+    <div class="chapter-head"><h2>What the market looks like</h2></div>
+    <figure>
+      <svg id="hostSvg" viewBox="0 0 640 100" role="img" aria-label="Share of listings by the host's number of listings"></svg>
+      <figcaption>54% of listings belong to hosts with 20 or more (133 hosts). 94.8% are entire homes.</figcaption>
+    </figure>
+    <figure>
+      <svg id="decilSvg" viewBox="0 0 610 215" role="img" aria-label="Share of estimated income by decile of listings"></svg>
+      <figcaption>Computed with NTILE in SQL (<a href="#sql-05">query 05</a>): the top-earning 10% of listings take 34.8% of estimated income, and the top half 83.5%.</figcaption>
+    </figure>
+    <figure>
+      <svg id="seasSvg" viewBox="0 0 640 240" role="img" aria-label="Reviews per month in 2023, 2024 and 2025"></svg>
+      <div class="legend" id="seasLegend"></div>
+      <figcaption>May to September concentrates 65% of activity, and the peak is 6.9 times the trough. Year-on-year growth: +16.4% in 2023, +25.7% in 2024 and +16.4% in 2025 (<a href="#sql-07">query 07</a>).</figcaption>
+    </figure>
+    <figure>
+      <svg id="mapSvg" role="img" aria-label="Map of Mallorca by municipality, shaded by median price per night"></svg>
+      <div class="maptip" id="mapTip" aria-live="polite">Hover over or tap a municipality.</div>
+      <div class="legend" id="mapLegend"></div>
+    </figure>
+    <figure>
+      <div class="scroll"><table id="munTable"><thead><tr><th>Municipality</th><th class="r">Listings</th><th class="r">Median price</th><th class="r">Median annual income</th><th class="r">With pool</th></tr></thead><tbody></tbody></table></div>
+      <figcaption>The 12 municipalities with the most listings. Palma has the lowest nightly price on the list and one of the highest annual incomes, because it works all year round. Sóller has the highest median income: €31,865.</figcaption>
+    </figure>
+  </section>
+
+  <!-- ================================================= CONCLUSIONS -->
+  <section class="chapter" id="conclusiones">
+    <div class="chapter-head"><h2>What a business would do with this</h2></div>
+    <div class="grid-cards auto">
+      <div class="card"><h3>Hotel</h3><p>Use the ≈ 25% sea-view premium as a reference ceiling for the upgrade to a room with a view, and sell air conditioning or the pool as separate features.</p></div>
+      <div class="card"><h3>Holiday rental manager</h3><p>Price by feature and by check-in month, not by the area median. The gap between the raw and the controlled figure avoids overvaluing a house.</p></div>
+      <div class="card"><h3>Destination</h3><p>Track how concentrated supply is and how much depends on summer, to plan services and regulation.</p></div>
+    </div>
+    <div class="stack">
+      <h3>Reproduce it</h3>
+<template data-code="py" data-label="terminal">
+python proyecto_airbnb/analisis_mallorca.py proyecto_airbnb/datos proyecto_airbnb   # pandas + model
+python proyecto_airbnb/ejecutar_sql.py      proyecto_airbnb/datos proyecto_airbnb   # SQLite + reconciliations
+python proyecto_airbnb/dashboard.py        proyecto_airbnb/datos proyecto_airbnb   # dashboard data
+python proyecto_airbnb/cuaderno.py         proyecto_airbnb/datos proyecto_airbnb   # pandas notebook
+python sitio_src/build.py                                                           # builds this site
+</template>
+      <p class="muted small">Code at <a href="https://github.com/fileasfox/portfolio" rel="noopener noreferrer">github.com/fileasfox/portfolio</a>. Data: <a href="https://insideairbnb.com/get-the-data/" rel="noopener noreferrer">Inside Airbnb</a> (CC BY 4.0).</p>
+    </div>
+  </section>
+  </div>
+</div>
+
+<nav class="prevnext" aria-label="Other projects"><span></span><a class="next" href="dashboard.html"><span>Next →</span><b>02 · Market dashboard</b></a></nav>
+
+</main>
+<footer class="site-foot"><div class="wrap"><nav class="sitemap" aria-label="Site map"><div><h2>Projects</h2><a href="proyectos.html">All projects</a><a href="mallorca.html">Sea view in Mallorca</a><a href="dashboard.html">Market dashboard</a><a href="pandas.html">pandas notebook</a><a href="visualizacion.html">How I present data</a><a href="caso-churn.html">Churn by ROI</a><a href="caso-cuadre.html">Dashboard ×2</a><a href="caso-funnel.html">Funnel and integrations</a><a href="caso-facturacion.html">Billing data cleaning</a><a href="habilidades.html#portal">This portfolio</a></div><div><h2>Mallorca project</h2><a href="mallorca.html#datos">Data and quality</a><a href="mallorca.html#python">Python and pandas</a><a href="mallorca.html#sql">SQL and console</a><a href="mallorca.html#modelo">Model and simulator</a><a href="mallorca.html#hallazgos">Findings and map</a><a href="mallorca.html#conclusiones">Conclusions</a></div><div><h2>Skills</h2><a href="habilidades.html#datos">Data and analysis</a><a href="habilidades.html#negocio">Business and tech</a><a href="habilidades.html#metodo">How I work</a><a href="habilidades.html#formacion">Education</a><a href="habilidades.html#portal">This portfolio and audit</a></div><div><h2>About me</h2><a href="index.html#sobre-mi">About me</a><a href="index.html#trayectoria">Experience</a><a href="index.html#habilidades">Skills</a><a href="cv.html">CV</a><a href="index.html#contacto">Contact</a><a href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener noreferrer">LinkedIn</a></div></nav><div class="foot-meta"><span>Matteo Eiras Pé, Palma de Mallorca</span><span>Project data: Inside Airbnb (CC BY 4.0)</span></div><div class="foot-word" aria-hidden="true">Eiras.</div></div></footer>
+<script src="../assets/datos.js?v=fa5e6ca7"></script>
+<script src="../assets/app.js?v=959886a8"></script>
+<script src="../assets/interactivo.js?v=41123638"></script>
+</body>
+</html>

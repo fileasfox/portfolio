@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<title>Interactive dashboard of Mallorca's holiday rental market</title>
+<meta name="description" content="Market dashboard with real Mallorca data: KPIs against the island total, filters, cross-filtering from the map, availability, prices and CSV export.">
+<link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#e9e8e4">
+<meta name="robots" content="index, follow">
+<meta name="author" content="Matteo Eiras Pé">
+<link rel="canonical" href="https://fileasfox.github.io/portfolio/en/dashboard.html">
+<link rel="alternate" hreflang="es" href="https://fileasfox.github.io/portfolio/dashboard.html">
+<link rel="alternate" hreflang="en" href="https://fileasfox.github.io/portfolio/en/dashboard.html">
+<link rel="alternate" hreflang="x-default" href="https://fileasfox.github.io/portfolio/dashboard.html">
+<meta property="og:type" content="article">
+<meta property="og:locale" content="en_GB">
+<meta property="og:locale:alternate" content="es_ES">
+<meta property="og:site_name" content="Matteo Eiras Pé">
+<meta property="og:url" content="https://fileasfox.github.io/portfolio/en/dashboard.html">
+<meta property="og:title" content="Interactive dashboard of Mallorca's holiday rental market">
+<meta property="og:description" content="Market dashboard with real Mallorca data: KPIs against the island total, filters, cross-filtering from the map, availability, prices and CSV export.">
+<meta property="og:image" content="https://fileasfox.github.io/portfolio/assets/img/retrato.jpg">
+<meta property="og:image:width" content="554">
+<meta property="og:image:height" content="693">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context": "https://schema.org", "@graph": [{"@type": "Article", "headline": "Interactive dashboard of Mallorca's holiday rental market", "inLanguage": "en", "url": "https://fileasfox.github.io/portfolio/en/dashboard.html", "image": "https://fileasfox.github.io/portfolio/assets/img/retrato.jpg", "author": {"@type": "Person", "name": "Matteo Eiras Pé", "url": "https://fileasfox.github.io/portfolio/en/"}, "isBasedOn": {"@type": "Dataset", "name": "Inside Airbnb: Mallorca", "url": "https://insideairbnb.com/get-the-data/", "license": "https://creativecommons.org/licenses/by/4.0/"}}]}</script>
+<script src="../assets/tema.js?v=85e2a5d7"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="../assets/styles.css?v=371af605">
+</head>
+<body>
+<a class="skip" href="#contenido">Skip to content</a>
+<div class="topbar"><div class="wrap"><span class="avail"><i aria-hidden="true"></i>Open to new opportunities</span><nav aria-label="Quick links"><a href="cv.html">CV</a><a href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener noreferrer">LinkedIn</a></nav></div></div><header class="site-head"><div class="bar"><nav class="menu" id="menu" aria-label="Main"><a href="index.html">Home</a><div class="dd"><a href="proyectos.html" aria-current=page>Projects</a><button class="dd-btn" type="button" aria-expanded="false" aria-controls="ddp" aria-label="Show the list of projects"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg></button><div class="dd-panel" id="ddp"><a href="mallorca.html"><b>01 · Sea view in Mallorca</b><small>pandas, SQL, regression and console</small></a><a href="dashboard.html"><b>02 · Market dashboard</b><small>KPIs, filters and cross-filtering</small></a><a href="pandas.html"><b>03 · pandas notebook</b><small>11 cells with their real output</small></a><a href="visualizacion.html"><b>04 · How I present data</b><small>Before and after, executive report</small></a><a href="caso-churn.html"><b>05 · Churn by ROI</b><small>Customer Success · BigQuery</small></a><a href="caso-cuadre.html"><b>06 · Dashboard ×2</b><small>Metric reconciliation</small></a><a href="caso-funnel.html"><b>07 · Funnel and integrations</b><small>Connector alerts</small></a><a href="caso-facturacion.html"><b>08 · Billing data cleaning</b><small>Python · data quality</small></a><a href="habilidades.html#portal"><b>09 · This portfolio</b><small>Web development and audit</small></a><a class="all" href="proyectos.html">All projects, with filters →</a></div></div><a href="habilidades.html">Skills</a><a href="cv.html">CV</a></nav><a class="brand" href="index.html" aria-label="Matteo Eiras, home">Eiras<span class="dot">.</span></a><div class="head-tools"><a class="lang-btn" href="../dashboard.html" hreflang="es" lang="es" aria-label="Leer esta página en español">ES</a><button class="icon-btn" id="themeBtn" type="button" aria-label="Switch theme"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg></button><button class="icon-btn burger" id="burger" type="button" aria-label="Menu" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button></div><span class="progress" aria-hidden="true"></span></div></header>
+<main class="wrap" id="contenido" tabindex="-1">
+<header class="p-hero">
+  <nav class="crumbs" aria-label="Breadcrumb"><a href="index.html">Home</a> / <a href="proyectos.html">Projects</a> / Market dashboard</nav>
+  <span class="eyebrow">Project 02, public data</span>
+  <h1>Mallorca holiday rental dashboard</h1>
+  <p class="lead">The kind of report I build every week in Looker Studio, rebuilt by hand so you can interact with it: pick an area, a host type or a home size and everything recalculates, always compared with the whole of Mallorca.</p>
+  <div class="tags"><span class="tag">pandas</span><span class="tag">Dashboard design</span><span class="tag">KPIs</span><span class="tag">Cross-filtering</span><span class="tag">JavaScript and SVG</span></div>
+  <nav class="jump" aria-label="On this page"><a href="#panel">Dashboard</a><a href="#decisiones">Design decisions</a><a href="#como">How it is built</a><a href="#definiciones">Definitions</a></nav>
+</header>
+
+<section class="dash" id="panel" aria-label="Interactive dashboard">
+  <div class="dash-bar" role="group" aria-label="Filters">
+    <label class="dash-f"><span>Municipality</span><select id="fMun"><option value="">All of Mallorca</option></select></label>
+    <div class="dash-f"><span id="lTramo">Host</span><div class="seg" id="fTramo" role="group" aria-labelledby="lTramo"></div></div>
+    <div class="dash-f"><span id="lCap">Guests</span><div class="seg" id="fCap" role="group" aria-labelledby="lCap"></div></div>
+    <div class="dash-tools">
+      <button class="btn sm ghost" type="button" id="dReset">Clear filters</button>
+      <button class="btn sm ghost" type="button" id="dCsv">Export CSV</button>
+      <button class="btn sm ghost" type="button" id="dLink">Copy link</button>
+    </div>
+  </div>
+
+  <p class="dash-read" id="dRead" aria-live="polite"></p>
+
+  <div class="dash-kpis" id="dKpis"></div>
+
+  <div class="dash-grid">
+    <figure class="panel wide">
+      <figcaption><h3>Unavailable nights, next 12 months</h3><p>Booked or blocked by the host. The grey line is Mallorca.</p></figcaption>
+      <svg id="dOcc" role="img" aria-label="Share of unavailable nights per month, selection against Mallorca"></svg>
+    </figure>
+    <figure class="panel">
+      <figcaption><h3>Median price by municipality</h3><p>Click a municipality to filter the whole dashboard.</p></figcaption>
+      <svg id="dMap" role="img" aria-label="Map of Mallorca by median price; each municipality filters the dashboard"></svg>
+      <div class="legend" id="dMapLegend"></div>
+    </figure>
+    <figure class="panel">
+      <figcaption><h3>Price per night distribution</h3><p>€50 bands. The line marks the selection's median.</p></figcaption>
+      <svg id="dHist" role="img" aria-label="Histogram of the selection's price per night"></svg>
+    </figure>
+    <figure class="panel">
+      <figcaption><h3>Demand: reviews per month</h3><p>Last 12 months in colour; the previous 12 in grey, to compare each month with the same month a year earlier.</p></figcaption>
+      <svg id="dRev" role="img" aria-label="Reviews per month, last 12 months against the previous 12"></svg>
+    </figure>
+    <figure class="panel">
+      <figcaption class="with-tools"><div><h3>Municipality ranking</h3><p>Top 10 with at least 30 listings. Click to filter.</p></div>
+        <label class="mini-select"><span class="sr-only">Sort by</span><select id="fRank">
+          <option value="n">Listings</option><option value="p">Median price</option><option value="o">Unavailable nights</option><option value="i">Median income</option>
+        </select></label></figcaption>
+      <svg id="dRank" role="img" aria-label="Municipality ranking by the chosen metric"></svg>
+    </figure>
+    <div class="panel wide">
+      <h3>By home size</h3>
+      <div class="scroll"><table class="dash-table" id="dTable">
+        <thead><tr><th scope="col">Guests</th><th scope="col">Listings</th><th scope="col">Median price</th><th scope="col">Unavail. nights</th><th scope="col">Median income</th><th scope="col">Rating</th></tr></thead>
+        <tbody></tbody>
+      </table></div>
+    </div>
+  </div>
+  <p class="dash-foot" id="dFoot"></p>
+</section>
+
+<div class="stack-lg">
+  <section class="case-block" id="decisiones">
+    <h3>Design decisions</h3>
+    <div class="findings">
+      <div class="finding"><b>Every figure with its benchmark</b><p>A KPI on its own does not say whether it is good or bad. Each one shows the difference against Mallorca, in points or percent depending on the metric.</p></div>
+      <div class="finding"><b>Medians, not means</b><p>Price and income have a long tail: a few luxury villas push the mean up. The median describes the typical listing.</p></div>
+      <div class="finding"><b>Ratios aggregated correctly</b><p>Unavailable nights are stored as numerator and denominator. When filtering, both are summed and divided at the end; percentages are never averaged.</p></div>
+      <div class="finding"><b>One meaningful colour</b><p>Red is the selection; grey is context. No decorative colours that send you looking for a legend.</p></div>
+      <div class="finding"><b>Small-sample warnings</b><p>Below 30 listings the dashboard says so and fades the figures. A median of 8 homes is not enough to decide anything.</p></div>
+      <div class="finding good"><b>Cross-filtering</b><p>The map and the ranking also filter, like chart interactions in Looker Studio. The state is kept in the link so it can be shared.</p></div>
+    </div>
+  </section>
+
+  <section class="case-block" id="como">
+    <h3>How it is built</h3>
+    <div class="why">
+      <div><h4>Preparation in pandas</h4><p><span class="mono">dashboard.py</span> reads the listings, the 5.4-million-night calendar and the reviews. It exports one row per listing (to compute medians when filtering) and a cube by municipality, host, size and month with numerators and denominators.</p></div>
+      <div><h4>Reconciled before publishing</h4><p>The script compares the cube total with a direct calculation on the calendar and stops if they differ. Mallorca's median price, €398, is the same as in the main project.</p></div>
+      <div><h4>Looker Studio equivalent</h4><p>A BigQuery source at the same grain, a calculated field <span class="mono">SUM(no_disp) / SUM(noches)</span>, filter controls and cross-filtering enabled between charts.</p></div>
+      <div><h4>What it does not show</h4><p>An unavailable night is not the same as a booked one: it includes host blocks. That is why I do not call it occupancy. 84 calendar listings that are no longer in the listings file are left out.</p></div>
+    </div>
+  </section>
+
+  <section class="case-block" id="definiciones">
+    <h3>Definitions</h3>
+    <div class="scroll"><table>
+      <thead><tr><th>Metric</th><th>Definition</th></tr></thead>
+      <tbody>
+        <tr><td>Listings</td><td class="wrap">Active listings in the Inside Airbnb scrape that match the filters</td></tr>
+        <tr><td>Median price</td><td class="wrap">Median published price per night. A quarter of listings publish no price and are not counted here</td></tr>
+        <tr><td>Unavailable nights</td><td class="wrap">Sum of booked or blocked nights divided by the sum of calendar nights, over the 12 months after the scrape</td></tr>
+        <tr><td>Median income</td><td class="wrap">Median estimated income over the last 12 months (Inside Airbnb's estimate), only listings with income above zero</td></tr>
+        <tr><td>Reviews, 12 months</td><td class="wrap">Reviews written in the 12 full months before the scrape. It is a demand indicator, not a count of bookings</td></tr>
+        <tr><td>Host</td><td class="wrap">Band by the host's number of listings: single (1), small (2-4), manager (5-19) and large manager (20 or more)</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+</div>
+
+<nav class="prevnext" aria-label="Other projects"><a href="mallorca.html"><span>← Previous</span><b>01 · Sea view in Mallorca</b></a><a class="next" href="pandas.html"><span>Next →</span><b>03 · pandas notebook</b></a></nav>
+
+</main>
+<footer class="site-foot"><div class="wrap"><nav class="sitemap" aria-label="Site map"><div><h2>Projects</h2><a href="proyectos.html">All projects</a><a href="mallorca.html">Sea view in Mallorca</a><a href="dashboard.html">Market dashboard</a><a href="pandas.html">pandas notebook</a><a href="visualizacion.html">How I present data</a><a href="caso-churn.html">Churn by ROI</a><a href="caso-cuadre.html">Dashboard ×2</a><a href="caso-funnel.html">Funnel and integrations</a><a href="caso-facturacion.html">Billing data cleaning</a><a href="habilidades.html#portal">This portfolio</a></div><div><h2>Mallorca project</h2><a href="mallorca.html#datos">Data and quality</a><a href="mallorca.html#python">Python and pandas</a><a href="mallorca.html#sql">SQL and console</a><a href="mallorca.html#modelo">Model and simulator</a><a href="mallorca.html#hallazgos">Findings and map</a><a href="mallorca.html#conclusiones">Conclusions</a></div><div><h2>Skills</h2><a href="habilidades.html#datos">Data and analysis</a><a href="habilidades.html#negocio">Business and tech</a><a href="habilidades.html#metodo">How I work</a><a href="habilidades.html#formacion">Education</a><a href="habilidades.html#portal">This portfolio and audit</a></div><div><h2>About me</h2><a href="index.html#sobre-mi">About me</a><a href="index.html#trayectoria">Experience</a><a href="index.html#habilidades">Skills</a><a href="cv.html">CV</a><a href="index.html#contacto">Contact</a><a href="https://www.linkedin.com/in/matteo-eiras-p%C3%A9-2b34931b9/" rel="noopener noreferrer">LinkedIn</a></div></nav><div class="foot-meta"><span>Matteo Eiras Pé, Palma de Mallorca</span><span>Project data: Inside Airbnb (CC BY 4.0)</span></div><div class="foot-word" aria-hidden="true">Eiras.</div></div></footer>
+<script src="../assets/datos.js?v=fa5e6ca7"></script>
+<script src="../assets/app.js?v=959886a8"></script>
+<script src="../assets/dashboard-datos.js?v=6c77b201"></script>
+<script src="../assets/vista.js?v=92e0de88"></script>
+</body>
+</html>
