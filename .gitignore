@@ -18,3 +18,6 @@ __pycache__/
 
 # Patrones sensibles que usa la auditoría (no se publican)
 sitio_src/privado/
+proyecto_clima/datos/
+proyecto_clima/clima.db
+proyecto_mercado/datos/

@@ -159,10 +159,10 @@
     {
       "control": "Imágenes sin metadatos EXIF ni GPS",
       "ok": true,
-      "detalle": "21 imágenes generadas desde canvas, sin metadatos de cámara.",
+      "detalle": "13 imágenes generadas desde canvas, sin metadatos de cámara.",
       "hallazgos": [],
       "control_en": "Images without EXIF or GPS metadata",
-      "detalle_en": "21 images generated from canvas, without camera metadata."
+      "detalle_en": "13 images generated from canvas, without camera metadata."
     },
     {
       "control": "Identificadores seudonimizados en la consola",
@@ -183,10 +183,10 @@
     {
       "control": "Cualquier sección a 3 clics o menos",
       "ok": true,
-      "detalle": "112 destinos (24 páginas y 88 secciones). Peor caso desde cualquier página: 3 clic(s); desde el inicio: 3.",
+      "detalle": "80 destinos (18 páginas y 62 secciones). Peor caso desde cualquier página: 3 clic(s); desde el inicio: 3.",
       "hallazgos": [],
       "control_en": "Any section within 3 clicks",
-      "detalle_en": "112 destinations (24 pages and 88 sections). Worst case from any page: 3 click(s); from the home page: 3."
+      "detalle_en": "80 destinations (18 pages and 62 sections). Worst case from any page: 3 click(s); from the home page: 3."
     }
   ]
 }

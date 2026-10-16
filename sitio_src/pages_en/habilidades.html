@@ -9,22 +9,29 @@
 <div class="layout">
   <nav class="toc" aria-label="Sections">
     <span class="eyebrow">On this page</span>
-    <a href="#datos" class="on">Data</a>
+    <a href="#mercado" class="on">What the market asks for</a>
+    <a href="#datos">Data</a>
     <a href="#negocio">Business and tech</a>
     <a href="#metodo">Method</a>
     <a href="#formacion">Education</a>
     <a href="#portal">This portfolio</a>
   </nav>
   <div>
+    <section class="chapter" id="mercado">
+      <div class="chapter-head"><h2>What the market asks for, and where I show it</h2>
+        <p>I did not pick the projects at random. I read the open data analyst postings at European travel and tech companies, counted the skills they ask for and built the projects to cover them. The counting code is in <a href="https://github.com/fileasfox/portfolio/blob/main/proyecto_mercado/mercado.py" rel="noopener">mercado.py</a>.</p></div>
+      <!--MERCADO-->
+    </section>
+
     <section class="chapter" id="datos">
       <div class="chapter-head"><h2>Data and analysis</h2></div>
       <div class="matrix">
-        <div class="mrow"><div><h3>SQL</h3><p>CTEs, window functions (ROW_NUMBER, NTILE, LAG), medians without MEDIAN(), conditional aggregates and indexes.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="mallorca.html#sql">8 queries and a SQL console</a><a href="caso-churn.html">ROI in BigQuery</a><a href="caso-cuadre.html">Reconciling views</a></div></div>
+        <div class="mrow"><div><h3>SQL</h3><p>CTEs, window functions (ROW_NUMBER, NTILE, LAG), medians without MEDIAN(), conditional aggregates and indexes.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="clima.html#sql">Layered SQL with tests</a><a href="mallorca.html#sql">8 queries and a SQL console</a><a href="caso-churn.html">ROI in BigQuery</a><a href="caso-cuadre.html">Reconciling views</a></div></div>
         <div class="mrow"><div><h3>BigQuery</h3><p>Versioned views, currency conversion, null-tolerant filters and QUALIFY.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="caso-churn.html">Churn by ROI</a><a href="caso-cuadre.html">Dashboard ×2</a></div></div>
-        <div class="mrow"><div><h3>Python and pandas</h3><p>Cleaning, JSON parsing, groupby/agg, binning, merges with validation and reconciliations between sources.</p></div><span class="lv proyecto">Project</span><div class="ev"><a href="pandas.html">pandas notebook</a><a href="mallorca.html#python">Project code</a><a href="caso-facturacion.html">Billing data cleaning</a></div></div>
-        <div class="mrow"><div><h3>Applied statistics</h3><p>Regression with control variables, robust errors, selection bias and interpreting coefficients.</p></div><span class="lv proyecto">Project</span><div class="ev"><a href="mallorca.html#modelo">Model and simulator</a></div></div>
+        <div class="mrow"><div><h3>Python and pandas</h3><p>Cleaning, JSON parsing, groupby/agg, binning, merges with validation and reconciliations between sources.</p></div><span class="lv proyecto">Project</span><div class="ev"><a href="clima.html#datos">Ingestion pipeline</a><a href="mallorca.html#python">Cleaning and regression</a></div></div>
+        <div class="mrow"><div><h3>Applied statistics</h3><p>Regression with control variables, robust errors, trends with confidence intervals, homogeneity tests and selection bias.</p></div><span class="lv proyecto">Project</span><div class="ev"><a href="clima.html#calor">Trends and homogeneity</a><a href="mallorca.html#modelo">Model and simulator</a></div></div>
         <div class="mrow"><div><h3>Looker Studio and dashboards</h3><p>Client-facing reports: ratios as calculated fields, date and hotel filters, cross-filtering and one definition per metric.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="dashboard.html">Market dashboard</a><a href="caso-cuadre.html">Uniques per month</a></div></div>
-        <div class="mrow"><div><h3>Data visualisation</h3><p>Choosing the right chart, conclusion-first titles, colour that signals, and one-page reports for management.</p></div><span class="lv proyecto">Project</span><div class="ev"><a href="visualizacion.html">Before and after</a></div></div>
+        <div class="mrow"><div><h3>Data visualisation</h3><p>Choosing the right chart, conclusion-first titles, colour that signals, and one-page reports for management.</p></div><span class="lv proyecto">Project</span><div class="ev"><a href="clima.html#turismo">Climate project charts</a></div></div>
         <div class="mrow"><div><h3>Excel and Google Sheets</h3><p>Performance analysis and account reports.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="cv.html">Experience</a></div></div>
       </div>
     </section>
@@ -33,7 +40,7 @@
       <div class="chapter-head"><h2>Business and tech</h2></div>
       <div class="matrix">
         <div class="mrow"><div><h3>Hotel business</h3><p>Distribution, booking engines, attribute-based upselling, the ROI of a SaaS product for the hotel.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="mallorca.html">Pricing by attribute</a><a href="caso-churn.html">ROI per hotel</a></div></div>
-        <div class="mrow"><div><h3>Integrations</h3><p>REST APIs, PMS and booking engines: validating data flows and synchronisation issues.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="caso-funnel.html">Connector alerts</a></div></div>
+        <div class="mrow"><div><h3>Integrations</h3><p>REST APIs, PMS and booking engines: validating data flows and synchronisation issues.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="cv.html">Experience</a></div></div>
         <div class="mrow"><div><h3>Web analytics</h3><p>Google Tag Manager, the Data Layer and JavaScript to measure funnels and validate event capture.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="cv.html">Experience</a></div></div>
         <div class="mrow"><div><h3>Web development</h3><p>HTML, CSS and JavaScript without frameworks; C# and .NET in the DAW programme.</p></div><span class="lv formacion">Learning</span><div class="ev"><a href="#portal">This portfolio</a></div></div>
         <div class="mrow"><div><h3>Client communication</h3><p>Quarterly business reviews (QBRs) with hotel chain management: from the figure to the decision.</p></div><span class="lv diario">Daily</span><div class="ev"><a href="cv.html">Experience</a></div></div>

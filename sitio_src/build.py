@@ -53,6 +53,12 @@ PAGINAS = [
      ("Data analysis projects | Matteo Eiras Pé",
       "Data analytics projects: holiday rental pricing in Mallorca with Python and SQL, plus real cases on churn, BI and data quality at a hotel SaaS."),
      "proyectos.html"),
+    ("clima.html",
+     ("Turismo, calor y agua en Mallorca | Proyecto de datos públicos",
+      "Pipeline con datos oficiales de INE, NOAA, NASA y el Govern balear: Palma se calienta casi el doble que el planeta y 6 de cada 10 noches de hotel ya son tropicales."),
+     ("Tourism, heat and water in Mallorca | Public data project",
+      "A pipeline on official data from INE, NOAA, NASA and the Balearic Government: Palma is warming almost twice as fast as the planet and 6 in 10 hotel nights are now tropical."),
+     "proyectos.html"),
     ("mallorca.html",
      ("¿Cuánto vale una vista al mar en Mallorca? | Proyecto de datos",
       "Análisis de 14.817 anuncios de Airbnb en Mallorca con pandas, SQL y regresión: la vista al mar suma un 27 % al precio. Con consola SQL y simulador interactivo."),
@@ -65,18 +71,6 @@ PAGINAS = [
      ("Interactive dashboard of Mallorca's holiday rental market",
       "Market dashboard with real Mallorca data: KPIs against the island total, filters, cross-filtering from the map, availability, prices and CSV export."),
      "proyectos.html"),
-    ("pandas.html",
-     ("Cuaderno de pandas con datos reales | Python para análisis",
-      "Once celdas de pandas ejecutadas sobre 5,9 millones de filas de Inside Airbnb: carga tipada, limpieza, groupby, pivot, merge, series temporales y cuadre con SQL."),
-     ("pandas notebook with real data | Python for analysis",
-      "Eleven pandas cells run on 5.9 million rows of Inside Airbnb data: typed loading, cleaning, groupby, pivot, merge, time series and a reconciliation with SQL."),
-     "proyectos.html"),
-    ("visualizacion.html",
-     ("Cómo presento los datos: antes y después | Visualización",
-      "Gráficos habituales frente a su versión corregida con datos reales: tartas, ejes truncados, medias engañosas, doble eje y color. Más un informe de una página."),
-     ("How I present data: before and after | Data visualisation",
-      "Common charts next to their corrected version, using real data: pie charts, truncated axes, misleading averages, dual axes and colour. Plus a one-page report."),
-     "proyectos.html"),
     ("caso-churn.html",
      ("Churn por ROI en un SaaS hotelero | Caso de análisis",
       "Cómo medir la salud de cuenta de cada hotel con su ROI mensual en BigQuery y Looker Studio para anticipar bajas. Caso real anonimizado de Customer Success."),
@@ -88,18 +82,6 @@ PAGINAS = [
       "Diagnóstico de un sobreconteo de 2,2 veces frente al informe oficial y rediseño de la vista en BigQuery. Una definición por métrica. Caso real anonimizado."),
      ("A dashboard that counted double | BI case",
       "Diagnosing a 2.2x overcount against the official report and redesigning the BigQuery view. One definition per metric. A real, anonymised case."),
-     "proyectos.html"),
-    ("caso-funnel.html",
-     ("Funnel de invitaciones y alertas de integración | Caso",
-      "Funnel de reservas importadas a solicitudes y alertas que separan una caída comercial de un fallo del conector con PMS o motor de reservas. Caso anonimizado."),
-     ("Invitation funnel and integration alerts | Case",
-      "A funnel from imported bookings to requests, with alerts that tell a commercial drop apart from a PMS or booking engine connector failure. Anonymised case."),
-     "proyectos.html"),
-    ("caso-facturacion.html",
-     ("Limpieza reproducible de datos con Python | Caso",
-      "De una hoja de facturación mantenida a mano a un proceso en Python con normalización, validación de claves y log de cambios. Caso real anonimizado."),
-     ("Reproducible data cleaning with Python | Case",
-      "From a hand-maintained billing sheet to a Python process with normalisation, key validation and a change log. A real, anonymised case."),
      "proyectos.html"),
     ("habilidades.html",
      ("Habilidades: SQL, BigQuery, Looker Studio y Python | Matteo Eiras",
@@ -136,15 +118,11 @@ FUENTES = ('<script src="assets/tema.js"></script>\n'   # aplica el tema guardad
 # Orden único de los proyectos: de aquí salen la numeración, el menú, el pie y los enlaces anterior/siguiente
 def proyectos():
     return [
+        ("clima.html", t("Turismo, calor y agua", "Tourism, heat and water"), t("Pipeline, SQL por capas y estadística", "Pipeline, layered SQL and statistics")),
         ("mallorca.html", t("Vista al mar en Mallorca", "Sea view in Mallorca"), t("pandas, SQL, regresión y consola", "pandas, SQL, regression and console")),
         ("dashboard.html", t("Dashboard de mercado", "Market dashboard"), t("KPIs, filtros y filtrado cruzado", "KPIs, filters and cross-filtering")),
-        ("pandas.html", t("Cuaderno de pandas", "pandas notebook"), t("11 celdas con su salida real", "11 cells with their real output")),
-        ("visualizacion.html", t("Cómo presento los datos", "How I present data"), t("Antes y después, informe ejecutivo", "Before and after, executive report")),
         ("caso-churn.html", t("Churn por ROI", "Churn by ROI"), "Customer Success · BigQuery"),
-        ("caso-cuadre.html", t("Dashboard ×2", "Dashboard ×2"), t("Cuadre de métricas", "Metric reconciliation")),
-        ("caso-funnel.html", t("Funnel e integraciones", "Funnel and integrations"), t("Alertas de conectores", "Connector alerts")),
-        ("caso-facturacion.html", t("Limpieza de facturación", "Billing data cleaning"), "Python · data quality"),
-        ("habilidades.html#portal", t("Este portal", "This portfolio"), t("Desarrollo web y auditoría", "Web development and audit")),
+        ("caso-cuadre.html", t("Dashboard ×2", "Dashboard ×2"), t("Gobierno y calidad del dato", "Data governance and quality")),
     ]
 
 
@@ -198,45 +176,34 @@ def cabecera(fichero: str) -> str:
 # Cada tarjeta lleva una captura real de la propia página (assets/img/proy/, una por idioma).
 def casos():
     return [
+        ("clima.html", t("Datos públicos · pipeline", "Public data · pipeline"), "publico sql python interactivo",
+         t("Turismo, calor y agua en Mallorca", "Tourism, heat and water in Mallorca"),
+         t("Cuatro fuentes oficiales, SQL por capas con tests y una prueba de homogeneidad: Palma se calienta casi el doble que el planeta.",
+           "Four official sources, layered SQL with tests and a homogeneity test: Palma is warming almost twice as fast as the planet.")),
         ("mallorca.html", t("Python · SQL · regresión", "Python · SQL · regression"), "publico sql python interactivo",
          t("¿Cuánto vale una vista al mar?", "What is a sea view worth?"),
          t("14.817 anuncios reales, 8 consultas SQL cuadradas y consola SQL en el navegador.",
            "14,817 real listings, 8 reconciled SQL queries and a SQL console in the browser.")),
-        ("dashboard.html", t("Dashboard · pandas", "Dashboard · pandas"), "publico interactivo",
+        ("dashboard.html", t("Dashboard · BI", "Dashboard · BI"), "publico interactivo",
          t("Mercado vacacional de Mallorca", "Mallorca holiday rental market"),
          t("KPIs frente al total, filtrado cruzado desde el mapa y exportación a CSV, como en Looker Studio.",
            "KPIs against the total, cross-filtering from the map and CSV export, as in Looker Studio.")),
-        ("pandas.html", "pandas · Jupyter", "publico python", t("Cuaderno de pandas", "pandas notebook"),
-         t("Once celdas ejecutadas sobre 5,4 millones de noches y cuadradas contra SQL.",
-           "Eleven cells run on 5.4 million nights and reconciled against SQL.")),
-        ("visualizacion.html", t("Visualización", "Data visualisation"), "publico interactivo", t("Cómo presento los datos", "How I present data"),
-         t("Seis gráficos habituales frente a su versión corregida, y un informe de una página.",
-           "Six common charts next to their corrected version, plus a one-page report.")),
         ("caso-churn.html", "BigQuery · Customer Success", "profesional sql", t("Churn por ROI", "Churn by ROI"),
          t("Qué hoteles no recuperan su cuota mensual, y por qué, antes de que pidan la baja.",
            "Which hotels do not earn back their monthly fee, and why, before they cancel.")),
         ("caso-cuadre.html", "BigQuery · BI", "profesional sql", t("El dashboard que contaba el doble", "The dashboard that counted double"),
-         t("Diagnóstico de un sobreconteo frente al informe oficial y rediseño de la vista.",
-           "Diagnosing an overcount against the official report and redesigning the view.")),
-        ("caso-funnel.html", t("SQL · integraciones", "SQL · integrations"), "profesional sql", t("Funnel e integraciones", "Funnel and integrations"),
-         t("Alertas que separan una caída comercial de un fallo del conector.",
-           "Alerts that tell a commercial drop apart from a connector failure.")),
-        ("caso-facturacion.html", t("Python · calidad del dato", "Python · data quality"), "profesional python", t("Limpieza de facturación", "Billing data cleaning"),
-         t("Una hoja manual convertida en un proceso reproducible con log de cambios.",
-           "A manual spreadsheet turned into a reproducible process with a change log.")),
-        ("habilidades.html#portal", t("Desarrollo web", "Web development"), "python interactivo", t("Este portal", "This portfolio"),
-         t("Generado con Python, sin frameworks, en dos idiomas y con auditoría antes de publicar.",
-           "Generated with Python, no frameworks, in two languages and audited before publishing.")),
+         t("Diagnóstico de un sobreconteo frente al informe oficial y una definición por métrica.",
+           "Diagnosing an overcount against the official report, with one definition per metric.")),
     ]
 
 
 assert [c[0] for c in casos()] == [p[0] for p in proyectos()]
-DESTACADOS = ["dashboard.html", "mallorca.html", "pandas.html", "visualizacion.html", "caso-churn.html"]   # bento del inicio
-TINTES = {"mallorca.html": " tint-a", "pandas.html": " tint-b", "caso-churn.html": " tint-a", "caso-funnel.html": " tint-b"}
+DESTACADOS = ["clima.html", "mallorca.html", "dashboard.html", "caso-churn.html", "caso-cuadre.html"]   # bento del inicio
+TINTES = {"mallorca.html": " tint-a", "dashboard.html": " tint-b", "caso-cuadre.html": " tint-a"}
 
 
 def captura(h: str) -> str:
-    nombre = ("portal" if h.startswith("habilidades") else h.replace(".html", "")) + ".jpg"
+    nombre = h.replace(".html", "") + ".jpg"
     return "assets/img/proy/" + ("en-" if L == "en" else "") + nombre
 
 
@@ -276,12 +243,18 @@ def recorte() -> str:
 def pie() -> str:
     mapa = [
         (t("Proyectos", "Projects"), [("proyectos.html", t("Todos los proyectos", "All projects"))] + [(h, ti) for h, ti, _ in proyectos()]),
-        (t("Proyecto Mallorca", "Mallorca project"),
+        (t("Turismo, calor y agua", "Tourism, heat and water"),
+         [("clima.html#resumen", t("Resumen", "Summary")), ("clima.html#datos", t("Datos y pipeline", "Data and pipeline")),
+          ("clima.html#sql", t("SQL por capas", "Layered SQL")), ("clima.html#calor", t("Calor", "Heat")),
+          ("clima.html#turismo", t("Turismo", "Tourism")), ("clima.html#agua", t("Agua", "Water")),
+          ("clima.html#explorar", t("Explorar por año", "Explore by year"))]),
+        (t("Proyecto vista al mar", "Sea view project"),
          [("mallorca.html#datos", t("Datos y calidad", "Data and quality")), ("mallorca.html#python", t("Python y pandas", "Python and pandas")),
           ("mallorca.html#sql", t("SQL y consola", "SQL and console")), ("mallorca.html#modelo", t("Modelo y simulador", "Model and simulator")),
           ("mallorca.html#hallazgos", t("Hallazgos y mapa", "Findings and map")), ("mallorca.html#conclusiones", t("Conclusiones", "Conclusions"))]),
         (t("Habilidades", "Skills"),
          [("habilidades.html#datos", t("Datos y análisis", "Data and analysis")), ("habilidades.html#negocio", t("Negocio y técnica", "Business and tech")),
+          ("habilidades.html#mercado", t("Lo que pide el mercado", "What the market asks for")),
           ("habilidades.html#metodo", t("Cómo trabajo", "How I work")), ("habilidades.html#formacion", t("Formación", "Education")),
           ("habilidades.html#portal", t("Este portal y auditoría", "This portfolio and audit"))]),
         (t("Sobre mí", "About me"),
@@ -304,36 +277,48 @@ def scripts(fichero: str) -> str:
         s += '\n<script src="assets/interactivo.js"></script>'
     if fichero == "dashboard.html":    # filas por anuncio y cubos, solo donde hacen falta
         s += '\n<script src="assets/dashboard-datos.js"></script>'
-    if fichero in ("dashboard.html", "visualizacion.html"):
+    if fichero == "dashboard.html":
         s += '\n<script src="assets/vista.js"></script>'
+    if fichero in ("clima.html", "habilidades.html"):   # gráficos del proyecto de clima y del mercado
+        s += '\n<script src="assets/clima.js"></script>'
     return s
 
 
-def cuaderno() -> str:
-    """Celdas del cuaderno de pandas con su salida real, en HTML estático (indexable y sin JavaScript)."""
-    c = json.loads((DATOS / "cuaderno.json").read_text(encoding="utf-8"))
-    partes = []
-    for x in c["celdas"]:
-        salida = f'<pre class="nb-print">{escape(x["impreso"])}</pre>' if x["impreso"] else ""
-        if x["tabla"]:
-            tb = x["tabla"]
-            cab = f'<th>{escape(tb["nombre_indice"])}</th>' + "".join(f"<th>{escape(col)}</th>" for col in tb["columnas"])
-            filas = "".join(f'<tr><th scope="row">{escape(i)}</th>' + "".join(f"<td>{escape(v)}</td>" for v in fila) + "</tr>"
-                            for i, fila in zip(tb["index"], tb["filas"]))
-            salida += f'<div class="scroll"><table class="nb-table"><thead><tr>{cab}</tr></thead><tbody>{filas}</tbody></table></div>'
-        if x["texto"]:
-            salida += f'<pre class="nb-print">{escape(x["texto"])}</pre>'
-        segundos = f"{x['segundos']:.1f}"
-        if L == "es":
-            segundos = segundos.replace(".", ",")
-        titulo = x["titulo_en"] if L == "en" else x["titulo"]
-        explicacion = x["explicacion_en"] if L == "en" else x["explicacion"]
-        partes.append(
-            f'<article class="nb-cell" id="celda-{x["n"]}"><div class="nb-head"><span class="nb-n">[{x["n"]}]</span>'
-            f'<div><h3>{escape(titulo)}</h3><p>{escape(explicacion)}</p></div></div>'
-            f'<template data-code="py" data-label="cuaderno.py · {t("celda", "cell")} {x["n"]}">{escape(x["codigo"], quote=False)}</template>'
-            f'<div class="nb-out" aria-label="{t("Salida de la celda", "Output of cell")} {x["n"]}"><span class="nb-lbl">{t("Salida", "Output")} · {segundos} s</span>{salida}</div></article>')
-    return "".join(partes)
+def mercado() -> str:
+    """Skills más pedidas en la muestra de ofertas y dónde se demuestran en el portafolio."""
+    m = json.loads((RAIZ / "proyecto_mercado" / "mercado.json").read_text(encoding="utf-8"))
+    donde = {
+        "SQL": [("clima.html#sql", t("SQL por capas", "Layered SQL")), ("mallorca.html#sql", t("8 consultas", "8 queries"))],
+        "Comunicación y storytelling": [("clima.html#resumen", t("Resumen ejecutivo", "Executive summary"))],
+        "Stakeholders / negocio": [("caso-churn.html", "Churn por ROI" if L == "es" else "Churn by ROI")],
+        "Alguna herramienta BI (Tableau, Looker, Power BI)": [("cv.html", t("Looker Studio a diario", "Looker Studio daily")), ("dashboard.html", "Dashboard")],
+        "Python": [("clima.html#datos", t("Pipeline de ingesta", "Ingestion pipeline")), ("mallorca.html#python", "pandas")],
+        "Dashboards": [("dashboard.html", t("Dashboard de mercado", "Market dashboard")), ("clima.html#explorar", t("Explorador", "Explorer"))],
+        "Algún almacén cloud (BigQuery, Snowflake, Redshift, Databricks)": [("caso-cuadre.html", t("BigQuery a diario", "BigQuery daily"))],
+        "A/B testing": [],
+        "Excel / Sheets": [("cv.html", t("Uso diario", "Daily use"))],
+        "Estadística": [("clima.html#calor", t("Tendencias e IC", "Trends and CIs")), ("mallorca.html#modelo", t("Regresión", "Regression"))],
+        "Modelado de datos": [("clima.html#sql", t("Staging, intermedio y marts", "Staging, intermediate and marts"))],
+        "dbt": [("clima.html#sql", t("Mismo patrón, en SQLite", "Same pattern, in SQLite"))],
+    }
+    nombres_en = {"Comunicación y storytelling": "Communication and storytelling", "Stakeholders / negocio": "Stakeholders / business",
+                  "Alguna herramienta BI (Tableau, Looker, Power BI)": "Any BI tool (Tableau, Looker, Power BI)",
+                  "Algún almacén cloud (BigQuery, Snowflake, Redshift, Databricks)": "Any cloud warehouse (BigQuery, Snowflake, Redshift, Databricks)",
+                  "Estadística": "Statistics", "Modelado de datos": "Data modelling"}
+    filas = [s for s in m["todas"]["skills"] if s["skill"] in donde][:12]
+    cuerpo_t = "".join(
+        f'<tr><th scope="row">{nombres_en.get(s["skill"], s["skill"]) if L == "en" else s["skill"]}</th>'
+        f'<td class="num"><span class="inbar" style="--w:{s["pct"]:.0f}%" aria-hidden="true"></span>{s["pct"]:.0f}{"%" if L == "en" else " %"}</td>'
+        f'<td>{" · ".join(f"<a href=\"{h}\">{x}</a>" for h, x in donde[s["skill"]]) or "<span class=\"muted\">" + t("Aún no está en el portafolio", "Not in the portfolio yet") + "</span>"}</td></tr>'
+        for s in filas)
+    return (f'<div class="scroll"><table class="vz-nice mercado"><thead><tr><th scope="col">Skill</th><th scope="col" class="num">'
+            f'{t("Ofertas que la piden", "Postings asking for it")}</th><th scope="col">{t("Dónde la demuestro", "Where I show it")}</th></tr></thead>'
+            f'<tbody>{cuerpo_t}</tbody></table></div>'
+            f'<p class="muted small">{t("Muestra", "Sample")}: {m["todas"]["n"]} {t("puestos de análisis distintos entre", "distinct analysis roles out of")} '
+            f'{m["ofertas_totales"]:,} {t("ofertas abiertas de", "open postings at")} {m["empresas"]} '
+            f'{t("empresas europeas de viajes y tecnología, leídas el", "European travel and tech companies, read on")} {m["fecha"]} '
+            f'{t("desde sus APIs públicas de empleo (Greenhouse, Ashby y Lever).", "from their public job APIs (Greenhouse, Ashby and Lever).")}</p>'
+            ).replace(f"{m['ofertas_totales']:,}", f"{m['ofertas_totales']:,}".replace(",", "." if L == "es" else ","))
 
 
 def cuerpo(fichero: str) -> str:
@@ -343,7 +328,7 @@ def cuerpo(fichero: str) -> str:
     contenido = (contenido.replace("<!--CASOS_INICIO-->", tarjetas(destacados=True)).replace("<!--CASOS-->", tarjetas())
                  .replace("<!--RECORTE-->", recorte())
                  .replace("<!--FILTROS-->", filtros()).replace("<!--PREVNEXT-->", prevnext(fichero))
-                 .replace("<!--CUADERNO-->", cuaderno() if "<!--CUADERNO-->" in contenido else ""))
+                 .replace("<!--MERCADO-->", mercado() if "<!--MERCADO-->" in contenido else ""))
     # Cifra y unidad nunca se separan de línea ("19 %", "262 €"); el código de las plantillas no se toca
     partes = re.split(r"(<template[\s\S]*?</template>)", contenido)
     contenido = "".join(p if p.startswith("<template") else re.sub(r"(\d) ([%€×])", "\\1&nbsp;\\2", p) for p in partes)
@@ -385,10 +370,15 @@ def datos_estructurados(fichero: str) -> str:
                            "inLanguage": ["es", "en"], "author": {"@id": BASE_URL + "#persona"}}]
         if fichero == "cv.html":
             grafo.append({"@type": "ProfilePage", "url": url_de("cv.html", L), "inLanguage": L, "mainEntity": {"@id": BASE_URL + "#persona"}})
-    elif fichero in ("mallorca.html", "dashboard.html", "pandas.html", "visualizacion.html"):
+    elif fichero in ("clima.html", "mallorca.html", "dashboard.html"):
         titulo = meta_pagina(fichero)[0].split(" | ")[0]
+        base = dataset if fichero != "clima.html" else [
+            {"@type": "Dataset", "name": "INE, Encuesta de Ocupación Hotelera", "url": "https://www.ine.es/"},
+            {"@type": "Dataset", "name": "NOAA GHCN-Daily", "url": "https://www.ncei.noaa.gov/products/land-based-station/global-historical-climatology-network-daily"},
+            {"@type": "Dataset", "name": "NASA GISTEMP v4", "url": "https://data.giss.nasa.gov/gistemp/"},
+            {"@type": "Dataset", "name": "Govern de les Illes Balears, reserves hídriques", "url": "https://www.caib.es/sites/aigua/"}]
         grafo = [{"@type": "Article", "headline": titulo, "inLanguage": L, "url": url_de(fichero, L),
-                  "image": BASE_URL + "assets/img/retrato.jpg", "author": autor, "isBasedOn": dataset}]
+                  "image": BASE_URL + "assets/img/retrato.jpg", "author": autor, "isBasedOn": base}]
     else:
         return ""
     datos = json.dumps({"@context": "https://schema.org", "@graph": grafo}, ensure_ascii=False).replace("</", "<\\/")
@@ -432,7 +422,7 @@ def pagina_completa(fichero, titulo, desc, seguridad=False):
 
 # ------------------------------------------------------------------ assets
 (OUT / "assets").mkdir(parents=True, exist_ok=True)
-for f in ("styles.css", "app.js", "interactivo.js", "vista.js", "tema.js", "favicon.svg"):
+for f in ("styles.css", "app.js", "interactivo.js", "vista.js", "clima.js", "tema.js", "favicon.svg"):
     shutil.copy(SRC / "assets" / f, OUT / "assets" / f)
 shutil.copytree(SRC / "assets" / "img", OUT / "assets" / "img", dirs_exist_ok=True)
 
@@ -446,6 +436,8 @@ _ingresos = sorted(x for x in json.loads((DATOS / "dashboard.json").read_text(en
 _media = sum(_ingresos) / len(_ingresos)
 datos["viz"] = {"ingreso_medio": round(_media), "ingreso_mediano": round((_ingresos[(len(_ingresos) - 1) // 2] + _ingresos[len(_ingresos) // 2]) / 2),
                 "bajo_media_pct": round(sum(x < _media for x in _ingresos) / len(_ingresos) * 100, 1), "n": len(_ingresos)}
+datos["clima"] = json.loads((RAIZ / "proyecto_clima" / "resultados.json").read_text(encoding="utf-8"))
+datos["mercado"] = {k: v for k, v in json.loads((RAIZ / "proyecto_mercado" / "mercado.json").read_text(encoding="utf-8")).items() if k != "muestra"}
 if (SRC / "auditoria.json").exists():   # resultado de la última auditoría, para la página Habilidades
     datos["audit"] = json.loads((SRC / "auditoria.json").read_text(encoding="utf-8"))
 (OUT / "assets" / "datos.js").write_text(
@@ -457,7 +449,9 @@ if (SRC / "auditoria.json").exists():   # resultado de la última auditoría, pa
     encoding="utf-8")
 (OUT / "assets" / "dashboard-datos.js").write_text(
     "window.PD = " + (DATOS / "dashboard.json").read_text(encoding="utf-8").replace("</", "<\\/") + ";\n", encoding="utf-8")
-(OUT / "casos.html").unlink(missing_ok=True)   # sustituida por una página por caso
+for viejo in ("casos.html", "pandas.html", "visualizacion.html", "caso-funnel.html", "caso-facturacion.html"):   # retiradas
+    (OUT / viejo).unlink(missing_ok=True)
+    (OUT / "en" / viejo).unlink(missing_ok=True)
 
 
 # ------------------------------------------------------------------ versión de los assets
@@ -466,7 +460,7 @@ def version(nombre: str) -> str:
     return hashlib.sha1((OUT / "assets" / nombre).read_bytes()).hexdigest()[:8]
 
 
-VERSIONES = {n: version(n) for n in ("styles.css", "app.js", "interactivo.js", "vista.js", "tema.js", "datos.js", "dashboard-datos.js")}
+VERSIONES = {n: version(n) for n in ("styles.css", "app.js", "interactivo.js", "vista.js", "clima.js", "tema.js", "datos.js", "dashboard-datos.js")}
 
 
 def con_version(html: str) -> str:
@@ -488,8 +482,7 @@ L = "es"
 
 # Mapa del sitio para buscadores (enviarlo en Google Search Console), con la pareja de idiomas de cada página
 hoy = date.today().isoformat()
-prioridad = {"index.html": "1.0", "mallorca.html": "0.9", "cv.html": "0.9", "proyectos.html": "0.8",
-             "dashboard.html": "0.8", "pandas.html": "0.8", "visualizacion.html": "0.8"}
+prioridad = {"index.html": "1.0", "clima.html": "0.9", "mallorca.html": "0.9", "cv.html": "0.9", "proyectos.html": "0.8", "dashboard.html": "0.8"}
 (OUT / "sitemap.xml").write_text(
     '<?xml version="1.0" encoding="UTF-8"?>\n'
     '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">\n'

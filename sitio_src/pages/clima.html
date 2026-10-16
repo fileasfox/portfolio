@@ -1,0 +1,213 @@
+<header class="p-hero" data-clima>
+  <nav class="crumbs" aria-label="Ruta"><a href="index.html">Inicio</a> / <a href="proyectos.html">Proyectos</a> / Turismo, calor y agua</nav>
+  <span class="eyebrow">Proyecto 01, datos públicos oficiales</span>
+  <h1>Turismo, calor y agua en Mallorca</h1>
+  <p class="lead">¿Aguanta Mallorca su verano? Crucé cuatro fuentes oficiales para medir cuánto se calienta Palma frente al planeta, cuántas noches de hotel caen ya en noche tropical y qué le pasa al agua cada verano.</p>
+  <div class="tags"><span class="tag">Python</span><span class="tag">SQL por capas (estilo dbt)</span><span class="tag">Tests de datos</span><span class="tag">Series temporales</span><span class="tag">Estadística</span><span class="tag">APIs públicas</span></div>
+  <div class="kpis">
+    <div class="kpi"><b>1,8-2,3×</b><span>el ritmo de calentamiento global</span></div>
+    <div class="kpi"><b>+9-10</b><span>noches tropicales por década</span></div>
+    <div class="kpi"><b>6 de 10</b><span>noches de hotel ya son tropicales</span></div>
+    <div class="kpi"><b>8,5 pt</b><span>de reservas de agua perdidos cada verano</span></div>
+  </div>
+</header>
+
+<div class="layout">
+  <nav class="toc" aria-label="Índice del proyecto">
+    <span class="eyebrow">En esta página</span>
+    <a href="#resumen" class="on">Resumen</a>
+    <a href="#datos">Datos y pipeline</a>
+    <a href="#sql">SQL por capas</a>
+    <a href="#calor">Calor</a>
+    <a href="#turismo">Turismo</a>
+    <a href="#agua">Agua</a>
+    <a href="#explorar">Explorar por año</a>
+    <a href="#conclusiones">Qué haría</a>
+  </nav>
+
+  <div>
+  <section class="chapter" id="resumen">
+    <div class="chapter-head"><h2>Resumen para quien tiene dos minutos</h2></div>
+    <div class="findings">
+      <div class="finding good"><b>Palma se calienta casi el doble que el planeta</b><p>Desde 1978, entre 0,38 y 0,48 °C por década según la fuente, frente a 0,21 °C del planeta. Doy un rango y no una cifra porque la estación tiene un cambio propio hacia 2020 (lo explico en «Datos»).</p></div>
+      <div class="finding good"><b>Las noches de hotel se han vuelto tropicales</b><p>Entre 2000-2003 y 2022-2025, la parte de pernoctaciones que cae en una noche de 20 °C o más pasó del 46 % al 62 %. Entre la mitad y dos tercios del aumento los explica el calor; el resto, que el turismo pesa más en los meses calurosos.</p></div>
+      <div class="finding alert"><b>El agua toca fondo cada vez más abajo</b><p>Cada verano las reservas de Mallorca pierden de media 8,5 puntos. Agosto de 2026 marca el valor más bajo de la serie de diez años: un 38,5 %.</p></div>
+      <div class="finding alert"><b>Pero el turismo hotelero no explica la caída del verano</b><p>En 2020, con los hoteles cerrados buena parte del verano (un 92 % menos de pernoctaciones de mayo a septiembre), las reservas cayeron más que ningún otro año: 11,7 puntos. Lo que mueve el agua es la lluvia del invierno y el verano en sí, no el hotel.</p></div>
+    </div>
+  </section>
+
+  <section class="chapter" id="datos">
+    <div class="chapter-head"><h2>Datos: cuatro fuentes oficiales y un pipeline reproducible</h2>
+      <p>Un script descarga todo con caché y reintentos, lo carga en SQLite y deja registro de origen y fecha. Ningún dato se copia a mano.</p></div>
+    <figure>
+      <div class="scroll"><table>
+        <thead><tr><th>Fuente</th><th>Qué aporta</th><th>Grano y periodo</th><th>Cómo se obtiene</th></tr></thead>
+        <tbody>
+          <tr><td>INE, Encuesta de Ocupación Hotelera</td><td class="wrap">Viajeros, pernoctaciones, plazas y ocupación de la isla de Mallorca</td><td>Mes, 2000-2026</td><td>API JSON del INE</td></tr>
+          <tr><td>NOAA GHCN-Daily</td><td class="wrap">Máxima, mínima y lluvia diarias de la estación Palma de Mallorca CMT (OMM 08306)</td><td>Día, 1972-2026</td><td>CSV público de NOAA</td></tr>
+          <tr><td>NASA GISTEMP v4</td><td class="wrap">Anomalía de temperatura global, tierra y océano</td><td>Mes, 1880-2026</td><td>CSV público de la NASA</td></tr>
+          <tr><td>Govern de les Illes Balears</td><td class="wrap">Reservas hídricas ponderadas de Mallorca (% de capacidad)</td><td>Mes, 2016-2026</td><td class="wrap">Solo se publican como gráfico PDF: reconstruyo cada barra desde su geometría</td></tr>
+          <tr><td>Copernicus ERA5</td><td class="wrap">Serie de referencia independiente para comprobar la estación</td><td>Día, 1972-2025</td><td>API de Open-Meteo</td></tr>
+        </tbody>
+      </table></div>
+    </figure>
+    <div class="tabset">
+      <div class="tabs" role="tablist" aria-label="Código del pipeline">
+        <button type="button" role="tab">Agua desde un PDF</button>
+        <button type="button" role="tab">Prueba de homogeneidad</button>
+      </div>
+      <div class="tabpanel" role="tabpanel">
+<template data-code="py" data-label="ingesta.py · reservas desde el gráfico vectorial">
+# Cada barra del PDF es un rectángulo: su altura ES el porcentaje
+barras = re.findall(r"0\.12156 0\.28627 0\.49019 rg\s*\n([\d.]+) ([\d.]+) m\s*\n[\d.]+ [\d.]+ l [\d.]+ ([\d.]+) l", contenido)
+rejilla = sorted({float(y) for y in re.findall(r"802\.377 ([\d.]+) m\s*\n62\.721 [\d.]+ l S", contenido)})
+cero, cien = rejilla[0], rejilla[-1]                  # líneas del 0 % y del 100 %
+barras = sorted((float(x), (float(tope) - float(base)) / (cien - cero) * 100)
+                for x, base, tope in barras)
+assert len(barras) == 121                             # agosto de 2016 a agosto de 2026
+</template>
+        <div class="why"><div><h4>Qué hace</h4><p>Lee el gráfico oficial como datos: el color identifica las barras y la rejilla da la escala exacta.</p></div><div><h4>Cómo sé que está bien</h4><p>Los 121 valores coinciden con las etiquetas impresas en el gráfico al redondear, y agosto de 2025 (41,3 %) cuadra con la nota de prensa del Govern.</p></div></div>
+      </div>
+      <div class="tabpanel" role="tabpanel">
+<template data-code="py" data-label="analisis.py · Standard Normal Homogeneity Test">
+def snht(serie):
+    """El punto k que maximiza T(k) = k·z1² + (n-k)·z2²: dónde cambia de nivel la serie."""
+    z = (serie - serie.mean()) / serie.std(ddof=1)
+    n = len(z)
+    t = [k * z[:k].mean() ** 2 + (n - k) * z[k:].mean() ** 2 for k in range(2, n - 1)]
+    return int(np.argmax(t)) + 2, max(t)
+
+# Estación menos referencia: si salta de golpe, el salto es de la estación, no del clima
+k, T = snht(estacion_anual - era5_anual)              # 1978, T = 37,1 (crítico al 95 %: 8,45)
+</template>
+        <div class="why"><div><h4>Qué hace</h4><p>Busca el año en que la estación cambia de nivel respecto a una referencia que no se ve afectada por traslados ni cambios de instrumento.</p></div><div><h4>Por qué importa</h4><p>La estación saltó +2,2 °C en 1978, un cambio de emplazamiento. Sin esta prueba, la tendencia de calentamiento saldría muy inflada.</p></div></div>
+      </div>
+    </div>
+    <div class="case-block">
+      <h3>Lo que salió mal y cómo lo detecté</h3>
+      <ol class="steps">
+        <li><p><strong>ERA5 no sirve para Palma.</strong> Empecé con la reanálisis: sus celdas caen sobre la bahía y daban mínimas 4-5 °C por encima de la estación. Lo vi al cuadrar contra las normales de AEMET y cambié a la estación oficial.</p></li>
+        <li><p><strong>La estación tiene un traslado en 1978.</strong> 1975-1977 salían 3 °C por debajo de lo normal y casi sin noches tropicales. La prueba de homogeneidad lo confirmó: el análisis empieza en 1978.</p></li>
+        <li><p><strong>La API mezclaba modelos.</strong> La primera serie de referencia cambiaba de golpe en 2018: la API usa por defecto otro modelo desde 2017. Pidiendo solo ERA5 desapareció el salto.</p></li>
+        <li><p><strong>Queda un escalón en 2020.</strong> La estación se separa unos 0,9 °C de ERA5 desde 2020. No puedo atribuirlo, así que las cifras clave van como rango entre las dos fuentes.</p></li>
+      </ol>
+    </div>
+    <figure>
+      <h3>Cuadres contra referencias publicadas</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Control</th><th>Este pipeline</th><th>Referencia oficial</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td class="wrap">Normales 1981-2010 de la estación</td><td>máx. 21,83 · mín. 14,57 · media 18,2 °C · 448 mm</td><td class="wrap">AEMET, Palma Puerto (B228): 21,8 · 14,6 · 18,2 °C · 449 mm</td><td><span class="ok-mark">✓ cuadra</span></td></tr>
+          <tr><td class="wrap">Pernoctaciones hoteleras de Mallorca en 2024</td><td>49,35 M (definitivo)</td><td class="wrap">INE, nota de prensa del 24/01/2025: 49,5 M (provisional)</td><td><span class="ok-mark">✓ 0,3 %</span></td></tr>
+          <tr><td class="wrap">Reservas reconstruidas desde el PDF</td><td>121 de 121 meses</td><td class="wrap">Etiquetas impresas en el gráfico oficial</td><td><span class="ok-mark">✓ cuadra</span></td></tr>
+        </tbody>
+      </table></div>
+    </figure>
+  </section>
+
+  <section class="chapter" id="sql">
+    <div class="chapter-head"><h2>SQL por capas, con tests, como en dbt</h2>
+      <p>La transformación sigue el patrón que usan los equipos de datos: staging limpia cada fuente, intermedio agrega del día al mes y los marts son las tablas que lee un dashboard. Cada test es una consulta que devuelve las filas que incumplen una regla.</p></div>
+    <ol class="stepper five" aria-label="Capas del modelo"><li><b>Crudo</b><span>Lo que devuelven las APIs, sin tocar</span><span class="tool">raw_*</span></li><li><b>Staging</b><span>Tipos, nombres y formato ancho por fuente</span><span class="tool">stg_*</span></li><li><b>Intermedio</b><span>Del día al mes: medias, extremos y umbrales</span><span class="tool">int_*</span></li><li><b>Marts</b><span>Mes, año y año hidrológico, listos para BI</span><span class="tool">mart_*</span></li><li><b>Tests</b><span>Unicidad, días completos, rangos y cobertura</span><span class="tool">4 de 4</span></li></ol>
+<template data-code="sql" data-label="modelos/03_marts/mart_mes.sql (extracto)">
+WITH normal AS (            -- normal climática 1991-2020 de cada mes (referencia de la OMM)
+    SELECT mes, AVG(tmedia) AS tmedia_normal
+    FROM int_clima_mensual WHERE anio BETWEEN 1991 AND 2020 GROUP BY mes
+)
+SELECT
+    c.periodo, c.tmedia - n.tmedia_normal                         AS anomalia_palma,
+    c.noches_tropicales,
+    t.pernoct_espana + t.pernoct_extranjero                       AS pernoctaciones,
+    -- Exposición: pernoctaciones que caen en noche tropical (reparto uniforme dentro del mes)
+    ROUND((t.pernoct_espana + t.pernoct_extranjero) * c.noches_tropicales * 1.0 / c.dias) AS pernoct_noche_tropical,
+    -- Interanual: el mismo mes del año anterior es la comparación justa en turismo
+    ROUND(100.0 * (t.pernoct_espana + t.pernoct_extranjero) / LAG(t.pernoct_espana + t.pernoct_extranjero, 12) OVER w - 100, 1) AS var_interanual_pct,
+    r.reservas_pct
+FROM int_clima_mensual c
+JOIN normal n USING (mes)
+LEFT JOIN stg_turismo  t USING (periodo)
+LEFT JOIN stg_reservas r USING (periodo)
+WINDOW w AS (ORDER BY c.anio, c.mes);
+</template>
+    <div class="why">
+      <div><h4>Dependencias resueltas solas</h4><p>El ejecutor lee qué tablas usa cada modelo y los ordena (orden topológico), igual que el <span class="mono">ref()</span> de dbt. No hay que numerar ficheros.</p></div>
+      <div><h4>Listo para Looker Studio</h4><p>Los tres marts se exportan a CSV en cada ejecución: conectarlos a Looker Studio, Power BI o Tableau es cuestión de minutos. Están en <a href="https://github.com/fileasfox/portfolio/tree/main/proyecto_clima/exports" rel="noopener">exports/</a>.</p></div>
+    </div>
+  </section>
+
+  <section class="chapter" id="calor">
+    <div class="chapter-head"><h2>Palma se calienta casi el doble que el planeta</h2>
+      <p>Cada franja es un año, de 1978 a 2025, con su temperatura media frente a la normal 1991-2020: azul más frío, rojo más cálido.</p></div>
+    <figure>
+      <svg id="cStripes" role="img" aria-label="Franjas de temperatura anual de Palma de 1978 a 2025, de azul a rojo"></svg>
+      <svg id="cAnom" role="img" aria-label="Anomalía de temperatura de Palma y del planeta con sus tendencias"></svg>
+      <div class="legend"><span><i style="background:var(--accent)"></i>Palma, estación de NOAA</span><span><i style="background:var(--y2)"></i>Planeta, NASA GISTEMP</span><span><i style="background:repeating-linear-gradient(90deg,var(--muted) 0 5px,transparent 5px 9px);height:2px"></i>Tendencia lineal</span></div>
+      <figcaption>Tendencia 1978-2025 con intervalo de confianza del 95 % (errores de Newey-West): estación 0,48 °C por década (0,34-0,62), ERA5 0,38 (0,31-0,46), planeta 0,21 (0,17-0,24).</figcaption>
+    </figure>
+    <figure>
+      <h3>Las noches tropicales crecen unas diez por década</h3>
+      <svg id="cTrop" role="img" aria-label="Noches tropicales por año en Palma con media móvil de 10 años"></svg>
+      <figcaption>Noches con una mínima de 20 °C o más (definición de AEMET). De 66 al año en 1978-1987 a 107 en 2016-2025. ERA5, que no depende de la estación, da una tendencia parecida: +8,7 por década. La línea negra es la media móvil de 10 años.</figcaption>
+    </figure>
+  </section>
+
+  <section class="chapter" id="turismo">
+    <div class="chapter-head"><h2>Seis de cada diez noches de hotel ya son tropicales</h2>
+      <p>El turismo creció un 20 % desde 2000 (de 41,1 a 49,2 millones de pernoctaciones) y sigue concentrado en verano: en 2025, agosto tuvo casi 40 veces las de enero.</p></div>
+    <figure>
+      <h3>Pernoctaciones hoteleras por mes, 2000-2026</h3>
+      <svg id="cHeat" role="img" aria-label="Mapa de calor de pernoctaciones hoteleras por mes y año"></svg>
+      <div class="legend" id="cHeatLeyenda"></div>
+      <figcaption>Cada fila es un año. El hueco de 2020 es la pandemia. El verano se ensancha hacia mayo y octubre en los últimos años.</figcaption>
+    </figure>
+    <figure>
+      <h3>Dos efectos que se suman</h3>
+      <svg id="cPerfil" role="img" aria-label="Peso de cada mes en las pernoctaciones y porcentaje de noches tropicales por mes, 2000-2003 frente a 2022-2025"></svg>
+      <div class="legend"><span><i style="background:var(--y1);height:10px"></i>2000-2003</span><span><i style="background:var(--accent);height:10px"></i>2022-2025</span></div>
+      <figcaption>Arriba, cuánto pesa cada mes en el año turístico. Abajo, qué parte de las noches de ese mes son tropicales. Junio es el mes que más ha cambiado: el 56 % de sus noches eran tropicales en 2000-2003 y ahora lo son el 83 %. Octubre pasa del 15 % al 34 %, justo cuando gana peso turístico.</figcaption>
+    </figure>
+    <figure>
+      <h3>De dónde sale el aumento: descomposición shift-share</h3>
+      <svg id="cDescomp" role="img" aria-label="Cascada de la parte de pernoctaciones en noche tropical, de 2000-2003 a 2022-2025"></svg>
+      <figcaption>Con las noches tropicales de ERA5 en lugar de la estación, el punto de partida es más alto (53,5 %) pero el resultado se mantiene: sube al 64,5 %, con 5,7 puntos de clima y 4,5 de calendario turístico.</figcaption>
+    </figure>
+  </section>
+
+  <section class="chapter" id="agua">
+    <div class="chapter-head"><h2>El agua toca fondo cada vez más abajo</h2>
+      <p>Las reservas de Mallorca se recuperan con la lluvia del invierno y bajan cada verano. Los dos últimos mínimos son los más bajos de la serie.</p></div>
+    <figure>
+      <svg id="cReservas" role="img" aria-label="Reservas hídricas ponderadas de Mallorca por mes, de 2016 a 2026"></svg>
+      <figcaption>Reservas ponderadas de Mallorca, % de su capacidad. Los puntos negros son el mínimo de cada año hidrológico (octubre a septiembre). Con solo nueve años completos, la tendencia de los mínimos (-6,3 puntos por década) aún no es estadísticamente distinguible de cero.</figcaption>
+    </figure>
+    <figure>
+      <h3>2020, un experimento natural: casi sin hoteles, el verano vació más el agua</h3>
+      <svg id="cCaida" role="img" aria-label="Puntos de reservas perdidos cada verano y pernoctaciones de esos meses"></svg>
+      <figcaption>Si el turismo hotelero fuera lo que vacía las reservas en verano, 2020 habría caído menos. Pasó lo contrario. La lluvia del año hidrológico sí se asocia al máximo de primavera (r = 0,57, nueve años). Correlación con pocos datos: sirve para descartar una explicación simple, no para medir efectos.</figcaption>
+    </figure>
+  </section>
+
+  <section class="chapter" id="explorar">
+    <div class="chapter-head"><h2>Explora un año</h2><p>Mueve el selector: todos los indicadores salen de los marts del pipeline.</p></div>
+    <div class="explorer">
+      <label for="cAnio">Año <output id="cAnioOut"></output></label>
+      <input type="range" id="cAnio" step="1">
+      <div class="dash-kpis five" id="cKpis" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section class="chapter" id="conclusiones">
+    <div class="chapter-head"><h2>Qué haría con esto un destino o una cadena hotelera</h2></div>
+    <div class="grid-cards auto">
+      <div class="card"><h3>Medir el calor como un KPI</h3><p>La parte de pernoctaciones en noche tropical es una métrica nueva y fácil de seguir junto a la ocupación. Afecta al confort, a la energía y a las reseñas.</p></div>
+      <div class="card"><h3>Mover demanda a mayo y octubre</h3><p>El calendario turístico añade unos 4 puntos de exposición. Los meses frontera tienen muchas menos noches tropicales y el agua en mejor nivel.</p></div>
+      <div class="card"><h3>Vigilar el invierno, no solo el verano</h3><p>Lo que decide el agua es la lluvia de octubre a abril. Una alerta en primavera con el máximo de reservas da meses de margen.</p></div>
+      <div class="card"><h3>Vender el frescor</h3><p>En el proyecto 02, el aire acondicionado ya vale un 12 % más de precio. Con más noches tropicales, ese atributo pesará más.</p></div>
+    </div>
+    <div class="transfer"><h4>Qué demuestra este proyecto</h4><p>Ingesta desde APIs y desde un PDF, SQL por capas con tests, estadística con intervalos y pruebas de homogeneidad, cuadre contra fuentes oficiales y una historia que se entiende en dos minutos. Son las skills que más se repiten en las <a href="habilidades.html#mercado">ofertas que analicé</a>.</p></div>
+    <p class="muted small">Código en <a href="https://github.com/fileasfox/portfolio/tree/main/proyecto_clima" rel="noopener">github.com/fileasfox/portfolio</a>. Fuentes: INE, NOAA (GHCN-Daily), NASA (GISTEMP v4), Govern de les Illes Balears (DG de Recursos Hídrics) y Copernicus (ERA5 vía Open-Meteo).</p>
+  </section>
+  </div>
+</div>
+
+<!--PREVNEXT-->

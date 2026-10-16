@@ -9,22 +9,29 @@
 <div class="layout">
   <nav class="toc" aria-label="Secciones">
     <span class="eyebrow">En esta página</span>
-    <a href="#datos" class="on">Datos</a>
+    <a href="#mercado" class="on">Lo que pide el mercado</a>
+    <a href="#datos">Datos</a>
     <a href="#negocio">Negocio y técnica</a>
     <a href="#metodo">Método</a>
     <a href="#formacion">Formación</a>
     <a href="#portal">Este portal</a>
   </nav>
   <div>
+    <section class="chapter" id="mercado">
+      <div class="chapter-head"><h2>Lo que pide el mercado, y dónde lo demuestro</h2>
+        <p>No elegí los proyectos al azar. Leí las ofertas abiertas de analista de datos en empresas europeas de viajes y tecnología, conté qué skills piden y construí los proyectos para cubrirlas. El código del recuento está en <a href="https://github.com/fileasfox/portfolio/blob/main/proyecto_mercado/mercado.py" rel="noopener">mercado.py</a>.</p></div>
+      <!--MERCADO-->
+    </section>
+
     <section class="chapter" id="datos">
       <div class="chapter-head"><h2>Datos y análisis</h2></div>
       <div class="matrix">
-        <div class="mrow"><div><h3>SQL</h3><p>CTE, funciones de ventana (ROW_NUMBER, NTILE, LAG), medianas sin MEDIAN(), agregados condicionales e índices.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="mallorca.html#sql">8 consultas y consola SQL</a><a href="caso-churn.html">ROI en BigQuery</a><a href="caso-cuadre.html">Cuadre de vistas</a></div></div>
+        <div class="mrow"><div><h3>SQL</h3><p>CTE, funciones de ventana (ROW_NUMBER, NTILE, LAG), medianas sin MEDIAN(), agregados condicionales e índices.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="clima.html#sql">SQL por capas con tests</a><a href="mallorca.html#sql">8 consultas y consola SQL</a><a href="caso-churn.html">ROI en BigQuery</a><a href="caso-cuadre.html">Cuadre de vistas</a></div></div>
         <div class="mrow"><div><h3>BigQuery</h3><p>Vistas versionadas, conversión de divisas, filtros tolerantes a nulos y QUALIFY.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="caso-churn.html">Churn por ROI</a><a href="caso-cuadre.html">Dashboard ×2</a></div></div>
-        <div class="mrow"><div><h3>Python y pandas</h3><p>Limpieza, parseo de JSON, groupby/agg, cortes por tramos, merges con validación y cuadres entre fuentes.</p></div><span class="lv proyecto">Proyecto</span><div class="ev"><a href="pandas.html">Cuaderno de pandas</a><a href="mallorca.html#python">Código del proyecto</a><a href="caso-facturacion.html">Limpieza de facturación</a></div></div>
-        <div class="mrow"><div><h3>Estadística aplicada</h3><p>Regresión con variables de control, errores robustos, sesgo de selección e interpretación de coeficientes.</p></div><span class="lv proyecto">Proyecto</span><div class="ev"><a href="mallorca.html#modelo">Modelo y simulador</a></div></div>
+        <div class="mrow"><div><h3>Python y pandas</h3><p>Limpieza, parseo de JSON, groupby/agg, cortes por tramos, merges con validación y cuadres entre fuentes.</p></div><span class="lv proyecto">Proyecto</span><div class="ev"><a href="clima.html#datos">Pipeline de ingesta</a><a href="mallorca.html#python">Limpieza y regresión</a></div></div>
+        <div class="mrow"><div><h3>Estadística aplicada</h3><p>Regresión con variables de control, errores robustos, tendencias con intervalo de confianza, pruebas de homogeneidad y sesgo de selección.</p></div><span class="lv proyecto">Proyecto</span><div class="ev"><a href="clima.html#calor">Tendencias y homogeneidad</a><a href="mallorca.html#modelo">Modelo y simulador</a></div></div>
         <div class="mrow"><div><h3>Looker Studio y dashboards</h3><p>Informes para cliente final: ratios como campos calculados, filtros por fecha y hotel, filtrado cruzado y una definición por métrica.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="dashboard.html">Dashboard de mercado</a><a href="caso-cuadre.html">Únicos por mes</a></div></div>
-        <div class="mrow"><div><h3>Visualización de datos</h3><p>Elegir el gráfico adecuado, títulos que dicen la conclusión, color que señala e informes de una página para dirección.</p></div><span class="lv proyecto">Proyecto</span><div class="ev"><a href="visualizacion.html">Antes y después</a></div></div>
+        <div class="mrow"><div><h3>Visualización de datos</h3><p>Elegir el gráfico adecuado, títulos que dicen la conclusión, color que señala e informes de una página para dirección.</p></div><span class="lv proyecto">Proyecto</span><div class="ev"><a href="clima.html#turismo">Gráficos del proyecto de clima</a></div></div>
         <div class="mrow"><div><h3>Excel y Google Sheets</h3><p>Análisis de rendimiento e informes para cuentas.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="cv.html">Experiencia</a></div></div>
       </div>
     </section>
@@ -33,7 +40,7 @@
       <div class="chapter-head"><h2>Negocio y técnica</h2></div>
       <div class="matrix">
         <div class="mrow"><div><h3>Negocio hotelero</h3><p>Distribución, motores de reservas, upselling por atributos, ROI de un SaaS para el hotel.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="mallorca.html">Pricing por atributo</a><a href="caso-churn.html">ROI por hotel</a></div></div>
-        <div class="mrow"><div><h3>Integraciones</h3><p>APIs REST, PMS y motores de reservas: validación de flujos de datos e incidencias de sincronización.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="caso-funnel.html">Alertas de conectores</a></div></div>
+        <div class="mrow"><div><h3>Integraciones</h3><p>APIs REST, PMS y motores de reservas: validación de flujos de datos e incidencias de sincronización.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="cv.html">Experiencia</a></div></div>
         <div class="mrow"><div><h3>Web analytics</h3><p>Google Tag Manager, Data Layer y JavaScript para medir funnels y validar la captura de eventos.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="cv.html">Experiencia</a></div></div>
         <div class="mrow"><div><h3>Desarrollo web</h3><p>HTML, CSS y JavaScript sin frameworks; C# y .NET en el ciclo de DAW.</p></div><span class="lv formacion">Formación</span><div class="ev"><a href="#portal">Este portal</a></div></div>
         <div class="mrow"><div><h3>Comunicación con cliente</h3><p>Revisiones trimestrales (QBR) con dirección de cadenas hoteleras: de la cifra a la decisión.</p></div><span class="lv diario">Diario</span><div class="ev"><a href="cv.html">Experiencia</a></div></div>

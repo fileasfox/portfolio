@@ -1,0 +1,692 @@
+{
+ "fecha": "2026-10-16",
+ "empresas": 35,
+ "ofertas_totales": 3540,
+ "todas": {
+  "n": 48,
+  "skills": [
+   {
+    "skill": "SQL",
+    "ofertas": 38,
+    "pct": 79.2
+   },
+   {
+    "skill": "Comunicación y storytelling",
+    "ofertas": 33,
+    "pct": 68.8
+   },
+   {
+    "skill": "Stakeholders / negocio",
+    "ofertas": 33,
+    "pct": 68.8
+   },
+   {
+    "skill": "Alguna herramienta BI (Tableau, Looker, Power BI)",
+    "ofertas": 27,
+    "pct": 56.2
+   },
+   {
+    "skill": "Python",
+    "ofertas": 22,
+    "pct": 45.8
+   },
+   {
+    "skill": "Dashboards",
+    "ofertas": 21,
+    "pct": 43.8
+   },
+   {
+    "skill": "Looker / Looker Studio",
+    "ofertas": 19,
+    "pct": 39.6
+   },
+   {
+    "skill": "Algún almacén cloud (BigQuery, Snowflake, Redshift, Databricks)",
+    "ofertas": 19,
+    "pct": 39.6
+   },
+   {
+    "skill": "Tableau",
+    "ofertas": 18,
+    "pct": 37.5
+   },
+   {
+    "skill": "A/B testing",
+    "ofertas": 16,
+    "pct": 33.3
+   },
+   {
+    "skill": "Excel / Sheets",
+    "ofertas": 15,
+    "pct": 31.2
+   },
+   {
+    "skill": "Estadística",
+    "ofertas": 14,
+    "pct": 29.2
+   },
+   {
+    "skill": "Modelado de datos",
+    "ofertas": 14,
+    "pct": 29.2
+   },
+   {
+    "skill": "dbt",
+    "ofertas": 14,
+    "pct": 29.2
+   },
+   {
+    "skill": "BigQuery",
+    "ofertas": 12,
+    "pct": 25.0
+   },
+   {
+    "skill": "R",
+    "ofertas": 9,
+    "pct": 18.8
+   },
+   {
+    "skill": "Power BI",
+    "ofertas": 9,
+    "pct": 18.8
+   },
+   {
+    "skill": "Snowflake",
+    "ofertas": 9,
+    "pct": 18.8
+   },
+   {
+    "skill": "ETL / pipelines de datos",
+    "ofertas": 7,
+    "pct": 14.6
+   },
+   {
+    "skill": "Product analytics (Amplitude, Mixpanel, GA)",
+    "ofertas": 6,
+    "pct": 12.5
+   },
+   {
+    "skill": "Forecasting",
+    "ofertas": 5,
+    "pct": 10.4
+   },
+   {
+    "skill": "Machine learning",
+    "ofertas": 5,
+    "pct": 10.4
+   },
+   {
+    "skill": "Databricks / Spark",
+    "ofertas": 5,
+    "pct": 10.4
+   },
+   {
+    "skill": "Redshift",
+    "ofertas": 5,
+    "pct": 10.4
+   },
+   {
+    "skill": "Git",
+    "ofertas": 4,
+    "pct": 8.3
+   },
+   {
+    "skill": "Airflow",
+    "ofertas": 3,
+    "pct": 6.2
+   },
+   {
+    "skill": "pandas",
+    "ofertas": 2,
+    "pct": 4.2
+   },
+   {
+    "skill": "GCP",
+    "ofertas": 2,
+    "pct": 4.2
+   },
+   {
+    "skill": "Algún cloud (AWS, GCP, Azure)",
+    "ofertas": 2,
+    "pct": 4.2
+   },
+   {
+    "skill": "AWS",
+    "ofertas": 1,
+    "pct": 2.1
+   },
+   {
+    "skill": "Azure",
+    "ofertas": 1,
+    "pct": 2.1
+   }
+  ]
+ },
+ "europa": {
+  "n": 37,
+  "skills": [
+   {
+    "skill": "SQL",
+    "ofertas": 31,
+    "pct": 83.8
+   },
+   {
+    "skill": "Stakeholders / negocio",
+    "ofertas": 28,
+    "pct": 75.7
+   },
+   {
+    "skill": "Comunicación y storytelling",
+    "ofertas": 27,
+    "pct": 73.0
+   },
+   {
+    "skill": "Alguna herramienta BI (Tableau, Looker, Power BI)",
+    "ofertas": 20,
+    "pct": 54.1
+   },
+   {
+    "skill": "Python",
+    "ofertas": 17,
+    "pct": 45.9
+   },
+   {
+    "skill": "Looker / Looker Studio",
+    "ofertas": 17,
+    "pct": 45.9
+   },
+   {
+    "skill": "Dashboards",
+    "ofertas": 17,
+    "pct": 45.9
+   },
+   {
+    "skill": "A/B testing",
+    "ofertas": 15,
+    "pct": 40.5
+   },
+   {
+    "skill": "Algún almacén cloud (BigQuery, Snowflake, Redshift, Databricks)",
+    "ofertas": 15,
+    "pct": 40.5
+   },
+   {
+    "skill": "Tableau",
+    "ofertas": 12,
+    "pct": 32.4
+   },
+   {
+    "skill": "Modelado de datos",
+    "ofertas": 12,
+    "pct": 32.4
+   },
+   {
+    "skill": "dbt",
+    "ofertas": 12,
+    "pct": 32.4
+   },
+   {
+    "skill": "Estadística",
+    "ofertas": 11,
+    "pct": 29.7
+   },
+   {
+    "skill": "Excel / Sheets",
+    "ofertas": 11,
+    "pct": 29.7
+   },
+   {
+    "skill": "BigQuery",
+    "ofertas": 10,
+    "pct": 27.0
+   },
+   {
+    "skill": "R",
+    "ofertas": 7,
+    "pct": 18.9
+   },
+   {
+    "skill": "Snowflake",
+    "ofertas": 7,
+    "pct": 18.9
+   },
+   {
+    "skill": "Product analytics (Amplitude, Mixpanel, GA)",
+    "ofertas": 6,
+    "pct": 16.2
+   },
+   {
+    "skill": "Forecasting",
+    "ofertas": 5,
+    "pct": 13.5
+   },
+   {
+    "skill": "Machine learning",
+    "ofertas": 5,
+    "pct": 13.5
+   },
+   {
+    "skill": "ETL / pipelines de datos",
+    "ofertas": 5,
+    "pct": 13.5
+   },
+   {
+    "skill": "Power BI",
+    "ofertas": 5,
+    "pct": 13.5
+   },
+   {
+    "skill": "Databricks / Spark",
+    "ofertas": 3,
+    "pct": 8.1
+   },
+   {
+    "skill": "Redshift",
+    "ofertas": 3,
+    "pct": 8.1
+   },
+   {
+    "skill": "Git",
+    "ofertas": 3,
+    "pct": 8.1
+   },
+   {
+    "skill": "Airflow",
+    "ofertas": 2,
+    "pct": 5.4
+   },
+   {
+    "skill": "pandas",
+    "ofertas": 1,
+    "pct": 2.7
+   },
+   {
+    "skill": "GCP",
+    "ofertas": 1,
+    "pct": 2.7
+   },
+   {
+    "skill": "Algún cloud (AWS, GCP, Azure)",
+    "ofertas": 1,
+    "pct": 2.7
+   }
+  ]
+ },
+ "viajes": {
+  "n": 18,
+  "skills": [
+   {
+    "skill": "Comunicación y storytelling",
+    "ofertas": 17,
+    "pct": 94.4
+   },
+   {
+    "skill": "SQL",
+    "ofertas": 15,
+    "pct": 83.3
+   },
+   {
+    "skill": "Stakeholders / negocio",
+    "ofertas": 14,
+    "pct": 77.8
+   },
+   {
+    "skill": "Alguna herramienta BI (Tableau, Looker, Power BI)",
+    "ofertas": 10,
+    "pct": 55.6
+   },
+   {
+    "skill": "Python",
+    "ofertas": 9,
+    "pct": 50.0
+   },
+   {
+    "skill": "Dashboards",
+    "ofertas": 9,
+    "pct": 50.0
+   },
+   {
+    "skill": "Looker / Looker Studio",
+    "ofertas": 7,
+    "pct": 38.9
+   },
+   {
+    "skill": "Estadística",
+    "ofertas": 7,
+    "pct": 38.9
+   },
+   {
+    "skill": "Tableau",
+    "ofertas": 6,
+    "pct": 33.3
+   },
+   {
+    "skill": "R",
+    "ofertas": 5,
+    "pct": 27.8
+   },
+   {
+    "skill": "Excel / Sheets",
+    "ofertas": 5,
+    "pct": 27.8
+   },
+   {
+    "skill": "Algún almacén cloud (BigQuery, Snowflake, Redshift, Databricks)",
+    "ofertas": 5,
+    "pct": 27.8
+   },
+   {
+    "skill": "A/B testing",
+    "ofertas": 4,
+    "pct": 22.2
+   },
+   {
+    "skill": "Modelado de datos",
+    "ofertas": 4,
+    "pct": 22.2
+   },
+   {
+    "skill": "dbt",
+    "ofertas": 4,
+    "pct": 22.2
+   },
+   {
+    "skill": "BigQuery",
+    "ofertas": 4,
+    "pct": 22.2
+   },
+   {
+    "skill": "Forecasting",
+    "ofertas": 3,
+    "pct": 16.7
+   },
+   {
+    "skill": "Snowflake",
+    "ofertas": 2,
+    "pct": 11.1
+   },
+   {
+    "skill": "Redshift",
+    "ofertas": 2,
+    "pct": 11.1
+   },
+   {
+    "skill": "Airflow",
+    "ofertas": 2,
+    "pct": 11.1
+   },
+   {
+    "skill": "Machine learning",
+    "ofertas": 1,
+    "pct": 5.6
+   },
+   {
+    "skill": "Databricks / Spark",
+    "ofertas": 1,
+    "pct": 5.6
+   },
+   {
+    "skill": "Power BI",
+    "ofertas": 1,
+    "pct": 5.6
+   },
+   {
+    "skill": "Git",
+    "ofertas": 1,
+    "pct": 5.6
+   },
+   {
+    "skill": "ETL / pipelines de datos",
+    "ofertas": 1,
+    "pct": 5.6
+   },
+   {
+    "skill": "Algún cloud (AWS, GCP, Azure)",
+    "ofertas": 0,
+    "pct": 0.0
+   }
+  ]
+ },
+ "muestra": [
+  {
+   "empresa": "getyourguide",
+   "titulo": "Senior Data Analyst (Sales & RevOps) ",
+   "ubicacion": "Berlin"
+  },
+  {
+   "empresa": "tripadvisor",
+   "titulo": "Sr Data Analyst, Search Marketing",
+   "ubicacion": "London"
+  },
+  {
+   "empresa": "airbnb",
+   "titulo": "Senior Analyst, Advanced Analytics - Gurugram",
+   "ubicacion": "Gurugram, India"
+  },
+  {
+   "empresa": "cabify",
+   "titulo": "Growth Analyst",
+   "ubicacion": "Bogotá"
+  },
+  {
+   "empresa": "cabify",
+   "titulo": "Marketplace - Growth Analyst ",
+   "ubicacion": "Santiago de Chile"
+  },
+  {
+   "empresa": "cabify",
+   "titulo": "Operations Analyst - Cabify",
+   "ubicacion": "Santiago, Chile"
+  },
+  {
+   "empresa": "hellofresh",
+   "titulo": "Growth Strategy Data Analyst - Intern (M/F/N)",
+   "ubicacion": "Paris, Paris, France"
+  },
+  {
+   "empresa": "hellofresh",
+   "titulo": "[HelloConnect] Product Data Analyst (SQL/Python)",
+   "ubicacion": "Manila, Manila, Philippines"
+  },
+  {
+   "empresa": "hellofresh",
+   "titulo": "Senior Marketing Data Analyst Pricing (all genders)",
+   "ubicacion": "Berlin, Berlin, Germany"
+  },
+  {
+   "empresa": "sumup",
+   "titulo": "Analytics Engineer (Mid-level)",
+   "ubicacion": "São Paulo, São Paulo, Brazil"
+  },
+  {
+   "empresa": "sumup",
+   "titulo": "Senior Analytics Engineer - Acquisition",
+   "ubicacion": "Berlin, Germany"
+  },
+  {
+   "empresa": "sumup",
+   "titulo": "Senior Product Data Analyst - Consumer Growth",
+   "ubicacion": "London, England, United Kingdom"
+  },
+  {
+   "empresa": "sumup",
+   "titulo": "Senior Product Data Analyst- Consumer Growth",
+   "ubicacion": "London, England, United Kingdom"
+  },
+  {
+   "empresa": "celonis",
+   "titulo": "Staff Product Analytics Engineer",
+   "ubicacion": "Bangalore, India"
+  },
+  {
+   "empresa": "doctolib",
+   "titulo": "Lead Marketing Data Analyst (x/f/m)",
+   "ubicacion": "Paris, Paris, France"
+  },
+  {
+   "empresa": "doctolib",
+   "titulo": "Performance projects analyst Intern (x/f/m)",
+   "ubicacion": "Nantes"
+  },
+  {
+   "empresa": "deliveroo",
+   "titulo": "Analytics Engineering Manager",
+   "ubicacion": "London, United Kingdom - Deliveroo"
+  },
+  {
+   "empresa": "deliveroo",
+   "titulo": "BI Engineer",
+   "ubicacion": "London, United Kingdom - Deliveroo"
+  },
+  {
+   "empresa": "deliveroo",
+   "titulo": "Sales Operations Analyst - UAE National",
+   "ubicacion": "Dubai, United Arab Emirates"
+  },
+  {
+   "empresa": "deliveroo",
+   "titulo": "Senior Analytics Engineer",
+   "ubicacion": "London, United Kingdom - Deliveroo"
+  },
+  {
+   "empresa": "monzo",
+   "titulo": "Staff Analytics Engineer",
+   "ubicacion": "Cardiff, London or Remote (UK)"
+  },
+  {
+   "empresa": "gocardless",
+   "titulo": "Data Analyst II",
+   "ubicacion": "Lisbon, Portugal"
+  },
+  {
+   "empresa": "feverup",
+   "titulo": "Analytics Engineer ",
+   "ubicacion": "Argentina"
+  },
+  {
+   "empresa": "feverup",
+   "titulo": "Business Growth Analyst",
+   "ubicacion": "Madrid"
+  },
+  {
+   "empresa": "feverup",
+   "titulo": "CRM Business Analyst",
+   "ubicacion": "Madrid"
+  },
+  {
+   "empresa": "feverup",
+   "titulo": "Growth Strategy Analyst",
+   "ubicacion": "Melbourne"
+  },
+  {
+   "empresa": "feverup",
+   "titulo": "Growth Strategy Senior Analyst",
+   "ubicacion": "Madrid"
+  },
+  {
+   "empresa": "feverup",
+   "titulo": "Junior People Operations Data Analyst ",
+   "ubicacion": "Madrid"
+  },
+  {
+   "empresa": "feverup",
+   "titulo": "Operations Analyst",
+   "ubicacion": "Madrid"
+  },
+  {
+   "empresa": "feverup",
+   "titulo": "Operations Analyst- Global Merchandising",
+   "ubicacion": "Madrid"
+  },
+  {
+   "empresa": "feverup",
+   "titulo": "Product Specialist Analyst (German Speaker)",
+   "ubicacion": "Madrid"
+  },
+  {
+   "empresa": "feverup",
+   "titulo": "Strategy Operations Analyst",
+   "ubicacion": "Madrid"
+  },
+  {
+   "empresa": "bitpanda",
+   "titulo": "Business Intelligence Analyst",
+   "ubicacion": "Vienna, Vienna, Austria"
+  },
+  {
+   "empresa": "mirakl",
+   "titulo": "Business Analyst/ Consultant  Intern – Mirakl Ads, Paris",
+   "ubicacion": "Paris, France"
+  },
+  {
+   "empresa": "mirakl",
+   "titulo": "Business Analyst Intern, London",
+   "ubicacion": "London, England, United Kingdom"
+  },
+  {
+   "empresa": "mirakl",
+   "titulo": "Revenue Systems & Automation Analyst, Paris",
+   "ubicacion": "Paris, France"
+  },
+  {
+   "empresa": "perk",
+   "titulo": "Data Analyst ",
+   "ubicacion": "Barcelona"
+  },
+  {
+   "empresa": "perk",
+   "titulo": "Senior Reporting Analyst - 6 month FTC",
+   "ubicacion": "London"
+  },
+  {
+   "empresa": "perk",
+   "titulo": "Senior Analytics Engineer",
+   "ubicacion": "Barcelona"
+  },
+  {
+   "empresa": "pleo",
+   "titulo": "Analytics Engineer",
+   "ubicacion": "United Kingdom"
+  },
+  {
+   "empresa": "pleo",
+   "titulo": "Revenue Operations Analyst (CX)",
+   "ubicacion": "Madrid"
+  },
+  {
+   "empresa": "pleo",
+   "titulo": "Billing Operations Analyst (Maternity Cover)",
+   "ubicacion": "Lisbon"
+  },
+  {
+   "empresa": "backmarket",
+   "titulo": "Senior Data Analyst - Strategy & Commercial ",
+   "ubicacion": "Paris"
+  },
+  {
+   "empresa": "qonto",
+   "titulo": "Staff Data Analyst - Ops & Compliance",
+   "ubicacion": "Paris, France"
+  },
+  {
+   "empresa": "qonto",
+   "titulo": "People Data Analyst",
+   "ubicacion": "Paris, France"
+  },
+  {
+   "empresa": "blablacar",
+   "titulo": "Strategy & Business Analyst Intern",
+   "ubicacion": "Paris, France"
+  },
+  {
+   "empresa": "jobandtalent",
+   "titulo": "HQ -  AI Business Analyst",
+   "ubicacion": "Madrid HQ, ES"
+  },
+  {
+   "empresa": "lodgify",
+   "titulo": "Senior Growth Data Analyst",
+   "ubicacion": "Barcelona - Cataluña"
+  }
+ ]
+}
