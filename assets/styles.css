@@ -677,3 +677,15 @@ svg .val{font-variant-numeric:tabular-nums}
 @media (max-width:960px){.site-head .bar{grid-template-columns:minmax(0,1fr) auto}.brand{min-width:0;overflow:hidden}}
 @media (max-width:420px){.head-tools{gap:2px}.icon-btn,.lang-btn{min-width:38px;padding:0 8px}}
 @media (max-width:960px){.btn.head-cta{display:none}}
+/* Explorador por año del proyecto de clima */
+.explorer{display:grid;gap:14px;background:var(--surface);border-radius:var(--r-card);padding:20px 22px}
+.explorer label{font:600 1rem var(--f-body);display:flex;gap:10px;align-items:baseline}
+.explorer output{font:700 1.6rem var(--f-display);letter-spacing:-.02em;color:var(--accent-text)}
+.explorer .dk{background:var(--card)}
+.dash-kpis.five{grid-template-columns:repeat(5,minmax(0,1fr))}
+@media (max-width:1100px){.dash-kpis.five{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.dash-kpis.five{grid-template-columns:repeat(2,minmax(0,1fr))}}
+#cStripes{border-radius:var(--r-in)}
+.mercado td:last-child a{color:var(--accent-text);text-decoration:none;font-weight:500}
+.mercado td:last-child{white-space:normal;min-width:200px}
+.mercado .inbar{background:var(--accent)}
