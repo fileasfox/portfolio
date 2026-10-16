@@ -159,10 +159,10 @@
     {
       "control": "Imágenes sin metadatos EXIF ni GPS",
       "ok": true,
-      "detalle": "3 imágenes generadas desde canvas, sin metadatos de cámara.",
+      "detalle": "21 imágenes generadas desde canvas, sin metadatos de cámara.",
       "hallazgos": [],
       "control_en": "Images without EXIF or GPS metadata",
-      "detalle_en": "3 images generated from canvas, without camera metadata."
+      "detalle_en": "21 images generated from canvas, without camera metadata."
     },
     {
       "control": "Identificadores seudonimizados en la consola",

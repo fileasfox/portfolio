@@ -126,17 +126,12 @@ def meta_pagina(fichero):
 FUENTES = ('<script src="assets/tema.js"></script>\n'   # aplica el tema guardado antes de pintar
            '<link rel="preconnect" href="https://fonts.googleapis.com">\n'
            '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
-           '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..700'
-           '&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">\n'
+           '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800'
+           '&family=Geist+Mono:wght@400;500&display=swap">\n'
+           # Iconos Phosphor (MIT), versión fija y con Subresource Integrity
+           '<link rel="stylesheet" href="https://unpkg.com/@phosphor-icons/web@2.1.1/src/regular/style.css" '
+           'integrity="sha384-6p9AefaqUhEVheRlj1mpAkbngHXy9mbYMrIdcIt4Jlc9lOLIablJq3bBsLOjGwZ7" crossorigin="anonymous">\n'
            '<link rel="stylesheet" href="assets/styles.css">')
-
-ICONO_TEMA = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'
-              '<path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>')
-ICONO_MENU = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">'
-              '<path d="M4 7h16M4 12h16M4 17h16"/></svg>')
-ICONO_FLECHA = ('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true">'
-                '<path d="m6 9 6 6 6-6"/></svg>')
-
 
 # Orden único de los proyectos: de aquí salen la numeración, el menú, el pie y los enlaces anterior/siguiente
 def proyectos():
@@ -174,8 +169,8 @@ def selector_idioma(fichero: str) -> str:
     """Enlace a la misma página en el otro idioma."""
     ruta = "" if fichero in ("index.html", "404.html") else fichero
     if L == "es":
-        return f'<a class="lang-btn" href="en/{ruta}" hreflang="en" lang="en" aria-label="Read this page in English">EN</a>'
-    return f'<a class="lang-btn" href="../{ruta}" hreflang="es" lang="es" aria-label="Leer esta página en español">ES</a>'
+        return f'<a class="lang-btn" href="en/{ruta}" hreflang="en" lang="en" aria-label="Read this page in English"><i class="ph ph-translate" aria-hidden="true"></i>EN</a>'
+    return f'<a class="lang-btn" href="../{ruta}" hreflang="es" lang="es" aria-label="Leer esta página en español"><i class="ph ph-translate" aria-hidden="true"></i>ES</a>'
 
 
 def cabecera(fichero: str) -> str:
@@ -184,84 +179,77 @@ def cabecera(fichero: str) -> str:
     panel = "".join(f'<a href="{h}"><b>{num(h)} · {ti}</b><small>{d}</small></a>' for h, ti, d in proyectos())
     menu = (f'<a href="index.html"{cur("index.html")}>{t("Inicio", "Home")}</a>'
             f'<div class="dd"><a href="proyectos.html"{cur("proyectos.html")}>{t("Proyectos", "Projects")}</a>'
-            f'<button class="dd-btn" type="button" aria-expanded="false" aria-controls="ddp" aria-label="{t("Ver la lista de proyectos", "Show the list of projects")}">{ICONO_FLECHA}</button>'
-            f'<div class="dd-panel" id="ddp">{panel}<a class="all" href="proyectos.html">{t("Todos los proyectos con filtros →", "All projects, with filters →")}</a></div></div>'
+            f'<button class="dd-btn" type="button" aria-expanded="false" aria-controls="ddp" aria-label="{t("Ver la lista de proyectos", "Show the list of projects")}"><i class="ph ph-caret-down" aria-hidden="true"></i></button>'
+            f'<div class="dd-panel" id="ddp">{panel}<a class="all" href="proyectos.html">{t("Todos los proyectos, con filtros", "All projects, with filters")}<i class="ph ph-arrow-right" aria-hidden="true"></i></a></div></div>'
             f'<a href="habilidades.html"{cur("habilidades.html")}>{t("Habilidades", "Skills")}</a>'
             f'<a href="cv.html"{cur("cv.html")}>CV</a>')
     progreso = '<span class="progress" aria-hidden="true"></span>' if fichero != "index.html" else ""
-    # Franja superior negra y barra con menú a la izquierda, marca centrada y herramientas a la derecha
-    return (f'<div class="topbar"><div class="wrap"><span class="avail"><i aria-hidden="true"></i>{t("Abierto a nuevos retos", "Open to new opportunities")}</span>'
-            f'<nav aria-label="{t("Enlaces rápidos", "Quick links")}"><a href="cv.html">CV</a>'
-            f'<a href="{LINKEDIN}" rel="noopener noreferrer">LinkedIn</a></nav></div></div>'
-            f'<header class="site-head"><div class="bar">'
+    return (f'<header class="site-head"><div class="bar">'
+            f'<a class="brand" href="index.html" aria-label="{t("Matteo Eiras, inicio", "Matteo Eiras, home")}"><b>Matteo Eiras</b><span>Data &amp; Performance Analyst</span></a>'
             f'<nav class="menu" id="menu" aria-label="{t("Principal", "Main")}">{menu}</nav>'
-            f'<a class="brand" href="index.html" aria-label="{t("Matteo Eiras, inicio", "Matteo Eiras, home")}">Eiras<span class="dot">.</span></a>'
             f'<div class="head-tools">{selector_idioma(fichero)}'
-            f'<button class="icon-btn" id="themeBtn" type="button" aria-label="{t("Cambiar tema", "Switch theme")}">{ICONO_TEMA}</button>'
-            f'<button class="icon-btn burger" id="burger" type="button" aria-label="{t("Menú", "Menu")}" aria-expanded="false" aria-controls="menu">{ICONO_MENU}</button></div>'
+            f'<button class="icon-btn" id="themeBtn" type="button" aria-label="{t("Cambiar tema", "Switch theme")}"><i class="ph ph-moon theme-moon" aria-hidden="true"></i><i class="ph ph-sun theme-sun" aria-hidden="true"></i></button>'
+            f'<a class="btn sm head-cta" href="index.html#contacto">{t("Contactar", "Contact")}</a>'
+            f'<button class="icon-btn burger" id="burger" type="button" aria-label="{t("Menú", "Menu")}" aria-expanded="false" aria-controls="menu"><i class="ph ph-list" aria-hidden="true"></i></button></div>'
             f'{progreso}</div></header>')
 
 
 # Tarjetas de proyectos: una sola lista para el inicio y la página de proyectos.
-# Cada tarjeta lleva arriba una visual hecha con sus propios datos, en lugar de una foto.
+# Cada tarjeta lleva una captura real de la propia página (assets/img/proy/, una por idioma).
 def casos():
     return [
-        ("mallorca.html", t("Datos públicos", "Public data"), "publico sql python interactivo",
+        ("mallorca.html", t("Python · SQL · regresión", "Python · SQL · regression"), "publico sql python interactivo",
          t("¿Cuánto vale una vista al mar?", "What is a sea view worth?"),
-         t("pandas, 8 consultas SQL cuadradas y una regresión, con consola SQL en el navegador.",
-           "pandas, 8 reconciled SQL queries and a regression, with a SQL console in the browser."),
-         f'<div class="v-map"><svg data-minimap role="img" aria-label="{t("Mallorca coloreada por precio mediano", "Mallorca shaded by median price")}"></svg></div>'),
-        ("dashboard.html", "Dashboard", "publico interactivo",
-         t("Dashboard del mercado vacacional", "Holiday rental market dashboard"),
-         t("KPIs frente al total, filtros y filtrado cruzado desde el mapa, como en Looker Studio.",
-           "KPIs against the total, filters and cross-filtering from the map, as in Looker Studio."),
-         f'<div class="v-dash"><span class="k"><b>{t("398 €", "€398")}</b><small>{t("precio", "price")}</small></span>'
-         f'<span class="k"><b>{t("50 %", "50%")}</b><small>{t("noches no disp.", "nights unavail.")}</small></span>'
-         '<span class="spark"><i style="--h:92%"></i><i style="--h:89%"></i><i style="--h:67%"></i><i style="--h:50%"></i><i style="--h:54%"></i>'
-         '<i style="--h:61%"></i><i style="--h:67%"></i><i style="--h:66%"></i><i style="--h:61%"></i><i style="--h:54%"></i><i style="--h:55%"></i><i style="--h:55%"></i></span></div>'),
-        ("pandas.html", "Python", "publico python", t("Cuaderno de pandas", "pandas notebook"),
-         t("Once celdas ejecutadas sobre 5,9 millones de filas: limpieza, groupby, merge y cuadre con SQL.",
-           "Eleven cells run on 5.9 million rows: cleaning, groupby, merge and a reconciliation with SQL."),
-         f'<div class="v-code">df.groupby("municipio")<br>&nbsp;&nbsp;.agg(precio=("precio", "median"))<br>'
-         f'<b>→ {t("53 filas", "53 rows")}</b><br><b>→ {t("cuadra con SQL", "matches SQL")}</b></div>'),
-        ("visualizacion.html", t("Visualización", "Data viz"), "publico interactivo", t("Cómo presento los datos", "How I present data"),
+         t("14.817 anuncios reales, 8 consultas SQL cuadradas y consola SQL en el navegador.",
+           "14,817 real listings, 8 reconciled SQL queries and a SQL console in the browser.")),
+        ("dashboard.html", t("Dashboard · pandas", "Dashboard · pandas"), "publico interactivo",
+         t("Mercado vacacional de Mallorca", "Mallorca holiday rental market"),
+         t("KPIs frente al total, filtrado cruzado desde el mapa y exportación a CSV, como en Looker Studio.",
+           "KPIs against the total, cross-filtering from the map and CSV export, as in Looker Studio.")),
+        ("pandas.html", "pandas · Jupyter", "publico python", t("Cuaderno de pandas", "pandas notebook"),
+         t("Once celdas ejecutadas sobre 5,4 millones de noches y cuadradas contra SQL.",
+           "Eleven cells run on 5.4 million nights and reconciled against SQL.")),
+        ("visualizacion.html", t("Visualización", "Data visualisation"), "publico interactivo", t("Cómo presento los datos", "How I present data"),
          t("Seis gráficos habituales frente a su versión corregida, y un informe de una página.",
-           "Six common charts next to their corrected version, plus a one-page report."),
-         '<div class="v-viz"><span class="pie" aria-hidden="true"></span><span class="arrow">→</span>'
-         '<span class="bars"><i style="--w:100%"></i><i style="--w:60%"></i><i style="--w:44%"></i><i style="--w:30%"></i></span></div>'),
-        ("caso-churn.html", "Customer Success", "profesional sql", t("Salud de cuenta y churn por ROI", "Account health and churn by ROI"),
+           "Six common charts next to their corrected version, plus a one-page report.")),
+        ("caso-churn.html", "BigQuery · Customer Success", "profesional sql", t("Churn por ROI", "Churn by ROI"),
          t("Qué hoteles no recuperan su cuota mensual, y por qué, antes de que pidan la baja.",
-           "Which hotels do not earn back their monthly fee, and why, before they cancel."),
-         f'<div class="v-roi"><div class="v-num">&lt;&nbsp;1<em>×</em><small>{t("umbral de riesgo", "risk threshold")}</small></div>'
-         f'<div class="scale"><i></i><i></i><i></i></div><div class="ticks"><span>{t("Riesgo", "Risk")}</span><span>1×</span><span>2×</span></div></div>'),
-        ("caso-cuadre.html", "BI governance", "profesional sql", t("El dashboard que contaba el doble", "The dashboard that counted double"),
+           "Which hotels do not earn back their monthly fee, and why, before they cancel.")),
+        ("caso-cuadre.html", "BigQuery · BI", "profesional sql", t("El dashboard que contaba el doble", "The dashboard that counted double"),
          t("Diagnóstico de un sobreconteo frente al informe oficial y rediseño de la vista.",
-           "Diagnosing an overcount against the official report and redesigning the view."),
-         f'<div class="v-num"><s>{t("2,2×", "2.2×")}</s><br>{t("1,0", "1.0")}<em>×</em><small>{t("cuadrado con el oficial", "matches the official one")}</small></div>'),
-        ("caso-funnel.html", t("Observabilidad", "Observability"), "profesional sql", t("Funnel e integraciones", "Funnel and integrations"),
+           "Diagnosing an overcount against the official report and redesigning the view.")),
+        ("caso-funnel.html", t("SQL · integraciones", "SQL · integrations"), "profesional sql", t("Funnel e integraciones", "Funnel and integrations"),
          t("Alertas que separan una caída comercial de un fallo del conector.",
-           "Alerts that tell a commercial drop apart from a connector failure."),
-         '<div class="v-bars"><i style="--w:100%"></i><i style="--w:82%"></i><i style="--w:49%"></i><i style="--w:17%"></i><i style="--w:13%"></i><i style="--w:8%"></i></div>'),
-        ("caso-facturacion.html", t("Calidad del dato", "Data quality"), "profesional python", t("Limpieza de facturación", "Billing data cleaning"),
+           "Alerts that tell a commercial drop apart from a connector failure.")),
+        ("caso-facturacion.html", t("Python · calidad del dato", "Python · data quality"), "profesional python", t("Limpieza de facturación", "Billing data cleaning"),
          t("Una hoja manual convertida en un proceso reproducible con log de cambios.",
-           "A manual spreadsheet turned into a reproducible process with a change log."),
-         '<div class="v-code">"Synxis"<br>"SYNXIS"<br>"1.234,50"<br><b>→ SynXis</b><br><b>→ 1234.50</b></div>'),
+           "A manual spreadsheet turned into a reproducible process with a change log.")),
         ("habilidades.html#portal", t("Desarrollo web", "Web development"), "python interactivo", t("Este portal", "This portfolio"),
-         t("Generado con Python, sin frameworks, con consola SQL y auditoría antes de publicar.",
-           "Generated with Python, no frameworks, with a SQL console and an audit before publishing."),
-         f'<div class="v-num">23<em>/</em>23<small>{t("controles superados", "checks passed")}</small></div>'),
+         t("Generado con Python, sin frameworks, en dos idiomas y con auditoría antes de publicar.",
+           "Generated with Python, no frameworks, in two languages and audited before publishing.")),
     ]
 
 
 assert [c[0] for c in casos()] == [p[0] for p in proyectos()]
+DESTACADOS = ["dashboard.html", "mallorca.html", "pandas.html", "visualizacion.html", "caso-churn.html"]   # bento del inicio
+TINTES = {"mallorca.html": " tint-a", "pandas.html": " tint-b", "caso-churn.html": " tint-a", "caso-funnel.html": " tint-b"}
 
 
-def tarjetas() -> str:
-    ver = lambda h: t("Ver caso", "View case") if h.startswith("caso-") else t("Ver proyecto", "View project")
-    return '<div class="cases">' + "".join(
-        f'<a class="case" href="{h}" data-cat="{cat}"><div class="visual"><span class="idx">{num(h)}</span><span class="cat">{c}</span>{v}</div>'
-        f'<div class="meta"><h3>{ti}</h3><p>{d}</p><span class="go">{ver(h)} <span aria-hidden="true">→</span></span></div></a>'
-        for h, c, cat, ti, d, v in casos()) + "</div>"
+def captura(h: str) -> str:
+    nombre = ("portal" if h.startswith("habilidades") else h.replace(".html", "")) + ".jpg"
+    return "assets/img/proy/" + ("en-" if L == "en" else "") + nombre
+
+
+def tarjetas(destacados: bool = False) -> str:
+    lista = casos()
+    if destacados:
+        lista = [next(c for c in lista if c[0] == h) for h in DESTACADOS]
+    return f'<div class="cases{" bento" if destacados else ""}">' + "".join(
+        f'<a class="case{TINTES.get(h, "")}" href="{h}" data-cat="{cat}" data-reveal style="--i:{i % 3}">'
+        f'<div class="shot"><img src="{captura(h)}" alt="" loading="lazy" decoding="async" width="1280" height="800"></div>'
+        f'<div class="meta"><span class="cat">{num(h)} · {c}</span><h3>{ti}</h3><p>{d}</p>'
+        f'<span class="go" aria-hidden="true"><i class="ph ph-arrow-right"></i></span></div></a>'
+        for i, (h, c, cat, ti, d) in enumerate(lista)) + "</div>"
 
 
 def filtros() -> str:
@@ -271,7 +259,7 @@ def filtros() -> str:
             ("profesional", t("Casos profesionales", "Work cases")), ("sql", "SQL"), ("python", "Python"),
             ("interactivo", t("Interactivo", "Interactive"))]
     n = lambda k: len(C) if k == "todos" else sum(k in c[2].split() for c in C)
-    return (f'<div class="chips" role="group" aria-label="{t("Filtrar proyectos", "Filter projects")}">' + "".join(
+    return (f'<div class="chips seg has-pill" role="group" aria-label="{t("Filtrar proyectos", "Filter projects")}"><span class="seg-pill" aria-hidden="true"></span>' + "".join(
         f'<button class="chip" type="button" data-filter="{k}" aria-pressed="{str(k == "todos").lower()}">{ti}<span>{n(k)}</span></button>'
         for k, ti in cats) + "</div>")
 
@@ -298,7 +286,7 @@ def pie() -> str:
           ("habilidades.html#portal", t("Este portal y auditoría", "This portfolio and audit"))]),
         (t("Sobre mí", "About me"),
          [("index.html#sobre-mi", t("Sobre mí", "About me")), ("index.html#trayectoria", t("Trayectoria", "Experience")),
-          ("index.html#habilidades", t("Habilidades", "Skills")), ("cv.html", "CV"), ("index.html#contacto", t("Contacto", "Contact")),
+          ("index.html#habilidades", t("Habilidades", "Skills")), ("cv.html", "CV"), ("index.html#contacto", t("Contacto", "Contact")), ("cv.html#contacto", "Email"),
           (LINKEDIN, "LinkedIn")]),
     ]
     return (f'<footer class="site-foot"><div class="wrap"><nav class="sitemap" aria-label="{t("Mapa del sitio", "Site map")}">'
@@ -307,7 +295,7 @@ def pie() -> str:
                       for g, ls in mapa)
             + f'</nav><div class="foot-meta"><span>Matteo Eiras Pé, Palma de Mallorca</span>'
               f'<span>{t("Datos del proyecto", "Project data")}: Inside Airbnb (CC BY 4.0)</span></div>'
-              '<div class="foot-word" aria-hidden="true">Eiras.</div></div></footer>')
+              '</div></footer>')
 
 
 def scripts(fichero: str) -> str:
@@ -352,7 +340,8 @@ def cuerpo(fichero: str) -> str:
     carpeta = SRC / ("pages_en" if L == "en" else "pages")
     contenido = (carpeta / fichero).read_text(encoding="utf-8")
     contenido = contenido.replace('rel="noopener"', 'rel="noopener noreferrer"')
-    contenido = (contenido.replace("<!--CASOS-->", tarjetas()).replace("<!--RECORTE-->", recorte())
+    contenido = (contenido.replace("<!--CASOS_INICIO-->", tarjetas(destacados=True)).replace("<!--CASOS-->", tarjetas())
+                 .replace("<!--RECORTE-->", recorte())
                  .replace("<!--FILTROS-->", filtros()).replace("<!--PREVNEXT-->", prevnext(fichero))
                  .replace("<!--CUADERNO-->", cuaderno() if "<!--CUADERNO-->" in contenido else ""))
     # Cifra y unidad nunca se separan de línea ("19 %", "262 €"); el código de las plantillas no se toca
@@ -367,7 +356,7 @@ def cuerpo(fichero: str) -> str:
 # Política de seguridad para la versión pública (GitHub Pages): solo scripts propios y de cdnjs,
 # sin plugins, sin formularios hacia fuera y sin enviar la URL completa a otros sitios.
 CSP = ("default-src 'self'; script-src 'self' https://cdnjs.cloudflare.com; "
-       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; "
+       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; "
        "img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; "
        "upgrade-insecure-requests")
 SEGURIDAD = (f'<meta http-equiv="Content-Security-Policy" content="{CSP}">\n'
@@ -416,7 +405,7 @@ def cabeza_extra(titulo, desc, fichero="index.html"):
         f'<link rel="alternate" hreflang="en" href="{url_de(fichero, "en")}">\n'
         f'<link rel="alternate" hreflang="x-default" href="{url_de(fichero, "es")}">\n')
     return ('<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">\n'
-            '<meta name="theme-color" content="#e9e8e4">\n'
+            '<meta name="theme-color" content="#ffffff">\n'
             f'<meta name="robots" content="{robots}">\n<meta name="author" content="Matteo Eiras Pé">\n'
             f'<link rel="canonical" href="{url}">\n' + alternas +
             f'<meta property="og:type" content="{tipo}">\n'

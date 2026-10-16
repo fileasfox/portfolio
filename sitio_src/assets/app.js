@@ -69,15 +69,23 @@
   $$("[data-copy]").forEach(b => b.addEventListener("click", () => {
     const t = $(b.dataset.copy);
     const select = () => { const r = document.createRange(); r.selectNodeContents(t); const s = getSelection(); s.removeAllRanges(); s.addRange(r); };
-    const label = b.textContent; const done = m => { b.textContent = m; setTimeout(() => (b.textContent = label), 2000); };
+    const hueco = $("[data-copy-label]", b) || b, antes = [...hueco.childNodes];
+    const done = m => { hueco.textContent = m; setTimeout(() => hueco.replaceChildren(...antes), 2000); };
     if (navigator.clipboard) navigator.clipboard.writeText(t.textContent.trim()).then(() => done(tr("Copiado", "Copied")), () => { select(); done(tr("Seleccionado", "Selected")); });
     else { select(); done(tr("Seleccionado", "Selected")); }
   }));
 
   /* ---------- Filtros de proyectos ---------- */
   const chips = $$(".chip[data-filter]");
+  const pildora = () => $$(".seg.has-pill").forEach(seg => {
+    const b = $(".chip[aria-pressed='true']", seg), p = $(".seg-pill", seg);
+    if (b && p) { p.style.width = b.offsetWidth + "px"; p.style.transform = `translate(${b.offsetLeft}px, ${b.offsetTop - 4}px)`; }
+  });
+  pildora(); addEventListener("resize", pildora);
+  if (document.fonts) document.fonts.ready.then(pildora);
   chips.forEach(c => c.addEventListener("click", () => {
     chips.forEach(x => x.setAttribute("aria-pressed", x === c ? "true" : "false"));
+    pildora();
     const f = c.dataset.filter;
     $$("[data-cat]").forEach(card => { card.hidden = f !== "todos" && !card.dataset.cat.split(" ").includes(f); });
   }));
@@ -137,20 +145,61 @@
     map.forEach((_, id) => { const s = document.getElementById(id); if (s) io.observe(s); });
   }
 
-  /* ---------- Foco rojo que sigue al puntero sobre las tarjetas de casos ---------- */
-  $$(".case .visual").forEach(v => v.addEventListener("pointermove", e => {
-    const b = v.getBoundingClientRect();
-    v.style.setProperty("--mx", (e.clientX - b.left) + "px"); v.style.setProperty("--my", (e.clientY - b.top) + "px");
-  }));
+  /* ---------- Movimiento: aparición al entrar en pantalla, titular por palabras, cabecera y profundidad ---------- */
+  const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Titular palabra a palabra (el texto queda igual para lectores de pantalla)
+  $$("h1.split").forEach(h => {
+    h.setAttribute("aria-label", h.textContent.trim());
+    let i = 0;
+    const partir = n => [...n.childNodes].forEach(c => {
+      if (c.nodeType !== 3) return partir(c);
+      const frag = document.createDocumentFragment();
+      c.textContent.split(/(\s+)/).forEach(w => {
+        if (!w.trim()) return frag.append(w);
+        const caja = document.createElement("span"), pal = document.createElement("span");
+        caja.className = "w"; caja.setAttribute("aria-hidden", "true"); pal.textContent = w; pal.style.setProperty("--i", i++);
+        caja.append(pal); frag.append(caja);
+      });
+      c.replaceWith(frag);
+    });
+    partir(h);
+  });
+  // En páginas interiores, los bloques principales también aparecen al bajar
+  $$(".p-hero > *, .chapter, .case-block, .finding, .mrow, .job, .card, .sql-card, .nb-cell, .panel, .prevnext a, .cv-box, .grid-cards > *, .op-kpis > div, .checklist li")
+    .forEach((n, k) => { if (!n.hasAttribute("data-reveal")) { n.setAttribute("data-reveal", ""); n.style.setProperty("--i", k % 4); } });
+  if ("IntersectionObserver" in window) {
+    const aparece = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      e.target.classList.add("in"); aparece.unobserve(e.target);
+    }), { threshold: .12, rootMargin: "0px 0px -6% 0px" });
+    $$("[data-reveal], h1.split, .hero-photo").forEach(n => aparece.observe(n));
+  } else $$("[data-reveal], h1.split, .hero-photo").forEach(n => n.classList.add("in"));
+
+  // Cabecera translúcida en cuanto la página se desplaza (centinela, sin escuchar el scroll)
+  if (head && "IntersectionObserver" in window) {
+    const cent = document.createElement("div");
+    cent.setAttribute("aria-hidden", "true"); cent.style.cssText = "position:absolute;top:0;left:0;width:1px;height:8px;pointer-events:none";
+    document.body.prepend(cent);
+    new IntersectionObserver(([e]) => head.classList.toggle("stuck", !e.isIntersecting)).observe(cent);
+  }
+
+  // Fichas sobre la foto con profundidad al mover el puntero
+  const foto = $(".hero-photo");
+  if (foto && !quieto && matchMedia("(hover: hover)").matches) {
+    foto.addEventListener("pointermove", e => {
+      const r = foto.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+      $$("[data-depth]", foto).forEach(c => { const d = +c.dataset.depth; c.style.transform = `translate(${(x * d).toFixed(1)}px, ${(y * d).toFixed(1)}px)`; });
+    });
+    foto.addEventListener("pointerleave", () => $$("[data-depth]", foto).forEach(c => (c.style.transform = "")));
+  }
 
   /* ---------- Cifras que cuentan al entrar en pantalla (una vez; nada si se pide menos movimiento) ---------- */
-  const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
   if (!quieto && "IntersectionObserver" in window) {
     const io = new IntersectionObserver(es => es.forEach(e => {
       if (!e.isIntersecting) return;
       io.unobserve(e.target);
       const b = e.target, n = +b.dataset.n, suf = b.dataset.suf || "", t0 = performance.now();
-      const paso = t => { const k = Math.min(1, (t - t0) / 900); b.textContent = fmt(Math.round(n * (1 - Math.pow(1 - k, 3)))) + suf; if (k < 1) requestAnimationFrame(paso); };
+      const paso = t => { const k = Math.min(1, (t - t0) / 1300); b.textContent = fmt(Math.round(n * (1 - Math.pow(1 - k, 3)))) + suf; if (k < 1) requestAnimationFrame(paso); };
       requestAnimationFrame(paso);
     }), { threshold: .6 });
     $$("[data-n]").forEach(b => io.observe(b));

@@ -149,7 +149,7 @@ tema = "t === \"light\" || t === \"dark\"" in leer(RAIZ / "assets" / "app.js")
 check("Valores de localStorage validados", tema, "El tema guardado solo acepta «light» o «dark».")
 
 # ---------------------------------------------------------------- 7. Imágenes y datos
-imgs = sorted((RAIZ / "assets" / "img").glob("*"))
+imgs = sorted(p for p in (RAIZ / "assets" / "img").rglob("*") if p.is_file())
 exif = [p.name for p in imgs if b"Exif" in p.read_bytes() or b"GPS" in p.read_bytes()]
 check("Imágenes sin metadatos EXIF ni GPS", not exif, f"{len(imgs)} imágenes generadas desde canvas, sin metadatos de cámara.", exif)
 pg = leer(RAIZ / "assets" / "playground.js")
